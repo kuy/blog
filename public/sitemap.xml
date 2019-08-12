@@ -6,4 +6,53 @@
             
         </url>
     
+        <url>
+            <loc>http%3A//127.0.0.1%3A1111/about/</loc>
+            
+                <lastmod>1970-01-01</lastmod>
+            
+        </url>
+    
+        <url>
+            <loc>http%3A//127.0.0.1%3A1111/categories/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>http%3A//127.0.0.1%3A1111/categories/programming/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>http%3A//127.0.0.1%3A1111/categories/programming/page/1/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>http%3A//127.0.0.1%3A1111/flex-handler/</loc>
+            
+                <lastmod>2019-08-12</lastmod>
+            
+        </url>
+    
+        <url>
+            <loc>http%3A//127.0.0.1%3A1111/page/1/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>http%3A//127.0.0.1%3A1111/tags/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>http%3A//127.0.0.1%3A1111/tags/rust/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>http%3A//127.0.0.1%3A1111/tags/web/</loc>
+            
+        </url>
+    
 </urlset>

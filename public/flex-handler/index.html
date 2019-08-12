@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title>blog.endflow.net - actix-webの柔軟なリクエストハンドラの仕組み</title>
+
+      
+
+      
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
+          
+      
+
+      
+          <link rel="stylesheet" href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;site.css">
+          
+      
+
+      
+      
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="mobile-navbar" class="mobile-navbar">
+              <div class="mobile-header-logo">
+                <a href="/" class="logo">&#x2F;* blog.endflow.net *&#x2F;</a>
+              </div>
+              <div class="mobile-navbar-icon icon-out">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
+              <ul class="mobile-menu-list">
+                
+                    <li class="mobile-menu-item">
+                        <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;categories">
+                            Categories
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;tags">
+                            Tags
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;about">
+                            @kuy
+                        </a>
+                    </li>
+                
+              </ul>
+            </nav>
+
+            <header id="header">
+                <div class="logo"><a href="http:&#x2F;&#x2F;127.0.0.1:1111">&#x2F;* blog.endflow.net *&#x2F;</a></div>
+                <nav class="menu">
+                    <ul>
+                        
+                            <li>
+                                <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;categories">
+                                    Categories
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;tags">
+                                    Tags
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;about">
+                                    @kuy
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="content" id="mobile-panel">
+                    
+
+
+<div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content always-active">
+        <nav id="TableOfContents">
+            <ul>
+                
+                <li>
+                    <a href="http://127.0.0.1:1111/flex-handler/#kitukake" class="toc-link">きっかけ</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="http://127.0.0.1:1111/flex-handler/#yi-wen" class="toc-link">疑問</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="http://127.0.0.1:1111/flex-handler/#tl-dr" class="toc-link">TL;DR</a>
+                    
+                </li>
+                
+                <li>
+                    <a href="http://127.0.0.1:1111/flex-handler/#yi-wen-1-ke-bian-chang-yin-shu-norikuesutohandorahadouyatuteshi-xian-siteiru" class="toc-link">疑問 1: 可変長引数のリクエストハンドラはどうやって実現している？</a>
+                    
+                    <ul>
+                        
+                        <li>
+                            <a href="http://127.0.0.1:1111/flex-handler/#taneakasi" class="toc-link">タネあかし</a>
+                        </li>
+                        
+                        <li>
+                            <a href="http://127.0.0.1:1111/flex-handler/#shi-siniyin-shu-11-ge-nohandorawozuo-tutemiru" class="toc-link">試しに引数 11 個のハンドラを作ってみる</a>
+                        </li>
+                        
+                        <li>
+                            <a href="http://127.0.0.1:1111/flex-handler/#factory-asyncfactory-no-call-self-param-t-nituite" class="toc-link">Factory &#x2F; AsyncFactory の call(&amp;self, param: T) について</a>
+                        </li>
+                        
+                    </ul>
+                    
+                </li>
+                
+                <li>
+                    <a href="http://127.0.0.1:1111/flex-handler/#yi-wen-2-nazeshun-fan-woru-reti-etemodong-ku" class="toc-link">疑問 2: なぜ順番を入れ替えても動く？</a>
+                    
+                    <ul>
+                        
+                        <li>
+                            <a href="http://127.0.0.1:1111/flex-handler/#fromrequest-rikuesutoqing-bao-karahandorayin-shu-nozhi-wochou-chu-suru" class="toc-link">FromRequest: リクエスト情報からハンドラ引数の値を抽出する</a>
+                        </li>
+                        
+                        <li>
+                            <a href="http://127.0.0.1:1111/flex-handler/#extensions-typeid-wokinisita-hashmap" class="toc-link">Extensions: TypeId をキーにした HashMap</a>
+                        </li>
+                        
+                        <li>
+                            <a href="http://127.0.0.1:1111/flex-handler/#ru-rezi-tapurumo-fromrequest-toreitowoshi-zhuang-siteiru" class="toc-link">入れ子: タプルも FromRequest トレイトを実装している</a>
+                        </li>
+                        
+                    </ul>
+                    
+                </li>
+                
+                <li>
+                    <a href="http://127.0.0.1:1111/flex-handler/#yi-wen-3-xing-tietukuhadounatutenno" class="toc-link">疑問 3: 型チェックはどうなってんの？</a>
+                    
+                    <ul>
+                        
+                        <li>
+                            <a href="http://127.0.0.1:1111/flex-handler/#tong-zixing-noapurikesiyondetahafu-shu-bao-chi-dekinai" class="toc-link">同じ型のアプリケーションデータは複数保持できない</a>
+                        </li>
+                        
+                        <li>
+                            <a href="http://127.0.0.1:1111/flex-handler/#data-dege-na-sitenaixing-woyin-shu-niqu-ruhandoraguan-shu-demokonpairutong-ru" class="toc-link">data() で格納してない型を引数に取るハンドラ関数でもコンパイル通る</a>
+                        </li>
+                        
+                    </ul>
+                    
+                </li>
+                
+                <li>
+                    <a href="http://127.0.0.1:1111/flex-handler/#sanpurukodo" class="toc-link">サンプルコード</a>
+                    
+                    <ul>
+                        
+                        <li>
+                            <a href="http://127.0.0.1:1111/flex-handler/#handorading-yi" class="toc-link">ハンドラ定義</a>
+                        </li>
+                        
+                        <li>
+                            <a href="http://127.0.0.1:1111/flex-handler/#hu-bichu-si" class="toc-link">呼び出し</a>
+                        </li>
+                        
+                        <li>
+                            <a href="http://127.0.0.1:1111/flex-handler/#shi-zhuang" class="toc-link">実装</a>
+                        </li>
+                        
+                    </ul>
+                    
+                </li>
+                
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+<article class="post">
+    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;flex-handler&#x2F;">actix-webの柔軟なリクエストハンドラの仕組み</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2019-08-12</span>
+            
+        </div>
+    </header>
+
+    <div class="post-content">
+      <h2 id="kitukake">きっかけ</h2>
+<p>業務で Rust を使っていこうということになったので、Rust を勉強しながら何か Web アプリでも作ってみようと思って <a href="https://actix.rs/">actix-web</a> を触り始めた。サンプルコードをいじっていて気になったのはリクエストハンドラの引数の柔軟さで、まるでスクリプト言語のように扱える。</p>
+<p>例えば以下は <code>http://localhost:8080/hoge</code> にリクエストを受けると path 部分である <code>/hoge</code> をレスポンスとして返す。</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">index</span><span style="color:#c0c5ce;">(
+    </span><span style="color:#bf616a;">req</span><span style="color:#c0c5ce;">: HttpRequest,
+) -&gt; impl IntoFuture&lt;Item = String, Error = Error&gt; {
+    Ok(String::from(req.</span><span style="color:#96b5b4;">path</span><span style="color:#c0c5ce;">()))
+}
+
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">main</span><span style="color:#c0c5ce;">() -&gt; std::io::Result&lt;()&gt; {
+    HttpServer::new(|| {
+        App::new()
+            .</span><span style="color:#96b5b4;">default_service</span><span style="color:#c0c5ce;">(web::route().</span><span style="color:#96b5b4;">to_async</span><span style="color:#c0c5ce;">(index))
+    })
+    .</span><span style="color:#96b5b4;">bind</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">127.0.0.1:8080</span><span style="color:#c0c5ce;">&quot;)?
+    .</span><span style="color:#96b5b4;">run</span><span style="color:#c0c5ce;">()
+}
+</span></pre>
+<p>リクエストハンドラに何かデータ（普通はアプリケーションの状態など）を渡すこともできる。この例だと <code>http://localhost:8080/spacecat</code> にアクセスすると <code>http://www.example.com/spacecat</code> が表示される。</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">index</span><span style="color:#c0c5ce;">(
+    </span><span style="color:#bf616a;">req</span><span style="color:#c0c5ce;">: HttpRequest,
+    </span><span style="color:#bf616a;">prefix</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+) -&gt; impl IntoFuture&lt;Item = String, Error = Error&gt; {
+    Ok(format!(&quot;</span><span style="color:#d08770;">{}{}</span><span style="color:#c0c5ce;">&quot;, prefix, req.</span><span style="color:#96b5b4;">path</span><span style="color:#c0c5ce;">()))
+}
+
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">main</span><span style="color:#c0c5ce;">() -&gt; std::io::Result&lt;()&gt; {
+    HttpServer::new(|| {
+        App::new()
+            .</span><span style="color:#96b5b4;">data</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">http://www.example.com</span><span style="color:#c0c5ce;">&quot;)
+            .</span><span style="color:#96b5b4;">default_service</span><span style="color:#c0c5ce;">(web::route().</span><span style="color:#96b5b4;">to_async</span><span style="color:#c0c5ce;">(index))
+    })
+    .</span><span style="color:#96b5b4;">bind</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">127.0.0.1:8080</span><span style="color:#c0c5ce;">&quot;)?
+    .</span><span style="color:#96b5b4;">run</span><span style="color:#c0c5ce;">()
+}
+</span></pre>
+<p>ここで「どこまで柔軟性があるんだろうか？」と思って、試しにリクエストハンドラの引数の順番を入れ替えてみた。</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">index</span><span style="color:#c0c5ce;">(
+    </span><span style="color:#bf616a;">prefix</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+    </span><span style="color:#bf616a;">req</span><span style="color:#c0c5ce;">: HttpRequest,
+) -&gt; impl IntoFuture&lt;Item = String, Error = Error&gt; {
+    Ok(format!(&quot;</span><span style="color:#d08770;">{}{}</span><span style="color:#c0c5ce;">&quot;, prefix, req.</span><span style="color:#96b5b4;">path</span><span style="color:#c0c5ce;">()))
+}
+</span></pre>
+<p><strong>これ、ちゃんと動いてしまう。</strong></p>
+<p>Rust のようなガチガチに検証するタイプの言語でこの柔軟性を一体どうやって実現しているんだろう・・・？ と思ったのがきっかけ。</p>
+<p id="zola-continue-reading"><a name="continue-reading"></a></p>
+<h2 id="yi-wen">疑問</h2>
+<p>謎な部分を分解すると以下になる。</p>
+<ul>
+<li>可変長引数のリクエストハンドラはどうやって実現している？</li>
+<li>なぜ順番を入れ替えても動く？</li>
+<li>型チェックはどうなってんの？</li>
+</ul>
+<h2 id="tl-dr">TL;DR</h2>
+<p>忙しい人のために要約すると、</p>
+<ul>
+<li>0 個から 10 個の引数を取る関数にハンドラ用のトレイトを実装（<code>factory_tuple!</code> マクロ）</li>
+<li>タプルで受け取った引数を、ハンドラ呼び出し時にフラットに展開</li>
+<li>ハンドラ引数の型情報に基づいて呼び出し用のタプルを実行時に生成（<code>tuple_from_req!</code> マクロ）</li>
+</ul>
+<p>という感じ（3 行で説明するの厳しい・・・）。忙しいけどコードは読める人向けに雰囲気が伝わるサンプルコードを作ってみた。</p>
+<p><a href="http://127.0.0.1:1111/flex-handler/">flex_handler: 柔軟なシグネチャを持つ関数の呼び出しサンプル</a></p>
+<p>以下、暇な人向けの解説。</p>
+<h2 id="yi-wen-1-ke-bian-chang-yin-shu-norikuesutohandorahadouyatuteshi-xian-siteiru">疑問 1: 可変長引数のリクエストハンドラはどうやって実現している？</h2>
+<p>リクエストハンドラを設定する <a href="https://github.com/actix/actix-web/blob/master/src/resource.rs#L220"><code>to()</code></a> と <a href="https://github.com/actix/actix-web/blob/master/src/resource.rs#L254"><code>to_async()</code></a> の引数を見ると、それぞれ <a href="https://github.com/actix/actix-web/blob/master/src/handler.rs#L15"><code>Factory&lt;T, R&gt;</code></a> と <a href="https://github.com/actix/actix-web/blob/master/src/handler.rs#L123"><code>AsyncFactory&lt;T, R&gt;</code></a> がトレイト境界として指定されている。ただ、このトレイトが実装されている型を探しても、引数 0 個の関数 <code>Fn() -&gt; R + Clone</code> への実装しか出てこない。いきなり出鼻をくじかれた感じだ。</p>
+<h3 id="taneakasi">タネあかし</h3>
+<p>そんなバカな、ということで <a href="https://github.com/actix/actix-web/blob/master/src/handler.rs"><code>handler.rs</code></a> を見てみると <a href="https://github.com/actix/actix-web/blob/master/src/handler.rs#L375"><code>factory_tuple!</code></a> というマクロ定義があり、引数 1 個から 10 個までの関数に対して <code>Factory</code> と <code>AsyncFactory</code> それぞれの実装が<a href="https://github.com/actix/actix-web/blob/master/src/handler.rs#L401-L410">マクロによって生成</a>されていた。</p>
+<p>例えば以下はマクロによって生成された「引数が 3 個で <code>Responder</code> を返す関数」をハンドラとして受け入れるようにする <code>Factory</code> トレイトの実装である。</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">impl </span><span style="color:#c0c5ce;">&lt;Func, A, B, C, Res&gt; Factory&lt;(A, B, C), Res&gt; </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">Func
+</span><span style="color:#b48ead;">where</span><span style="color:#c0c5ce;">
+    Func: Fn(A, B, C) -&gt; Res + Clone,
+    Res: Responder,
+{
+    </span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">call</span><span style="color:#c0c5ce;">(&amp;</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">param</span><span style="color:#c0c5ce;">: (</span><span style="color:#bf616a;">A</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">B</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">C</span><span style="color:#c0c5ce;">)) -&gt; Res {
+        (</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">)(param.</span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">, param.</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">, param.</span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">)
+    }
+}
+</span></pre>
+<p>同様に以下は <code>AsyncFactory</code> トレイトの実装。</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">impl </span><span style="color:#c0c5ce;">&lt;Func, A, B, C, Res&gt; AsyncFactory&lt;(A, B, C), Res&gt; </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">Func
+</span><span style="color:#b48ead;">where</span><span style="color:#c0c5ce;">
+    Func: Fn(A, B, C) -&gt; Res + Clone + </span><span style="color:#b48ead;">&#39;static</span><span style="color:#c0c5ce;">,
+    Res: IntoFuture,
+    </span><span style="color:#b48ead;">Res::</span><span style="color:#c0c5ce;">Item: Responder,
+    </span><span style="color:#b48ead;">Res::</span><span style="color:#c0c5ce;">Error: Into&lt;Error&gt;,
+{
+    </span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">call</span><span style="color:#c0c5ce;">(&amp;</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">param</span><span style="color:#c0c5ce;">: (</span><span style="color:#bf616a;">A</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">B</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">C</span><span style="color:#c0c5ce;">)) -&gt; Res {
+        (</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">)(param.</span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">, param.</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">, param.</span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">)
+    }
+}
+</span></pre>
+<p>Rust には現時点では可変長引数はないのでマクロによる力技に頼るしか無い。</p>
+<h3 id="shi-siniyin-shu-11-ge-nohandorawozuo-tutemiru">試しに引数 11 個のハンドラを作ってみる</h3>
+<p>引数 10 個はコンパイル通る。</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">forward</span><span style="color:#c0c5ce;">(
+    </span><span style="color:#bf616a;">req</span><span style="color:#c0c5ce;">: HttpRequest,
+    </span><span style="color:#bf616a;">payload</span><span style="color:#c0c5ce;">: web::Payload,
+    </span><span style="color:#bf616a;">client</span><span style="color:#c0c5ce;">: web::Data&lt;Client&gt;,
+    </span><span style="color:#bf616a;">ignore4</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+    </span><span style="color:#bf616a;">ignore5</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+    </span><span style="color:#bf616a;">ignore6</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+    </span><span style="color:#bf616a;">ignore7</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+    </span><span style="color:#bf616a;">ignore8</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+    </span><span style="color:#bf616a;">ignore9</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+    </span><span style="color:#bf616a;">ignore10</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+) -&gt; impl Future&lt;Item = HttpResponse, Error = Error&gt; {
+</span></pre>
+<p>引数 11 個はコンパイル通らない。</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">forward</span><span style="color:#c0c5ce;">(
+    </span><span style="color:#bf616a;">req</span><span style="color:#c0c5ce;">: HttpRequest,
+    </span><span style="color:#bf616a;">payload</span><span style="color:#c0c5ce;">: web::Payload,
+    </span><span style="color:#bf616a;">client</span><span style="color:#c0c5ce;">: web::Data&lt;Client&gt;,
+    </span><span style="color:#bf616a;">ignore4</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+    </span><span style="color:#bf616a;">ignore5</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+    </span><span style="color:#bf616a;">ignore6</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+    </span><span style="color:#bf616a;">ignore7</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+    </span><span style="color:#bf616a;">ignore8</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+    </span><span style="color:#bf616a;">ignore9</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+    </span><span style="color:#bf616a;">ignore10</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+    </span><span style="color:#bf616a;">ignore11</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+) -&gt; impl Future&lt;Item = HttpResponse, Error = Error&gt; {
+</span></pre><h3 id="factory-asyncfactory-no-call-self-param-t-nituite"><code>Factory</code> / <code>AsyncFactory</code> の <code>call(&amp;self, param: T)</code> について</h3>
+<p>前述の <code>factory_tuple!</code> マクロによって生成される <code>Factory</code> / <code>AsyncFactory</code> トレイトの実装にはいくつか重要なポイントがある。</p>
+<p>1 つ目はフレームワーク内の規約として、ハンドラを関数として普通に呼び出す代わりに <code>Factory</code> / <code>AsyncFactory</code> トレイトの <code>call()</code> メソッドを呼び出すようにし、さらに <code>call()</code> メソッドの引数をたった１つの <code>param: T</code> (<code>T</code>は型パラメータ) のみした点。この規約を導入することでハンドラ関数の引数がいくつだろうと呼び出し側は気にする必要がなくなる。</p>
+<p>もう 1 つは <code>param: T</code> の実際の型としてタプルを使うことで、<code>call()</code> メソッド呼び出し時にいったんタプルに集約しつつも、要素の型と並び順を保ち、ハンドラ関数の呼び出し時にはタプルを関数引数に展開している部分。</p>
+<p>さきほどの 3 引数の <code>Factory</code> トレイト実装をもう一度見てみる。</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">impl </span><span style="color:#c0c5ce;">&lt;Func, A, B, C, Res&gt; Factory&lt;(A, B, C), Res&gt; </span><span style="color:#b48ead;">for </span><span style="color:#c0c5ce;">Func
+</span><span style="color:#b48ead;">where</span><span style="color:#c0c5ce;">
+    Func: Fn(A, B, C) -&gt; Res + Clone,
+    Res: Responder,
+{
+    </span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">call</span><span style="color:#c0c5ce;">(&amp;</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">param</span><span style="color:#c0c5ce;">: (</span><span style="color:#bf616a;">A</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">B</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">C</span><span style="color:#c0c5ce;">)) -&gt; Res {
+        (</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">)(param.</span><span style="color:#d08770;">0</span><span style="color:#c0c5ce;">, param.</span><span style="color:#d08770;">1</span><span style="color:#c0c5ce;">, param.</span><span style="color:#d08770;">2</span><span style="color:#c0c5ce;">)
+    }
+}
+</span></pre>
+<p>注目すべきは <code>T = (A, B, C)</code> でのタプル型を指定し、要素の型と関数の引数の型と並び順が一致するように <code>Fn(A, B, C) -&gt; Res + Clone</code> というトレイト境界を定めているところ。</p>
+<h2 id="yi-wen-2-nazeshun-fan-woru-reti-etemodong-ku">疑問 2: なぜ順番を入れ替えても動く？</h2>
+<p>次は一番謎な引数の順番入れ替えについて。定義で型パラメータが使われているから順番を入れ替えてもコンパイルが通るというのはなんとなくわかるけど、実際に動いてしまうのは謎すぎる。</p>
+<p>まわりの Rust に詳しそうな人に聞いてみても言語的にそういう仕組みはなさそう、ということで詳しく調べることにした。最初ヒントになったのは同僚の <a href="https://twitter.com/fnwiya">@fnwiya</a> から教えてもらった <a href="https://actix.rs/docs/extractors/">Extractors</a> という仕組み。</p>
+<p>ざっくり言えば、さまざまなリクエスト情報（パス情報、クエリ文字列、POST/PUT データ、任意のアプリケーションデータなど）を、表現（例えば POST/PUT データだけでも <code>Payload (Stream)</code>, <code>String</code>, <code>Bytes</code>, <code>JSON</code>）含めて自由にアクセスするための枠組み。ほとんどの Web フレームワークではリクエストハンドラの第１引数として <code>req: Request</code> が与えられるので、リファレンス片手にネストされた構造をたどって・・・となりがちだけど、ハンドラ関数を定義するだけで欲しいデータにアクセスできるのは魔法みたいな開発体験。</p>
+<p>「なぜ順番入れ替えできるの？」→「Extractors 使ってるから ( ｰ`д ｰ ´)ｷﾘｯ」では済まされないので仕組みを見ていくことにする。</p>
+<h3 id="fromrequest-rikuesutoqing-bao-karahandorayin-shu-nozhi-wochou-chu-suru"><code>FromRequest</code>: リクエスト情報からハンドラ引数の値を抽出する</h3>
+<p>ハンドラ関数の引数に何でも指定できてしまうかのような雰囲気があるが、もちろん制約はある。それは引数の型はすべて <a href="https://github.com/actix/actix-web/blob/master/src/extract.rs#L13"><code>FromRequest</code> トレイト</a> を実装している必要がある。<code>FromRequest</code> トレイトの役割はたったひとつで「型、<code>HttpRequest</code>、<code>Payload</code> から値を抽出する」。そのための関数が <code>from_request(req: &amp;HttpRequest, payload: &amp;mut Payload)</code> である。後述するが、この関数が関連関数として定義されているのが重要である。</p>
+<p>例えば本記事冒頭で示した <code>req: HttpRequest</code> のみを引数に取るハンドラ関数であれば <code>from_request()</code> 関数の引数にまんま <code>HttpRequest</code> が含まれているので、そのまま渡せばよさそう、と想像できる。POST/PUT データがさまざまな形態でアクセスできるのも <code>Payload (Stream)</code> を加工することで実現している。</p>
+<h3 id="extensions-typeid-wokinisita-hashmap"><code>Extensions</code>: <code>TypeId</code> をキーにした <code>HashMap</code></h3>
+<p>次に疑問に思うのは任意のアプリケーションデータを受け取れる部分。これは <code>data()</code> メソッドで設定した値を <code>Extensions</code> という <code>TypeId</code> (型に割り振られた一意の ID) をキーにした <code>HashMap</code> のデータ構造に保持しておいて、 <code>HttpRequest</code> の <code>get_app_data()</code> メソッドからアクセスできる。<code>data()</code> メソッドはタプル構造体の <a href="https://github.com/actix/actix-web/blob/master/src/data.rs#L64"><code>Data&lt;T&gt;</code></a> でラップしてから <code>Extensions</code> 構造体に値を突っ込むので、 <code>FromRequest</code> トレイトが実装されている型は <code>Data&lt;T&gt;</code> で、ハンドラ関数の引数として指定できる型は <code>Data&lt;&amp;str&gt;</code> とか <code>Data&lt;MyData&gt;</code> (ユーザー定義の構造体も OK) のように <code>Data&lt;T&gt;</code> に型パラメータを与えたものになる。</p>
+<p>これでアプリケーションデータについても <code>from_request()</code> 関数で <code>HttpRequest</code> から値を抽出することができることがわかった。</p>
+<h3 id="ru-rezi-tapurumo-fromrequest-toreitowoshi-zhuang-siteiru">入れ子: タプルも <code>FromRequest</code> トレイトを実装している</h3>
+<p>ここまでの話で、ハンドラ関数の呼び出しには同じ型で同じ並びのタプルが必要なこと、そして <code>FromRequest</code> トレイトによって引数の値をリクエスト情報から抽出できる仕組みを知った。あとはこれらの要素をつないで「引数の順番を入れ替えても動く」ようにする。</p>
+<p>以下は <a href="https://github.com/actix/actix-web/blob/master/src/extract.rs#L194"><code>tuple_from_req!</code> マクロ</a> が生成した、３要素タプル <code>(A, B, C)</code> への <code>FromRequest</code> トレイト実装である。</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">impl </span><span style="color:#c0c5ce;">&lt;A: FromRequest + </span><span style="color:#b48ead;">&#39;static</span><span style="color:#c0c5ce;">, B: FromRequest + </span><span style="color:#b48ead;">&#39;static</span><span style="color:#c0c5ce;">,
+      C: FromRequest + </span><span style="color:#b48ead;">&#39;static</span><span style="color:#c0c5ce;">&gt; FromRequest </span><span style="color:#b48ead;">for</span><span style="color:#c0c5ce;"> (A, B, C) {
+    </span><span style="color:#b48ead;">type </span><span style="color:#c0c5ce;">Error = Error;
+    </span><span style="color:#b48ead;">type </span><span style="color:#c0c5ce;">Future = TupleFromRequest3&lt;A, B, C&gt;;
+    </span><span style="color:#b48ead;">type </span><span style="color:#c0c5ce;">Config = (A::Config, B::Config, C::Config);
+
+    </span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">from_request</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">req</span><span style="color:#c0c5ce;">: &amp;HttpRequest, </span><span style="color:#bf616a;">payload</span><span style="color:#c0c5ce;">: &amp;</span><span style="color:#b48ead;">mut</span><span style="color:#c0c5ce;"> Payload) -&gt; </span><span style="color:#b48ead;">Self::</span><span style="color:#c0c5ce;">Future {
+        TupleFromRequest3{
+            items: &lt;(Option&lt;A&gt;, Option&lt;B&gt;, Option&lt;C&gt;)&gt;::default(),
+            futs: (A::from_request(req, payload).</span><span style="color:#96b5b4;">into_future</span><span style="color:#c0c5ce;">(),
+                   B::from_request(req, payload).</span><span style="color:#96b5b4;">into_future</span><span style="color:#c0c5ce;">(),
+                   C::from_request(req, payload).</span><span style="color:#96b5b4;">into_future</span><span style="color:#c0c5ce;">()),
+        }
+    }
+}
+</span></pre>
+<p>注目すべきはトレイト境界の <code>&lt;A: FromRequest + 'static, B: FromRequest + 'static, C: FromRequest + 'static&gt;</code> で、これは何を意味しているかというとタプルの要素も <code>FromRequest</code> トレイトを実装しているという制約である。この制約によってタプルに対して呼び出された <code>from_request()</code> 関数が、要素に対して再帰的に <code>from_request()</code> 関数を呼び出す形になって、すべての引数が解決される。</p>
+<p>もう 1 つ（しれっと書かれてるけど）重要なことは <code>A::from_request(req, payload).into_future()</code> という形で型パラメータだったはずの <code>A</code> がコード中で使用されている部分。これは <code>from_request()</code> が関連関数であることが重要である理由になる。</p>
+<p>ここでちょっと「引数の順番」について考えてみると、このコードは型パラメータが使われているので、 <code>A</code> や <code>B</code> が実際に何であるかは気にしておらず、 <code>from_request()</code> を呼び出せることだけが重要になっている。つまり、 <strong>ユーザーが定義したハンドラ関数の引数の個数と型とその並びに一致するタプルに <code>FromRequest</code> トレイト実装がコンパイル時にコード生成されることで「引数の順番の入れ替え」を実現していることになる。</strong></p>
+<p>一応最後まで説明すると、 <code>from_request()</code> の戻り値である <code>TupleFromRequest3&lt;A, B, C&gt;</code> 構造体には <code>Future</code> トレイトも実装されていて、 <code>poll()</code> メソッドの戻り値の型が <code>Poll&lt;(A, B, C), Error&gt;</code> となっていることから、最終的に <code>(A, B, C)</code> を得ることができる。</p>
+<h2 id="yi-wen-3-xing-tietukuhadounatutenno">疑問 3: 型チェックはどうなってんの？</h2>
+<p>まるでスクリプト言語という感じだったのでどこまで型チェックが効いているのか俄然興味が湧いてくる。ということでこの柔軟性のトレードオフとなっている型チェックの限界、仕組み上の制限について見ていく。</p>
+<h3 id="tong-zixing-noapurikesiyondetahafu-shu-bao-chi-dekinai">同じ型のアプリケーションデータは複数保持できない</h3>
+<p><code>TypeId</code> をキーにした <code>HashMap</code> のデータ構造という時点でこれはどうしょもない部分。試したところ、 <code>data(&quot;Foo&quot;)</code> と <code>data(&quot;Bar&quot;)</code> を呼び出して、ハンドラを <code>fn index(str1: web::Data&lt;&amp;str&gt;, str2: web::Data&lt;&amp;str&gt;)</code> にすると、どちらの引数にも <code>&quot;Foo&quot;</code> が入っていた。 <code>HashMap</code> の実装的には上書きされる気がしたけど、なぜそうならないのかは深追いしていない。</p>
+<p>回避策として <code>type Hoge = String</code> みたいなエイリアスだと <code>TypeId</code> が同一になって別々のデータとして格納できないので代わりに<a href="https://doc.rust-lang.org/rust-by-example/generics/new_types.html">New Type イディオム</a>を使えばよい。</p>
+<h3 id="data-dege-na-sitenaixing-woyin-shu-niqu-ruhandoraguan-shu-demokonpairutong-ru"><code>data()</code> で格納してない型を引数に取るハンドラ関数でもコンパイル通る</h3>
+<p>さすがにこれは現状の仕組みだと検出のしようがない。<code>Data&lt;T&gt;</code> に実装された <code>FromRequest</code> トレイトの <code>from_request()</code> 関数で <code>Extensions</code> から値を引き出すときに存在しないため <code>App data is not configured, to configure use App::data()</code> というエラーが発生する。</p>
+<p>でもこれ、 <code>data()</code> を呼び出すたびに幽霊型で型を保持していけるなら、実行時のコストはゼロのまま、受け入れるハンドラに制限かけることってできるような気がしないでもない。すんごいすんごい面倒そうだけど。ちなみに OCaml の線形代数ライブラリ <a href="https://github.com/akabe/slap">slap</a> は、ペアノ数のように次元数を型として表現することで、２つのベクトルが演算可能かどうかコンパイル時にわかるやつがある。コンパイル時チェックは夢もロマンもある。</p>
+<h2 id="sanpurukodo">サンプルコード</h2>
+<p>以上の仕組みの理解を深めるために、引数の数や順番を入れ替えてもいい感じに引数を fill して呼び出してくれるやつを作ってみた。仕組みがわかりやすいようにマクロなどは使っていないのと、上記で説明した部分とはかなり異なる部分もあるので注意。あくまで雰囲気を感じてもらえれば。</p>
+<h3 id="handorading-yi">ハンドラ定義</h3>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">handler0</span><span style="color:#c0c5ce;">() {
+    println!(&quot;</span><span style="color:#a3be8c;">handler[0]</span><span style="color:#c0c5ce;">&quot;);
+}
+
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">handler1</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">a</span><span style="color:#c0c5ce;">: &amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">) {
+    println!(&quot;</span><span style="color:#a3be8c;">handler[1]: </span><span style="color:#d08770;">{}</span><span style="color:#c0c5ce;">&quot;, a);
+}
+
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">handler1i</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">a</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">i32</span><span style="color:#c0c5ce;">) {
+    println!(&quot;</span><span style="color:#a3be8c;">handler[1i]: </span><span style="color:#d08770;">{}</span><span style="color:#c0c5ce;">&quot;, a);
+}
+
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">handler2</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">a</span><span style="color:#c0c5ce;">: &amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">b</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">i32</span><span style="color:#c0c5ce;">) {
+    println!(&quot;</span><span style="color:#a3be8c;">handler[2]: </span><span style="color:#d08770;">{}</span><span style="color:#a3be8c;">, </span><span style="color:#d08770;">{}</span><span style="color:#c0c5ce;">&quot;, a, b);
+}
+
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">handler2s</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">a</span><span style="color:#c0c5ce;">: </span><span style="color:#b48ead;">i32</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">b</span><span style="color:#c0c5ce;">: &amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">) {
+    println!(&quot;</span><span style="color:#a3be8c;">handler[2s]: </span><span style="color:#d08770;">{}</span><span style="color:#a3be8c;">, </span><span style="color:#d08770;">{}</span><span style="color:#c0c5ce;">&quot;, a, b);
+}
+</span></pre><h3 id="hu-bichu-si">呼び出し</h3>
+<p><code>Dispatcher</code> 構造体を作ってハンドラ関数を格納しておいて、 <code>run()</code> メソッドで呼ぶときに引数の代わりに <code>Extensions</code> を渡して、ハンドラが必要とするタプルの生成とディスパッチを行う。</p>
+<p><code>TypeId</code> をキーにした <code>HashMap</code>、今の自分にはハイレベルすぎて詰んだので、<code>actix-web</code> から拝借した <code>Extensions</code> 実装を使っている。</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">main</span><span style="color:#c0c5ce;">() {
+    env::set_var(&quot;</span><span style="color:#a3be8c;">RUST_LOG</span><span style="color:#c0c5ce;">&quot;, &quot;</span><span style="color:#a3be8c;">info</span><span style="color:#c0c5ce;">&quot;);
+    env_logger::init();
+
+    </span><span style="color:#b48ead;">let mut</span><span style="color:#c0c5ce;"> bag = Extensions::new();
+    bag.</span><span style="color:#96b5b4;">insert</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">Universe</span><span style="color:#c0c5ce;">&quot;);
+    bag.</span><span style="color:#96b5b4;">insert</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">42</span><span style="color:#c0c5ce;">);
+
+    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> d0 = Dispatcher::new(handler0);
+    d0.</span><span style="color:#96b5b4;">run</span><span style="color:#c0c5ce;">(&amp;bag);
+
+    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> d1 = Dispatcher::new(handler1);
+    d1.</span><span style="color:#96b5b4;">run</span><span style="color:#c0c5ce;">(&amp;bag);
+
+    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> d1i = Dispatcher::new(handler1i);
+    d1i.</span><span style="color:#96b5b4;">run</span><span style="color:#c0c5ce;">(&amp;bag);
+
+    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> d2 = Dispatcher::new(handler2);
+    d2.</span><span style="color:#96b5b4;">run</span><span style="color:#c0c5ce;">(&amp;bag);
+
+    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> d2s = Dispatcher::new(handler2s);
+    d2s.</span><span style="color:#96b5b4;">run</span><span style="color:#c0c5ce;">(&amp;bag);
+}
+</span></pre>
+<p>ここで <code>bag.insert(42);</code> の行をコメントアウトして実行すると、 <code>Extensions</code> から取得できずにエラーログを吐いて <code>panic!</code> する。</p>
+<h3 id="shi-zhuang">実装</h3>
+<p>わりと長くなったので Github に置くことにした。</p>
+
+    </div>
+
+    
+    
+
+    <div class="post-footer">
+        
+            
+                <div class="post-tags">
+                    
+                        <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;tags&#x2F;rust&#x2F;">#rust</a>
+                    
+                        <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;tags&#x2F;web&#x2F;">#web</a>
+                    
+                </div>
+            
+            
+                <div class="post-nav">
+                    
+                        <a class="previous" href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;about&#x2F;">‹ &#x2F;* @kuy *&#x2F;</a>
+                    
+                    
+                    
+                    
+                </div>
+            
+
+        
+
+    </div>
+
+    
+    
+</article>
+
+
+                </div>
+            </main>
+
+            
+            
+        </div>
+
+      
+          <script type="text/javascript" src="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;even.js" ></script>
+      
+    <script src="/livereload.js?port=1025&mindelay=10"></script></body>
+
+</html>

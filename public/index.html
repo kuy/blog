@@ -30,7 +30,7 @@
 
             <div id="mobile-navbar" class="mobile-navbar">
               <div class="mobile-header-logo">
-                <a href="/" class="logo">Even</a>
+                <a href="/" class="logo">&#x2F;* blog.endflow.net *&#x2F;</a>
               </div>
               <div class="mobile-navbar-icon icon-out">
                 <span></span>
@@ -41,12 +41,6 @@
 
             <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
               <ul class="mobile-menu-list">
-                
-                    <li class="mobile-menu-item">
-                        <a href="http:&#x2F;&#x2F;127.0.0.1:1111">
-                            Home
-                        </a>
-                    </li>
                 
                     <li class="mobile-menu-item">
                         <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;categories">
@@ -62,7 +56,7 @@
                 
                     <li class="mobile-menu-item">
                         <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;about">
-                            About
+                            @kuy
                         </a>
                     </li>
                 
@@ -70,15 +64,9 @@
             </nav>
 
             <header id="header">
-                <div class="logo"><a href="http:&#x2F;&#x2F;127.0.0.1:1111">Even</a></div>
+                <div class="logo"><a href="http:&#x2F;&#x2F;127.0.0.1:1111">&#x2F;* blog.endflow.net *&#x2F;</a></div>
                 <nav class="menu">
                     <ul>
-                        
-                            <li>
-                                <a href="http:&#x2F;&#x2F;127.0.0.1:1111">
-                                    Home
-                                </a>
-                            </li>
                         
                             <li>
                                 <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;categories">
@@ -94,7 +82,7 @@
                         
                             <li>
                                 <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;about">
-                                    About
+                                    @kuy
                                 </a>
                             </li>
                         
@@ -106,6 +94,98 @@
                 <div class="content" id="mobile-panel">
                     
                         <div class="posts">
+                            
+                                <article class="post">
+                                    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;flex-handler&#x2F;">actix-webの柔軟なリクエストハンドラの仕組み</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2019-08-12</span>
+            
+        </div>
+    </header>
+
+                                    <div class="post__summary">
+                                        <h2 id="kitukake">きっかけ</h2>
+<p>業務で Rust を使っていこうということになったので、Rust を勉強しながら何か Web アプリでも作ってみようと思って <a href="https://actix.rs/">actix-web</a> を触り始めた。サンプルコードをいじっていて気になったのはリクエストハンドラの引数の柔軟さで、まるでスクリプト言語のように扱える。</p>
+<p>例えば以下は <code>http://localhost:8080/hoge</code> にリクエストを受けると path 部分である <code>/hoge</code> をレスポンスとして返す。</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">index</span><span style="color:#c0c5ce;">(
+    </span><span style="color:#bf616a;">req</span><span style="color:#c0c5ce;">: HttpRequest,
+) -&gt; impl IntoFuture&lt;Item = String, Error = Error&gt; {
+    Ok(String::from(req.</span><span style="color:#96b5b4;">path</span><span style="color:#c0c5ce;">()))
+}
+
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">main</span><span style="color:#c0c5ce;">() -&gt; std::io::Result&lt;()&gt; {
+    HttpServer::new(|| {
+        App::new()
+            .</span><span style="color:#96b5b4;">default_service</span><span style="color:#c0c5ce;">(web::route().</span><span style="color:#96b5b4;">to_async</span><span style="color:#c0c5ce;">(index))
+    })
+    .</span><span style="color:#96b5b4;">bind</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">127.0.0.1:8080</span><span style="color:#c0c5ce;">&quot;)?
+    .</span><span style="color:#96b5b4;">run</span><span style="color:#c0c5ce;">()
+}
+</span></pre>
+<p>リクエストハンドラに何かデータ（普通はアプリケーションの状態など）を渡すこともできる。この例だと <code>http://localhost:8080/spacecat</code> にアクセスすると <code>http://www.example.com/spacecat</code> が表示される。</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">index</span><span style="color:#c0c5ce;">(
+    </span><span style="color:#bf616a;">req</span><span style="color:#c0c5ce;">: HttpRequest,
+    </span><span style="color:#bf616a;">prefix</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+) -&gt; impl IntoFuture&lt;Item = String, Error = Error&gt; {
+    Ok(format!(&quot;</span><span style="color:#d08770;">{}{}</span><span style="color:#c0c5ce;">&quot;, prefix, req.</span><span style="color:#96b5b4;">path</span><span style="color:#c0c5ce;">()))
+}
+
+</span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">main</span><span style="color:#c0c5ce;">() -&gt; std::io::Result&lt;()&gt; {
+    HttpServer::new(|| {
+        App::new()
+            .</span><span style="color:#96b5b4;">data</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">http://www.example.com</span><span style="color:#c0c5ce;">&quot;)
+            .</span><span style="color:#96b5b4;">default_service</span><span style="color:#c0c5ce;">(web::route().</span><span style="color:#96b5b4;">to_async</span><span style="color:#c0c5ce;">(index))
+    })
+    .</span><span style="color:#96b5b4;">bind</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">127.0.0.1:8080</span><span style="color:#c0c5ce;">&quot;)?
+    .</span><span style="color:#96b5b4;">run</span><span style="color:#c0c5ce;">()
+}
+</span></pre>
+<p>ここで「どこまで柔軟性があるんだろうか？」と思って、試しにリクエストハンドラの引数の順番を入れ替えてみた。</p>
+<pre style="background-color:#2b303b;">
+<span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">index</span><span style="color:#c0c5ce;">(
+    </span><span style="color:#bf616a;">prefix</span><span style="color:#c0c5ce;">: web::Data&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;,
+    </span><span style="color:#bf616a;">req</span><span style="color:#c0c5ce;">: HttpRequest,
+) -&gt; impl IntoFuture&lt;Item = String, Error = Error&gt; {
+    Ok(format!(&quot;</span><span style="color:#d08770;">{}{}</span><span style="color:#c0c5ce;">&quot;, prefix, req.</span><span style="color:#96b5b4;">path</span><span style="color:#c0c5ce;">()))
+}
+</span></pre>
+<p><strong>これ、ちゃんと動いてしまう。</strong></p>
+<p>Rust のようなガチガチに検証するタイプの言語でこの柔軟性を一体どうやって実現しているんだろう・・・？ と思ったのがきっかけ。</p>
+
+                                    </div>
+                                    <div class="read-more">
+                                        <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;flex-handler&#x2F;">Read more...</a>
+                                    </div>
+                                </article>
+                            
+                                <article class="post">
+                                    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;about&#x2F;">&#x2F;* @kuy *&#x2F;</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">1970-01-01</span>
+            
+        </div>
+    </header>
+
+                                    <div class="post__summary">
+                                        <p>プログラマ<br />
+<a href="https://twitter.com/kuy">@kuy</a> at Twitter<br />
+<a href="https://github.com/kuy">@kuy</a> at Github</p>
+
+                                    </div>
+                                    <div class="read-more">
+                                        <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;about&#x2F;">Read more...</a>
+                                    </div>
+                                </article>
                             
                         </div>
                         <nav class="pagination">
@@ -123,6 +203,6 @@
       
           <script type="text/javascript" src="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;even.js" ></script>
       
-    <script src="/livereload.js?port=1024&mindelay=10"></script></body>
+    <script src="/livereload.js?port=1025&mindelay=10"></script></body>
 
 </html>

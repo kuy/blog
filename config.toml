@@ -1,8 +1,8 @@
 # The URL the site will be built for
 base_url = "https://blog.endflow.net"
 
-# Used in RSS by default
 title = "blog.endflow.net"
+
 
 # Theme name to use
 theme = "even"
@@ -17,5 +17,15 @@ highlight_code = true
 # Whether to build a search index to be used later on by a JavaScript library
 build_search_index = true
 
+taxonomies = [
+  {name = "tags", rss = true},
+  {name = "categories", paginate_by = 10},
+]
+
 [extra]
-# Put all your custom variables here
+even_title = "/* blog.endflow.net */"
+even_menu = [
+    {url = "$BASE_URL/categories", name = "Categories"},
+    {url = "$BASE_URL/tags", name = "Tags"},
+    {url = "$BASE_URL/about", name = "@kuy"},
+]
