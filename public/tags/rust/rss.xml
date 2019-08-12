@@ -2,18 +2,18 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>blog.endflow.net</title>
-        <link>http%3A//127.0.0.1%3A1111</link>
+        <link>https%3A//kuy.github.io</link>
         <description></description>
         <generator>Zola</generator>
         <language>en</language>
-        <atom:link href="http%3A//127.0.0.1%3A1111/tags/rust/rss.xml" rel="self" type="application/rss+xml"/>
+        <atom:link href="https%3A//kuy.github.io/tags/rust/rss.xml" rel="self" type="application/rss+xml"/>
         <lastBuildDate>Mon, 12 Aug 2019 00:00:00 +0000</lastBuildDate>
         
             <item>
                 <title>actix-webの柔軟なリクエストハンドラの仕組み</title>
                 <pubDate>Mon, 12 Aug 2019 00:00:00 +0000</pubDate>
-                <link>http%3A//127.0.0.1%3A1111/flex-handler/</link>
-                <guid>http%3A//127.0.0.1%3A1111/flex-handler/</guid>
+                <link>https%3A//kuy.github.io/flex-handler/</link>
+                <guid>https%3A//kuy.github.io/flex-handler/</guid>
                 <description>&lt;h2 id=&quot;kitukake&quot;&gt;きっかけ&lt;&#x2F;h2&gt;
 &lt;p&gt;業務で Rust を使っていこうということになったので、Rust を勉強しながら何か Web アプリでも作ってみようと思って &lt;a href=&quot;https:&#x2F;&#x2F;actix.rs&#x2F;&quot;&gt;actix-web&lt;&#x2F;a&gt; を触り始めた。サンプルコードをいじっていて気になったのはリクエストハンドラの引数の柔軟さで、まるでスクリプト言語のように扱える。&lt;&#x2F;p&gt;
 &lt;p&gt;例えば以下は &lt;code&gt;http:&#x2F;&#x2F;localhost:8080&#x2F;hoge&lt;&#x2F;code&gt; にリクエストを受けると path 部分である &lt;code&gt;&#x2F;hoge&lt;&#x2F;code&gt; をレスポンスとして返す。&lt;&#x2F;p&gt;
@@ -63,199 +63,6 @@
 &lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;&lt;strong&gt;これ、ちゃんと動いてしまう。&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;Rust のようなガチガチに検証するタイプの言語でこの柔軟性を一体どうやって実現しているんだろう・・・？ と思ったのがきっかけ。&lt;&#x2F;p&gt;
-&lt;h2 id=&quot;yi-wen&quot;&gt;疑問&lt;&#x2F;h2&gt;
-&lt;p&gt;謎な部分を分解すると以下になる。&lt;&#x2F;p&gt;
-&lt;ul&gt;
-&lt;li&gt;可変長引数のリクエストハンドラはどうやって実現している？&lt;&#x2F;li&gt;
-&lt;li&gt;なぜ順番を入れ替えても動く？&lt;&#x2F;li&gt;
-&lt;li&gt;型チェックはどうなってんの？&lt;&#x2F;li&gt;
-&lt;&#x2F;ul&gt;
-&lt;h2 id=&quot;tl-dr&quot;&gt;TL;DR&lt;&#x2F;h2&gt;
-&lt;p&gt;忙しい人のために要約すると、&lt;&#x2F;p&gt;
-&lt;ul&gt;
-&lt;li&gt;0 個から 10 個の引数を取る関数にハンドラ用のトレイトを実装（&lt;code&gt;factory_tuple!&lt;&#x2F;code&gt; マクロ）&lt;&#x2F;li&gt;
-&lt;li&gt;タプルで受け取った引数を、ハンドラ呼び出し時にフラットに展開&lt;&#x2F;li&gt;
-&lt;li&gt;ハンドラ引数の型情報に基づいて呼び出し用のタプルを実行時に生成（&lt;code&gt;tuple_from_req!&lt;&#x2F;code&gt; マクロ）&lt;&#x2F;li&gt;
-&lt;&#x2F;ul&gt;
-&lt;p&gt;という感じ（3 行で説明するの厳しい・・・）。忙しいけどコードは読める人向けに雰囲気が伝わるサンプルコードを作ってみた。&lt;&#x2F;p&gt;
-&lt;p&gt;&lt;a href=&quot;http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;flex-handler&#x2F;&quot;&gt;flex_handler: 柔軟なシグネチャを持つ関数の呼び出しサンプル&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
-&lt;p&gt;以下、暇な人向けの解説。&lt;&#x2F;p&gt;
-&lt;h2 id=&quot;yi-wen-1-ke-bian-chang-yin-shu-norikuesutohandorahadouyatuteshi-xian-siteiru&quot;&gt;疑問 1: 可変長引数のリクエストハンドラはどうやって実現している？&lt;&#x2F;h2&gt;
-&lt;p&gt;リクエストハンドラを設定する &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;actix&#x2F;actix-web&#x2F;blob&#x2F;master&#x2F;src&#x2F;resource.rs#L220&quot;&gt;&lt;code&gt;to()&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; と &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;actix&#x2F;actix-web&#x2F;blob&#x2F;master&#x2F;src&#x2F;resource.rs#L254&quot;&gt;&lt;code&gt;to_async()&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; の引数を見ると、それぞれ &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;actix&#x2F;actix-web&#x2F;blob&#x2F;master&#x2F;src&#x2F;handler.rs#L15&quot;&gt;&lt;code&gt;Factory&amp;lt;T, R&amp;gt;&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; と &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;actix&#x2F;actix-web&#x2F;blob&#x2F;master&#x2F;src&#x2F;handler.rs#L123&quot;&gt;&lt;code&gt;AsyncFactory&amp;lt;T, R&amp;gt;&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; がトレイト境界として指定されている。ただ、このトレイトが実装されている型を探しても、引数 0 個の関数 &lt;code&gt;Fn() -&amp;gt; R + Clone&lt;&#x2F;code&gt; への実装しか出てこない。いきなり出鼻をくじかれた感じだ。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;taneakasi&quot;&gt;タネあかし&lt;&#x2F;h3&gt;
-&lt;p&gt;そんなバカな、ということで &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;actix&#x2F;actix-web&#x2F;blob&#x2F;master&#x2F;src&#x2F;handler.rs&quot;&gt;&lt;code&gt;handler.rs&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; を見てみると &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;actix&#x2F;actix-web&#x2F;blob&#x2F;master&#x2F;src&#x2F;handler.rs#L375&quot;&gt;&lt;code&gt;factory_tuple!&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; というマクロ定義があり、引数 1 個から 10 個までの関数に対して &lt;code&gt;Factory&lt;&#x2F;code&gt; と &lt;code&gt;AsyncFactory&lt;&#x2F;code&gt; それぞれの実装が&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;actix&#x2F;actix-web&#x2F;blob&#x2F;master&#x2F;src&#x2F;handler.rs#L401-L410&quot;&gt;マクロによって生成&lt;&#x2F;a&gt;されていた。&lt;&#x2F;p&gt;
-&lt;p&gt;例えば以下はマクロによって生成された「引数が 3 個で &lt;code&gt;Responder&lt;&#x2F;code&gt; を返す関数」をハンドラとして受け入れるようにする &lt;code&gt;Factory&lt;&#x2F;code&gt; トレイトの実装である。&lt;&#x2F;p&gt;
-&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
-&lt;span style=&quot;color:#b48ead;&quot;&gt;impl &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;lt;Func, A, B, C, Res&amp;gt; Factory&amp;lt;(A, B, C), Res&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;Func
-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;where&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;
-    Func: Fn(A, B, C) -&amp;gt; Res + Clone,
-    Res: Responder,
-{
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;call&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;param&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;A&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;B&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;C&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;)) -&amp;gt; Res {
-        (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;)(param.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;, param.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;, param.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;)
-    }
-}
-&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
-&lt;p&gt;同様に以下は &lt;code&gt;AsyncFactory&lt;&#x2F;code&gt; トレイトの実装。&lt;&#x2F;p&gt;
-&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
-&lt;span style=&quot;color:#b48ead;&quot;&gt;impl &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;lt;Func, A, B, C, Res&amp;gt; AsyncFactory&amp;lt;(A, B, C), Res&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;Func
-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;where&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;
-    Func: Fn(A, B, C) -&amp;gt; Res + Clone + &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;&amp;#39;static&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;,
-    Res: IntoFuture,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;Res::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;Item: Responder,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;Res::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;Error: Into&amp;lt;Error&amp;gt;,
-{
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;call&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;param&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;A&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;B&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;C&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;)) -&amp;gt; Res {
-        (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;)(param.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;, param.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;, param.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;)
-    }
-}
-&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
-&lt;p&gt;Rust には現時点では可変長引数はないのでマクロによる力技に頼るしか無い。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;shi-siniyin-shu-11-ge-nohandorawozuo-tutemiru&quot;&gt;試しに引数 11 個のハンドラを作ってみる&lt;&#x2F;h3&gt;
-&lt;p&gt;引数 10 個はコンパイル通る。&lt;&#x2F;p&gt;
-&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
-&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;forward&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;req&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: HttpRequest,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;payload&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Payload,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;client&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Data&amp;lt;Client&amp;gt;,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ignore4&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Data&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;gt;,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ignore5&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Data&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;gt;,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ignore6&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Data&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;gt;,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ignore7&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Data&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;gt;,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ignore8&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Data&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;gt;,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ignore9&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Data&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;gt;,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ignore10&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Data&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;gt;,
-) -&amp;gt; impl Future&amp;lt;Item = HttpResponse, Error = Error&amp;gt; {
-&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
-&lt;p&gt;引数 11 個はコンパイル通らない。&lt;&#x2F;p&gt;
-&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
-&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;forward&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;req&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: HttpRequest,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;payload&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Payload,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;client&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Data&amp;lt;Client&amp;gt;,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ignore4&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Data&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;gt;,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ignore5&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Data&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;gt;,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ignore6&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Data&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;gt;,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ignore7&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Data&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;gt;,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ignore8&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Data&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;gt;,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ignore9&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Data&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;gt;,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ignore10&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Data&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;gt;,
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ignore11&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: web::Data&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;gt;,
-) -&amp;gt; impl Future&amp;lt;Item = HttpResponse, Error = Error&amp;gt; {
-&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;&lt;h3 id=&quot;factory-asyncfactory-no-call-self-param-t-nituite&quot;&gt;&lt;code&gt;Factory&lt;&#x2F;code&gt; &#x2F; &lt;code&gt;AsyncFactory&lt;&#x2F;code&gt; の &lt;code&gt;call(&amp;amp;self, param: T)&lt;&#x2F;code&gt; について&lt;&#x2F;h3&gt;
-&lt;p&gt;前述の &lt;code&gt;factory_tuple!&lt;&#x2F;code&gt; マクロによって生成される &lt;code&gt;Factory&lt;&#x2F;code&gt; &#x2F; &lt;code&gt;AsyncFactory&lt;&#x2F;code&gt; トレイトの実装にはいくつか重要なポイントがある。&lt;&#x2F;p&gt;
-&lt;p&gt;1 つ目はフレームワーク内の規約として、ハンドラを関数として普通に呼び出す代わりに &lt;code&gt;Factory&lt;&#x2F;code&gt; &#x2F; &lt;code&gt;AsyncFactory&lt;&#x2F;code&gt; トレイトの &lt;code&gt;call()&lt;&#x2F;code&gt; メソッドを呼び出すようにし、さらに &lt;code&gt;call()&lt;&#x2F;code&gt; メソッドの引数をたった１つの &lt;code&gt;param: T&lt;&#x2F;code&gt; (&lt;code&gt;T&lt;&#x2F;code&gt;は型パラメータ) のみした点。この規約を導入することでハンドラ関数の引数がいくつだろうと呼び出し側は気にする必要がなくなる。&lt;&#x2F;p&gt;
-&lt;p&gt;もう 1 つは &lt;code&gt;param: T&lt;&#x2F;code&gt; の実際の型としてタプルを使うことで、&lt;code&gt;call()&lt;&#x2F;code&gt; メソッド呼び出し時にいったんタプルに集約しつつも、要素の型と並び順を保ち、ハンドラ関数の呼び出し時にはタプルを関数引数に展開している部分。&lt;&#x2F;p&gt;
-&lt;p&gt;さきほどの 3 引数の &lt;code&gt;Factory&lt;&#x2F;code&gt; トレイト実装をもう一度見てみる。&lt;&#x2F;p&gt;
-&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
-&lt;span style=&quot;color:#b48ead;&quot;&gt;impl &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;lt;Func, A, B, C, Res&amp;gt; Factory&amp;lt;(A, B, C), Res&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;Func
-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;where&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;
-    Func: Fn(A, B, C) -&amp;gt; Res + Clone,
-    Res: Responder,
-{
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;call&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;param&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;A&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;B&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;C&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;)) -&amp;gt; Res {
-        (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;)(param.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;, param.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;, param.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;)
-    }
-}
-&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
-&lt;p&gt;注目すべきは &lt;code&gt;T = (A, B, C)&lt;&#x2F;code&gt; でのタプル型を指定し、要素の型と関数の引数の型と並び順が一致するように &lt;code&gt;Fn(A, B, C) -&amp;gt; Res + Clone&lt;&#x2F;code&gt; というトレイト境界を定めているところ。&lt;&#x2F;p&gt;
-&lt;h2 id=&quot;yi-wen-2-nazeshun-fan-woru-reti-etemodong-ku&quot;&gt;疑問 2: なぜ順番を入れ替えても動く？&lt;&#x2F;h2&gt;
-&lt;p&gt;次は一番謎な引数の順番入れ替えについて。定義で型パラメータが使われているから順番を入れ替えてもコンパイルが通るというのはなんとなくわかるけど、実際に動いてしまうのは謎すぎる。&lt;&#x2F;p&gt;
-&lt;p&gt;まわりの Rust に詳しそうな人に聞いてみても言語的にそういう仕組みはなさそう、ということで詳しく調べることにした。最初ヒントになったのは同僚の &lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;fnwiya&quot;&gt;@fnwiya&lt;&#x2F;a&gt; から教えてもらった &lt;a href=&quot;https:&#x2F;&#x2F;actix.rs&#x2F;docs&#x2F;extractors&#x2F;&quot;&gt;Extractors&lt;&#x2F;a&gt; という仕組み。&lt;&#x2F;p&gt;
-&lt;p&gt;ざっくり言えば、さまざまなリクエスト情報（パス情報、クエリ文字列、POST&#x2F;PUT データ、任意のアプリケーションデータなど）を、表現（例えば POST&#x2F;PUT データだけでも &lt;code&gt;Payload (Stream)&lt;&#x2F;code&gt;, &lt;code&gt;String&lt;&#x2F;code&gt;, &lt;code&gt;Bytes&lt;&#x2F;code&gt;, &lt;code&gt;JSON&lt;&#x2F;code&gt;）含めて自由にアクセスするための枠組み。ほとんどの Web フレームワークではリクエストハンドラの第１引数として &lt;code&gt;req: Request&lt;&#x2F;code&gt; が与えられるので、リファレンス片手にネストされた構造をたどって・・・となりがちだけど、ハンドラ関数を定義するだけで欲しいデータにアクセスできるのは魔法みたいな開発体験。&lt;&#x2F;p&gt;
-&lt;p&gt;「なぜ順番入れ替えできるの？」→「Extractors 使ってるから ( ｰ&#96;д ｰ ´)ｷﾘｯ」では済まされないので仕組みを見ていくことにする。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;fromrequest-rikuesutoqing-bao-karahandorayin-shu-nozhi-wochou-chu-suru&quot;&gt;&lt;code&gt;FromRequest&lt;&#x2F;code&gt;: リクエスト情報からハンドラ引数の値を抽出する&lt;&#x2F;h3&gt;
-&lt;p&gt;ハンドラ関数の引数に何でも指定できてしまうかのような雰囲気があるが、もちろん制約はある。それは引数の型はすべて &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;actix&#x2F;actix-web&#x2F;blob&#x2F;master&#x2F;src&#x2F;extract.rs#L13&quot;&gt;&lt;code&gt;FromRequest&lt;&#x2F;code&gt; トレイト&lt;&#x2F;a&gt; を実装している必要がある。&lt;code&gt;FromRequest&lt;&#x2F;code&gt; トレイトの役割はたったひとつで「型、&lt;code&gt;HttpRequest&lt;&#x2F;code&gt;、&lt;code&gt;Payload&lt;&#x2F;code&gt; から値を抽出する」。そのための関数が &lt;code&gt;from_request(req: &amp;amp;HttpRequest, payload: &amp;amp;mut Payload)&lt;&#x2F;code&gt; である。後述するが、この関数が関連関数として定義されているのが重要である。&lt;&#x2F;p&gt;
-&lt;p&gt;例えば本記事冒頭で示した &lt;code&gt;req: HttpRequest&lt;&#x2F;code&gt; のみを引数に取るハンドラ関数であれば &lt;code&gt;from_request()&lt;&#x2F;code&gt; 関数の引数にまんま &lt;code&gt;HttpRequest&lt;&#x2F;code&gt; が含まれているので、そのまま渡せばよさそう、と想像できる。POST&#x2F;PUT データがさまざまな形態でアクセスできるのも &lt;code&gt;Payload (Stream)&lt;&#x2F;code&gt; を加工することで実現している。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;extensions-typeid-wokinisita-hashmap&quot;&gt;&lt;code&gt;Extensions&lt;&#x2F;code&gt;: &lt;code&gt;TypeId&lt;&#x2F;code&gt; をキーにした &lt;code&gt;HashMap&lt;&#x2F;code&gt;&lt;&#x2F;h3&gt;
-&lt;p&gt;次に疑問に思うのは任意のアプリケーションデータを受け取れる部分。これは &lt;code&gt;data()&lt;&#x2F;code&gt; メソッドで設定した値を &lt;code&gt;Extensions&lt;&#x2F;code&gt; という &lt;code&gt;TypeId&lt;&#x2F;code&gt; (型に割り振られた一意の ID) をキーにした &lt;code&gt;HashMap&lt;&#x2F;code&gt; のデータ構造に保持しておいて、 &lt;code&gt;HttpRequest&lt;&#x2F;code&gt; の &lt;code&gt;get_app_data()&lt;&#x2F;code&gt; メソッドからアクセスできる。&lt;code&gt;data()&lt;&#x2F;code&gt; メソッドはタプル構造体の &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;actix&#x2F;actix-web&#x2F;blob&#x2F;master&#x2F;src&#x2F;data.rs#L64&quot;&gt;&lt;code&gt;Data&amp;lt;T&amp;gt;&lt;&#x2F;code&gt;&lt;&#x2F;a&gt; でラップしてから &lt;code&gt;Extensions&lt;&#x2F;code&gt; 構造体に値を突っ込むので、 &lt;code&gt;FromRequest&lt;&#x2F;code&gt; トレイトが実装されている型は &lt;code&gt;Data&amp;lt;T&amp;gt;&lt;&#x2F;code&gt; で、ハンドラ関数の引数として指定できる型は &lt;code&gt;Data&amp;lt;&amp;amp;str&amp;gt;&lt;&#x2F;code&gt; とか &lt;code&gt;Data&amp;lt;MyData&amp;gt;&lt;&#x2F;code&gt; (ユーザー定義の構造体も OK) のように &lt;code&gt;Data&amp;lt;T&amp;gt;&lt;&#x2F;code&gt; に型パラメータを与えたものになる。&lt;&#x2F;p&gt;
-&lt;p&gt;これでアプリケーションデータについても &lt;code&gt;from_request()&lt;&#x2F;code&gt; 関数で &lt;code&gt;HttpRequest&lt;&#x2F;code&gt; から値を抽出することができることがわかった。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;ru-rezi-tapurumo-fromrequest-toreitowoshi-zhuang-siteiru&quot;&gt;入れ子: タプルも &lt;code&gt;FromRequest&lt;&#x2F;code&gt; トレイトを実装している&lt;&#x2F;h3&gt;
-&lt;p&gt;ここまでの話で、ハンドラ関数の呼び出しには同じ型で同じ並びのタプルが必要なこと、そして &lt;code&gt;FromRequest&lt;&#x2F;code&gt; トレイトによって引数の値をリクエスト情報から抽出できる仕組みを知った。あとはこれらの要素をつないで「引数の順番を入れ替えても動く」ようにする。&lt;&#x2F;p&gt;
-&lt;p&gt;以下は &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;actix&#x2F;actix-web&#x2F;blob&#x2F;master&#x2F;src&#x2F;extract.rs#L194&quot;&gt;&lt;code&gt;tuple_from_req!&lt;&#x2F;code&gt; マクロ&lt;&#x2F;a&gt; が生成した、３要素タプル &lt;code&gt;(A, B, C)&lt;&#x2F;code&gt; への &lt;code&gt;FromRequest&lt;&#x2F;code&gt; トレイト実装である。&lt;&#x2F;p&gt;
-&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
-&lt;span style=&quot;color:#b48ead;&quot;&gt;impl &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;lt;A: FromRequest + &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;&amp;#39;static&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;, B: FromRequest + &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;&amp;#39;static&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;,
-      C: FromRequest + &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;&amp;#39;static&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;gt; FromRequest &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;for&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; (A, B, C) {
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;type &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;Error = Error;
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;type &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;Future = TupleFromRequest3&amp;lt;A, B, C&amp;gt;;
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;type &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;Config = (A::Config, B::Config, C::Config);
-
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;from_request&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;req&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: &amp;amp;HttpRequest, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;payload&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;mut&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; Payload) -&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;Self::&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;Future {
-        TupleFromRequest3{
-            items: &amp;lt;(Option&amp;lt;A&amp;gt;, Option&amp;lt;B&amp;gt;, Option&amp;lt;C&amp;gt;)&amp;gt;::default(),
-            futs: (A::from_request(req, payload).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;into_future&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(),
-                   B::from_request(req, payload).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;into_future&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(),
-                   C::from_request(req, payload).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;into_future&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;()),
-        }
-    }
-}
-&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
-&lt;p&gt;注目すべきはトレイト境界の &lt;code&gt;&amp;lt;A: FromRequest + &#x27;static, B: FromRequest + &#x27;static, C: FromRequest + &#x27;static&amp;gt;&lt;&#x2F;code&gt; で、これは何を意味しているかというとタプルの要素も &lt;code&gt;FromRequest&lt;&#x2F;code&gt; トレイトを実装しているという制約である。この制約によってタプルに対して呼び出された &lt;code&gt;from_request()&lt;&#x2F;code&gt; 関数が、要素に対して再帰的に &lt;code&gt;from_request()&lt;&#x2F;code&gt; 関数を呼び出す形になって、すべての引数が解決される。&lt;&#x2F;p&gt;
-&lt;p&gt;もう 1 つ（しれっと書かれてるけど）重要なことは &lt;code&gt;A::from_request(req, payload).into_future()&lt;&#x2F;code&gt; という形で型パラメータだったはずの &lt;code&gt;A&lt;&#x2F;code&gt; がコード中で使用されている部分。これは &lt;code&gt;from_request()&lt;&#x2F;code&gt; が関連関数であることが重要である理由になる。&lt;&#x2F;p&gt;
-&lt;p&gt;ここでちょっと「引数の順番」について考えてみると、このコードは型パラメータが使われているので、 &lt;code&gt;A&lt;&#x2F;code&gt; や &lt;code&gt;B&lt;&#x2F;code&gt; が実際に何であるかは気にしておらず、 &lt;code&gt;from_request()&lt;&#x2F;code&gt; を呼び出せることだけが重要になっている。つまり、 &lt;strong&gt;ユーザーが定義したハンドラ関数の引数の個数と型とその並びに一致するタプルに &lt;code&gt;FromRequest&lt;&#x2F;code&gt; トレイト実装がコンパイル時にコード生成されることで「引数の順番の入れ替え」を実現していることになる。&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
-&lt;p&gt;一応最後まで説明すると、 &lt;code&gt;from_request()&lt;&#x2F;code&gt; の戻り値である &lt;code&gt;TupleFromRequest3&amp;lt;A, B, C&amp;gt;&lt;&#x2F;code&gt; 構造体には &lt;code&gt;Future&lt;&#x2F;code&gt; トレイトも実装されていて、 &lt;code&gt;poll()&lt;&#x2F;code&gt; メソッドの戻り値の型が &lt;code&gt;Poll&amp;lt;(A, B, C), Error&amp;gt;&lt;&#x2F;code&gt; となっていることから、最終的に &lt;code&gt;(A, B, C)&lt;&#x2F;code&gt; を得ることができる。&lt;&#x2F;p&gt;
-&lt;h2 id=&quot;yi-wen-3-xing-tietukuhadounatutenno&quot;&gt;疑問 3: 型チェックはどうなってんの？&lt;&#x2F;h2&gt;
-&lt;p&gt;まるでスクリプト言語という感じだったのでどこまで型チェックが効いているのか俄然興味が湧いてくる。ということでこの柔軟性のトレードオフとなっている型チェックの限界、仕組み上の制限について見ていく。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;tong-zixing-noapurikesiyondetahafu-shu-bao-chi-dekinai&quot;&gt;同じ型のアプリケーションデータは複数保持できない&lt;&#x2F;h3&gt;
-&lt;p&gt;&lt;code&gt;TypeId&lt;&#x2F;code&gt; をキーにした &lt;code&gt;HashMap&lt;&#x2F;code&gt; のデータ構造という時点でこれはどうしょもない部分。試したところ、 &lt;code&gt;data(&amp;quot;Foo&amp;quot;)&lt;&#x2F;code&gt; と &lt;code&gt;data(&amp;quot;Bar&amp;quot;)&lt;&#x2F;code&gt; を呼び出して、ハンドラを &lt;code&gt;fn index(str1: web::Data&amp;lt;&amp;amp;str&amp;gt;, str2: web::Data&amp;lt;&amp;amp;str&amp;gt;)&lt;&#x2F;code&gt; にすると、どちらの引数にも &lt;code&gt;&amp;quot;Foo&amp;quot;&lt;&#x2F;code&gt; が入っていた。 &lt;code&gt;HashMap&lt;&#x2F;code&gt; の実装的には上書きされる気がしたけど、なぜそうならないのかは深追いしていない。&lt;&#x2F;p&gt;
-&lt;p&gt;回避策として &lt;code&gt;type Hoge = String&lt;&#x2F;code&gt; みたいなエイリアスだと &lt;code&gt;TypeId&lt;&#x2F;code&gt; が同一になって別々のデータとして格納できないので代わりに&lt;a href=&quot;https:&#x2F;&#x2F;doc.rust-lang.org&#x2F;rust-by-example&#x2F;generics&#x2F;new_types.html&quot;&gt;New Type イディオム&lt;&#x2F;a&gt;を使えばよい。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;data-dege-na-sitenaixing-woyin-shu-niqu-ruhandoraguan-shu-demokonpairutong-ru&quot;&gt;&lt;code&gt;data()&lt;&#x2F;code&gt; で格納してない型を引数に取るハンドラ関数でもコンパイル通る&lt;&#x2F;h3&gt;
-&lt;p&gt;さすがにこれは現状の仕組みだと検出のしようがない。&lt;code&gt;Data&amp;lt;T&amp;gt;&lt;&#x2F;code&gt; に実装された &lt;code&gt;FromRequest&lt;&#x2F;code&gt; トレイトの &lt;code&gt;from_request()&lt;&#x2F;code&gt; 関数で &lt;code&gt;Extensions&lt;&#x2F;code&gt; から値を引き出すときに存在しないため &lt;code&gt;App data is not configured, to configure use App::data()&lt;&#x2F;code&gt; というエラーが発生する。&lt;&#x2F;p&gt;
-&lt;p&gt;でもこれ、 &lt;code&gt;data()&lt;&#x2F;code&gt; を呼び出すたびに幽霊型で型を保持していけるなら、実行時のコストはゼロのまま、受け入れるハンドラに制限かけることってできるような気がしないでもない。すんごいすんごい面倒そうだけど。ちなみに OCaml の線形代数ライブラリ &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;akabe&#x2F;slap&quot;&gt;slap&lt;&#x2F;a&gt; は、ペアノ数のように次元数を型として表現することで、２つのベクトルが演算可能かどうかコンパイル時にわかるやつがある。コンパイル時チェックは夢もロマンもある。&lt;&#x2F;p&gt;
-&lt;h2 id=&quot;sanpurukodo&quot;&gt;サンプルコード&lt;&#x2F;h2&gt;
-&lt;p&gt;以上の仕組みの理解を深めるために、引数の数や順番を入れ替えてもいい感じに引数を fill して呼び出してくれるやつを作ってみた。仕組みがわかりやすいようにマクロなどは使っていないのと、上記で説明した部分とはかなり異なる部分もあるので注意。あくまで雰囲気を感じてもらえれば。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;handorading-yi&quot;&gt;ハンドラ定義&lt;&#x2F;h3&gt;
-&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
-&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;handler0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;() {
-    println!(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;handler[0]&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;);
-}
-
-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;handler1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;) {
-    println!(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;handler[1]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;, a);
-}
-
-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;handler1i&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;i32&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;) {
-    println!(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;handler[1i]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;, a);
-}
-
-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;handler2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;b&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;i32&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;) {
-    println!(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;handler[2]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;, a, b);
-}
-
-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;handler2s&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;i32&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;b&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;) {
-    println!(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;handler[2s]: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;, a, b);
-}
-&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;&lt;h3 id=&quot;hu-bichu-si&quot;&gt;呼び出し&lt;&#x2F;h3&gt;
-&lt;p&gt;&lt;code&gt;Dispatcher&lt;&#x2F;code&gt; 構造体を作ってハンドラ関数を格納しておいて、 &lt;code&gt;run()&lt;&#x2F;code&gt; メソッドで呼ぶときに引数の代わりに &lt;code&gt;Extensions&lt;&#x2F;code&gt; を渡して、ハンドラが必要とするタプルの生成とディスパッチを行う。&lt;&#x2F;p&gt;
-&lt;p&gt;&lt;code&gt;TypeId&lt;&#x2F;code&gt; をキーにした &lt;code&gt;HashMap&lt;&#x2F;code&gt;、今の自分にはハイレベルすぎて詰んだので、&lt;code&gt;actix-web&lt;&#x2F;code&gt; から拝借した &lt;code&gt;Extensions&lt;&#x2F;code&gt; 実装を使っている。&lt;&#x2F;p&gt;
-&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
-&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;() {
-    env::set_var(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;RUST_LOG&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;, &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;info&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;);
-    env_logger::init();
-
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let mut&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; bag = Extensions::new();
-    bag.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;insert&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Universe&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;);
-    bag.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;insert&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;42&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;);
-
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; d0 = Dispatcher::new(handler0);
-    d0.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;run&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&amp;amp;bag);
-
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; d1 = Dispatcher::new(handler1);
-    d1.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;run&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&amp;amp;bag);
-
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; d1i = Dispatcher::new(handler1i);
-    d1i.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;run&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&amp;amp;bag);
-
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; d2 = Dispatcher::new(handler2);
-    d2.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;run&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&amp;amp;bag);
-
-    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; d2s = Dispatcher::new(handler2s);
-    d2s.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;run&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&amp;amp;bag);
-}
-&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
-&lt;p&gt;ここで &lt;code&gt;bag.insert(42);&lt;&#x2F;code&gt; の行をコメントアウトして実行すると、 &lt;code&gt;Extensions&lt;&#x2F;code&gt; から取得できずにエラーログを吐いて &lt;code&gt;panic!&lt;&#x2F;code&gt; する。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;shi-zhuang&quot;&gt;実装&lt;&#x2F;h3&gt;
-&lt;p&gt;わりと長くなったので Github に置くことにした。&lt;&#x2F;p&gt;
 </description>
             </item>
         

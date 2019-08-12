@@ -1,5 +1,6 @@
 # The URL the site will be built for
-base_url = "https://blog.endflow.net"
+# base_url = "https://blog.endflow.net"
+base_url = "https://kuy.github.io"
 
 title = "blog.endflow.net"
 

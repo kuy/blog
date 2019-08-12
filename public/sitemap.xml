@@ -2,56 +2,56 @@
 <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
     
         <url>
-            <loc>http%3A//127.0.0.1%3A1111/</loc>
+            <loc>https%3A//kuy.github.io/</loc>
             
         </url>
     
         <url>
-            <loc>http%3A//127.0.0.1%3A1111/about/</loc>
+            <loc>https%3A//kuy.github.io/about/</loc>
             
                 <lastmod>1970-01-01</lastmod>
             
         </url>
     
         <url>
-            <loc>http%3A//127.0.0.1%3A1111/categories/</loc>
+            <loc>https%3A//kuy.github.io/categories/</loc>
             
         </url>
     
         <url>
-            <loc>http%3A//127.0.0.1%3A1111/categories/programming/</loc>
+            <loc>https%3A//kuy.github.io/categories/programming/</loc>
             
         </url>
     
         <url>
-            <loc>http%3A//127.0.0.1%3A1111/categories/programming/page/1/</loc>
+            <loc>https%3A//kuy.github.io/categories/programming/page/1/</loc>
             
         </url>
     
         <url>
-            <loc>http%3A//127.0.0.1%3A1111/flex-handler/</loc>
+            <loc>https%3A//kuy.github.io/flex-handler/</loc>
             
                 <lastmod>2019-08-12</lastmod>
             
         </url>
     
         <url>
-            <loc>http%3A//127.0.0.1%3A1111/page/1/</loc>
+            <loc>https%3A//kuy.github.io/page/1/</loc>
             
         </url>
     
         <url>
-            <loc>http%3A//127.0.0.1%3A1111/tags/</loc>
+            <loc>https%3A//kuy.github.io/tags/</loc>
             
         </url>
     
         <url>
-            <loc>http%3A//127.0.0.1%3A1111/tags/rust/</loc>
+            <loc>https%3A//kuy.github.io/tags/rust/</loc>
             
         </url>
     
         <url>
-            <loc>http%3A//127.0.0.1%3A1111/tags/web/</loc>
+            <loc>https%3A//kuy.github.io/tags/web/</loc>
             
         </url>
     

@@ -90,7 +90,7 @@ Rust のようなガチガチに検証するタイプの言語でこの柔軟性
 
 という感じ（3 行で説明するの厳しい・・・）。忙しいけどコードは読める人向けに雰囲気が伝わるサンプルコードを作ってみた。
 
-[flex_handler: 柔軟なシグネチャを持つ関数の呼び出しサンプル]()
+[flex_handler](https://github.com/kuy/flex-handler/blob/master/src/main.rs): 柔軟なシグネチャを持つ関数の呼び出しサンプル
 
 以下、暇な人向けの解説。
 
@@ -330,3 +330,5 @@ fn main() {
 ### 実装
 
 わりと長くなったので Github に置くことにした。
+
+[flex_handler](https://github.com/kuy/flex-handler/blob/master/src/main.rs): 柔軟なシグネチャを持つ関数の呼び出しサンプル
