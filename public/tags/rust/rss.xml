@@ -7,7 +7,34 @@
         <generator>Zola</generator>
         <language>en</language>
         <atom:link href="https%3A//kuy.github.io/tags/rust/rss.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Mon, 12 Aug 2019 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Sat, 17 Aug 2019 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>中身を型で表現するコンテナを作ろうとした</title>
+                <pubDate>Sat, 17 Aug 2019 00:00:00 +0000</pubDate>
+                <link>https%3A//kuy.github.io/typed-basket/</link>
+                <guid>https%3A//kuy.github.io/typed-basket/</guid>
+                <description>&lt;h2 id=&quot;jie-guo&quot;&gt;結果&lt;&#x2F;h2&gt;
+&lt;p&gt;自分には思い通りのものを作ることはできなかった。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;yaritaikoto-yaritakatutakoto&quot;&gt;やりたいこと（やりたかったこと）&lt;&#x2F;h2&gt;
+&lt;p&gt;以下みたいなことを実現したい。&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;型をキーとした &lt;code&gt;HashMap&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;値を与えると格納される&lt;&#x2F;li&gt;
+&lt;li&gt;型を指定することで値を取り出せる&lt;&#x2F;li&gt;
+&lt;li&gt;保管していない型を指定した場合は &lt;strong&gt;コンパイルエラー&lt;&#x2F;strong&gt; が発生&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;pre style=&quot;background-color:#2b303b;&quot;&gt;
+&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt; bag = Basket::new();
+bag.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;set&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Universe&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;);
+bag.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;set&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;42&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;);
+
+println!(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;i32: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;, bag.get::&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;i32&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;gt;());   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; =&amp;gt; &amp;quot;i32: 42&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;println!(&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&amp;amp;str: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;quot;, bag.get::&amp;lt;&amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c0c5ce;&quot;&gt;&amp;gt;()); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; =&amp;gt; &amp;quot;&amp;amp;str: Universe&amp;quot;
+
+&#x2F;&#x2F; println!(&amp;quot;bool: {}&amp;quot;, bag.get::&amp;lt;bool&amp;gt;()); =&amp;gt; Compile Error!
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;</description>
+            </item>
         
             <item>
                 <title>actix-webの柔軟なリクエストハンドラの仕組み</title>
