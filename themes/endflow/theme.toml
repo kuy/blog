@@ -1,0 +1,24 @@
+name = "endflow"
+description = "A blog theme for endflow"
+license = "MIT"
+homepage = "https://github.com/kuy"
+min_version = "0.1.0"
+
+[extra]
+even_menu = [
+    {url = "$BASE_URL", name = "Home"},
+    {url = "$BASE_URL/categories", name = "Categories"},
+    {url = "$BASE_URL/tags", name = "Tags"},
+    {url = "$BASE_URL/about", name = "About"},
+]
+even_title = "endflow"
+
+[author]
+name = "Yuki Kodama"
+homepage = "https://kuy.github.io"
+repo = "https://github.com/kuy"
+
+[original]
+name = "Vincent Prouillet"
+homepage = "https://www.vincentprouillet.com"
+repo = "https://github.com/getzola/even"

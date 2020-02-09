@@ -17,7 +17,8 @@
       
 
       
-          <link rel="stylesheet" href="https:&#x2F;&#x2F;kuy.github.io&#x2F;site.css">
+          <link href="https://fonts.googleapis.com/css?family=Roboto:400,700|Source+Code+Pro&display=swap" rel="stylesheet">
+          <link rel="stylesheet" href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;site.css">
           
       
 
@@ -43,19 +44,19 @@
               <ul class="mobile-menu-list">
                 
                     <li class="mobile-menu-item">
-                        <a href="https:&#x2F;&#x2F;kuy.github.io&#x2F;categories">
+                        <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;categories">
                             Categories
                         </a>
                     </li>
                 
                     <li class="mobile-menu-item">
-                        <a href="https:&#x2F;&#x2F;kuy.github.io&#x2F;tags">
+                        <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;tags">
                             Tags
                         </a>
                     </li>
                 
                     <li class="mobile-menu-item">
-                        <a href="https:&#x2F;&#x2F;kuy.github.io&#x2F;about">
+                        <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;about">
                             @kuy
                         </a>
                     </li>
@@ -64,24 +65,24 @@
             </nav>
 
             <header id="header">
-                <div class="logo"><a href="https:&#x2F;&#x2F;kuy.github.io">&#x2F;* blog.endflow.net *&#x2F;</a></div>
+                <div class="logo"><a href="http:&#x2F;&#x2F;127.0.0.1:1111">&#x2F;* blog.endflow.net *&#x2F;</a></div>
                 <nav class="menu">
                     <ul>
                         
                             <li>
-                                <a href="https:&#x2F;&#x2F;kuy.github.io&#x2F;categories">
+                                <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;categories">
                                     Categories
                                 </a>
                             </li>
                         
                             <li>
-                                <a href="https:&#x2F;&#x2F;kuy.github.io&#x2F;tags">
+                                <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;tags">
                                     Tags
                                 </a>
                             </li>
                         
                             <li>
-                                <a href="https:&#x2F;&#x2F;kuy.github.io&#x2F;about">
+                                <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;about">
                                     @kuy
                                 </a>
                             </li>
@@ -102,22 +103,22 @@
             <ul>
                 
                 <li>
-                    <a href="https://kuy.github.io/typed-basket/#jie-guo" class="toc-link">結果</a>
+                    <a href="http://127.0.0.1:1111/typed-basket/#jie-guo" class="toc-link">結果</a>
                     
                 </li>
                 
                 <li>
-                    <a href="https://kuy.github.io/typed-basket/#yaritaikoto-yaritakatutakoto" class="toc-link">やりたいこと（やりたかったこと）</a>
+                    <a href="http://127.0.0.1:1111/typed-basket/#yaritaikoto-yaritakatutakoto" class="toc-link">やりたいこと（やりたかったこと）</a>
                     
                 </li>
                 
                 <li>
-                    <a href="https://kuy.github.io/typed-basket/#shi-xing-cuo-wu" class="toc-link">試行錯誤</a>
+                    <a href="http://127.0.0.1:1111/typed-basket/#shi-xing-cuo-wu" class="toc-link">試行錯誤</a>
                     
                 </li>
                 
                 <li>
-                    <a href="https://kuy.github.io/typed-basket/#dametupoi" class="toc-link">ダメっぽい</a>
+                    <a href="http://127.0.0.1:1111/typed-basket/#dametupoi" class="toc-link">ダメっぽい</a>
                     
                 </li>
                 
@@ -131,7 +132,7 @@
     
     <header class="post__header">
         <h1 class="post__title">
-            <a href="https:&#x2F;&#x2F;kuy.github.io&#x2F;typed-basket&#x2F;">中身を型で表現するコンテナを作ろうとした</a>
+            <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;typed-basket&#x2F;">中身を型で表現するコンテナを作ろうとした</a>
         </h1>
         <div class="post__meta">
             <span class="post__time">2019-08-17</span>
@@ -150,13 +151,13 @@
 <li>型を指定することで値を取り出せる</li>
 <li>保管していない型を指定した場合は <strong>コンパイルエラー</strong> が発生</li>
 </ul>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> bag = Basket::new();
-bag.</span><span style="color:#96b5b4;">set</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">Universe</span><span style="color:#c0c5ce;">&quot;);
-bag.</span><span style="color:#96b5b4;">set</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">42</span><span style="color:#c0c5ce;">);
+<pre style="background-color:#282828;">
+<span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> bag </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1aa;">Basket::new();
+bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;Universe&quot;</span><span style="color:#fdf4c1aa;">);
+bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;">(</span><span style="color:#d3869b;">42</span><span style="color:#fdf4c1aa;">);
 
-println!(&quot;</span><span style="color:#a3be8c;">i32: </span><span style="color:#d08770;">{}</span><span style="color:#c0c5ce;">&quot;, bag.get::&lt;</span><span style="color:#b48ead;">i32</span><span style="color:#c0c5ce;">&gt;());   </span><span style="color:#65737e;">// =&gt; &quot;i32: 42&quot;
-</span><span style="color:#c0c5ce;">println!(&quot;</span><span style="color:#a3be8c;">&amp;str: </span><span style="color:#d08770;">{}</span><span style="color:#c0c5ce;">&quot;, bag.get::&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;()); </span><span style="color:#65737e;">// =&gt; &quot;&amp;str: Universe&quot;
+</span><span style="color:#fabd2f;">println!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;i32: </span><span style="color:#fdf4c1;">{}</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1aa;">, bag.get::&lt;</span><span style="color:#fa5c4b;">i32</span><span style="color:#fdf4c1aa;">&gt;());   </span><span style="font-style:italic;color:#928374;">// =&gt; &quot;i32: 42&quot;
+</span><span style="color:#fabd2f;">println!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;&amp;str: </span><span style="color:#fdf4c1;">{}</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1aa;">, bag.get::&lt;</span><span style="color:#fe8019;">&amp;</span><span style="color:#fa5c4b;">str</span><span style="color:#fdf4c1aa;">&gt;()); </span><span style="font-style:italic;color:#928374;">// =&gt; &quot;&amp;str: Universe&quot;
 
 // println!(&quot;bool: {}&quot;, bag.get::&lt;bool&gt;()); =&gt; Compile Error!
 </span></pre><p id="zola-continue-reading"><a name="continue-reading"></a></p>
@@ -166,158 +167,158 @@ println!(&quot;</span><span style="color:#a3be8c;">i32: </span><span style="colo
 <h2 id="shi-xing-cuo-wu">試行錯誤</h2>
 <p>基本的なアイデアは簡単で、初期状態を <code>Basket&lt;()&gt;</code> 、<code>&amp;str</code> を格納した状態を <code>Basket&lt;(&amp;str,)&gt;</code> 、さらに <code>i32</code> を格納した状態を <code>Basket&lt;(&amp;str, i32)&gt;</code> という感じで <code>Basket&lt;T&gt;</code> の型パラメータを変えて、それぞれの型ごとに呼び出せるメソッドに制限をかければいい。型が変化するのは <code>set()</code> メソッドの呼び出し時なので、単純にその時点で格納しているデータを引き継ぎつつ、新しく格納する値の型を含めた新たなコンテナの型で <code>new()</code> すればいい。型パラメータを使わないと怒られるので <code>PhantomData</code> を使っている。 <code>HashMap</code> のデータを引き継ぐ部分は <code>Drain</code> を使ってみた。</p>
 <p>以下がとりあえず書いたコード。 <code>panic!</code> しまくってるけど気にしてはいけない。</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">pub struct </span><span style="color:#c0c5ce;">Basket&lt;T&gt; {
-    </span><span style="color:#bf616a;">items</span><span style="color:#c0c5ce;">: HashMap&lt;TypeId, Box&lt;dyn Any&gt;&gt;,
-    </span><span style="color:#bf616a;">_t</span><span style="color:#c0c5ce;">: PhantomData&lt;T&gt;,
+<pre style="background-color:#282828;">
+<span style="color:#fa5c4b;">pub struct </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;T&gt; {
+    </span><span style="color:#fdf4c1;">items</span><span style="color:#fdf4c1aa;">: HashMap&lt;TypeId, Box&lt;dyn Any&gt;&gt;,
+    </span><span style="color:#fdf4c1;">_t</span><span style="color:#fdf4c1aa;">: PhantomData&lt;T&gt;,
 }
 
-</span><span style="color:#b48ead;">impl </span><span style="color:#c0c5ce;">Basket&lt;()&gt; {
-    </span><span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">new</span><span style="color:#c0c5ce;">() -&gt; </span><span style="color:#b48ead;">Self </span><span style="color:#c0c5ce;">{
+</span><span style="color:#fa5c4b;">impl </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;()&gt; {
+    </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">new</span><span style="color:#fdf4c1aa;">() -&gt; </span><span style="color:#fa5c4b;">Self </span><span style="color:#fdf4c1aa;">{
         Basket {
             items: HashMap::new(),
             _t: PhantomData,
         }
     }
 
-    </span><span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">set</span><span style="color:#c0c5ce;">&lt;U: </span><span style="color:#b48ead;">&#39;static</span><span style="color:#c0c5ce;">&gt;(</span><span style="color:#b48ead;">mut </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">val</span><span style="color:#c0c5ce;">: U) -&gt; Basket&lt;(U,)&gt; {
-        </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.items.</span><span style="color:#96b5b4;">insert</span><span style="color:#c0c5ce;">(TypeId::of::&lt;U&gt;(), Box::new(val));
-        Basket::&lt;(U,)&gt;::new_with(</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.items.</span><span style="color:#96b5b4;">drain</span><span style="color:#c0c5ce;">())
+    </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">set</span><span style="color:#fdf4c1aa;">&lt;U: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt;(</span><span style="color:#fa5c4b;">mut </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">, </span><span style="color:#fdf4c1;">val</span><span style="color:#fdf4c1aa;">: U) -&gt; Basket&lt;(U,)&gt; {
+        </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">insert</span><span style="color:#fdf4c1aa;">(TypeId::of::&lt;U&gt;(), </span><span style="color:#fabd2f;">Box</span><span style="color:#fdf4c1aa;">::new(val));
+        Basket::&lt;(U,)&gt;::new_with(</span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">drain</span><span style="color:#fdf4c1aa;">())
     }
 }
 
-</span><span style="color:#b48ead;">impl</span><span style="color:#c0c5ce;">&lt;A: </span><span style="color:#b48ead;">&#39;static</span><span style="color:#c0c5ce;">&gt; Basket&lt;(A,)&gt; {
-    </span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">new_with</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">iter</span><span style="color:#c0c5ce;">: Drain&lt;TypeId, Box&lt;dyn Any&gt;&gt;) -&gt; </span><span style="color:#b48ead;">Self </span><span style="color:#c0c5ce;">{
+</span><span style="color:#fa5c4b;">impl</span><span style="color:#fdf4c1aa;">&lt;A: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt; </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;(A,)&gt; {
+    </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">new_with</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fdf4c1;">iter</span><span style="color:#fdf4c1aa;">: Drain&lt;TypeId, Box&lt;dyn Any&gt;&gt;) -&gt; </span><span style="color:#fa5c4b;">Self </span><span style="color:#fdf4c1aa;">{
         Basket {
             items: HashMap::from_iter(iter),
             _t: PhantomData,
         }
     }
 
-    </span><span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">set</span><span style="color:#c0c5ce;">&lt;U: </span><span style="color:#b48ead;">&#39;static</span><span style="color:#c0c5ce;">&gt;(</span><span style="color:#b48ead;">mut </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">, </span><span style="color:#bf616a;">val</span><span style="color:#c0c5ce;">: U) -&gt; Basket&lt;(A, U)&gt; {
-        </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.items.</span><span style="color:#96b5b4;">insert</span><span style="color:#c0c5ce;">(TypeId::of::&lt;U&gt;(), Box::new(val));
-        Basket::&lt;(A, U)&gt;::new_with(</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.items.</span><span style="color:#96b5b4;">drain</span><span style="color:#c0c5ce;">())
+    </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">set</span><span style="color:#fdf4c1aa;">&lt;U: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt;(</span><span style="color:#fa5c4b;">mut </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">, </span><span style="color:#fdf4c1;">val</span><span style="color:#fdf4c1aa;">: U) -&gt; Basket&lt;(A, U)&gt; {
+        </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">insert</span><span style="color:#fdf4c1aa;">(TypeId::of::&lt;U&gt;(), </span><span style="color:#fabd2f;">Box</span><span style="color:#fdf4c1aa;">::new(val));
+        Basket::&lt;(A, U)&gt;::new_with(</span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">drain</span><span style="color:#fdf4c1aa;">())
     }
 
-    </span><span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">get</span><span style="color:#c0c5ce;">&lt;U: </span><span style="color:#b48ead;">&#39;static</span><span style="color:#c0c5ce;">&gt;(&amp;</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">) -&gt; &amp;U {
-        </span><span style="color:#b48ead;">match </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.items.</span><span style="color:#96b5b4;">get</span><span style="color:#c0c5ce;">(&amp;TypeId::of::&lt;U&gt;()) {
-            Some(item) =&gt; </span><span style="color:#b48ead;">match</span><span style="color:#c0c5ce;"> item.downcast_ref::&lt;U&gt;() {
-                Some(item) =&gt; item,
-                _ =&gt; panic!()
+    </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">get</span><span style="color:#fdf4c1aa;">&lt;U: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt;(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">) -&gt; </span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">U {
+        </span><span style="color:#fa5c4b;">match </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">get</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">TypeId::of::&lt;U&gt;()) {
+            </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt; </span><span style="color:#fa5c4b;">match</span><span style="color:#fdf4c1aa;"> item.downcast_ref::&lt;U&gt;() {
+                </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> item,
+                </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
             },
-            _ =&gt; panic!()
+            </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
         }
     }
 }
 
-</span><span style="color:#b48ead;">impl</span><span style="color:#c0c5ce;">&lt;A: </span><span style="color:#b48ead;">&#39;static</span><span style="color:#c0c5ce;">, B: </span><span style="color:#b48ead;">&#39;static</span><span style="color:#c0c5ce;">&gt; Basket&lt;(A, B)&gt; {
-    </span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">new_with</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">iter</span><span style="color:#c0c5ce;">: Drain&lt;TypeId, Box&lt;dyn Any&gt;&gt;) -&gt; </span><span style="color:#b48ead;">Self </span><span style="color:#c0c5ce;">{
+</span><span style="color:#fa5c4b;">impl</span><span style="color:#fdf4c1aa;">&lt;A: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">, B: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt; </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;(A, B)&gt; {
+    </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">new_with</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fdf4c1;">iter</span><span style="color:#fdf4c1aa;">: Drain&lt;TypeId, Box&lt;dyn Any&gt;&gt;) -&gt; </span><span style="color:#fa5c4b;">Self </span><span style="color:#fdf4c1aa;">{
         Basket {
             items: HashMap::from_iter(iter),
             _t: PhantomData,
         }
     }
 
-    </span><span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">get</span><span style="color:#c0c5ce;">&lt;U: </span><span style="color:#b48ead;">&#39;static</span><span style="color:#c0c5ce;">&gt;(&amp;</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">) -&gt; &amp;U {
-        </span><span style="color:#b48ead;">match </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.items.</span><span style="color:#96b5b4;">get</span><span style="color:#c0c5ce;">(&amp;TypeId::of::&lt;U&gt;()) {
-            Some(item) =&gt; </span><span style="color:#b48ead;">match</span><span style="color:#c0c5ce;"> item.downcast_ref::&lt;U&gt;() {
-                Some(item) =&gt; item,
-                _ =&gt; panic!()
+    </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">get</span><span style="color:#fdf4c1aa;">&lt;U: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt;(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">) -&gt; </span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">U {
+        </span><span style="color:#fa5c4b;">match </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">get</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">TypeId::of::&lt;U&gt;()) {
+            </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt; </span><span style="color:#fa5c4b;">match</span><span style="color:#fdf4c1aa;"> item.downcast_ref::&lt;U&gt;() {
+                </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> item,
+                </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
             },
-            _ =&gt; panic!()
+            </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
         }
     }
 }
 </span></pre>
 <p>このコードは一見正しく動いてしまう。</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">main</span><span style="color:#c0c5ce;">() {
-    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> bag = Basket::new()
-        .</span><span style="color:#96b5b4;">set</span><span style="color:#c0c5ce;">(&quot;</span><span style="color:#a3be8c;">Universe</span><span style="color:#c0c5ce;">&quot;)
-        .</span><span style="color:#96b5b4;">set</span><span style="color:#c0c5ce;">(</span><span style="color:#d08770;">42</span><span style="color:#c0c5ce;">);
+<pre style="background-color:#282828;">
+<span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">main</span><span style="color:#fdf4c1aa;">() {
+    </span><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> bag </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1aa;">Basket::new()
+        .</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;Universe&quot;</span><span style="color:#fdf4c1aa;">)
+        .</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;">(</span><span style="color:#d3869b;">42</span><span style="color:#fdf4c1aa;">);
 
-    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> item = bag.get::&lt;</span><span style="color:#b48ead;">i32</span><span style="color:#c0c5ce;">&gt;();
-    println!(&quot;</span><span style="color:#a3be8c;">i32: </span><span style="color:#d08770;">{}</span><span style="color:#c0c5ce;">&quot;, item); </span><span style="color:#65737e;">// =&gt; &quot;i32: 42&quot;
+    </span><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> item </span><span style="color:#fe8019;">=</span><span style="color:#fdf4c1aa;"> bag.get::&lt;</span><span style="color:#fa5c4b;">i32</span><span style="color:#fdf4c1aa;">&gt;();
+    </span><span style="color:#fabd2f;">println!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;i32: </span><span style="color:#fdf4c1;">{}</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1aa;">, item); </span><span style="font-style:italic;color:#928374;">// =&gt; &quot;i32: 42&quot;
 
-    </span><span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> item = bag.get::&lt;&amp;</span><span style="color:#b48ead;">str</span><span style="color:#c0c5ce;">&gt;();
-    println!(&quot;</span><span style="color:#a3be8c;">&amp;str: </span><span style="color:#d08770;">{}</span><span style="color:#c0c5ce;">&quot;, item); </span><span style="color:#65737e;">// =&gt; &quot;&amp;str: Universe&quot;
-</span><span style="color:#c0c5ce;">}
+    </span><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> item </span><span style="color:#fe8019;">=</span><span style="color:#fdf4c1aa;"> bag.get::&lt;</span><span style="color:#fe8019;">&amp;</span><span style="color:#fa5c4b;">str</span><span style="color:#fdf4c1aa;">&gt;();
+    </span><span style="color:#fabd2f;">println!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;&amp;str: </span><span style="color:#fdf4c1;">{}</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1aa;">, item); </span><span style="font-style:italic;color:#928374;">// =&gt; &quot;&amp;str: Universe&quot;
+</span><span style="color:#fdf4c1aa;">}
 </span></pre>
 <p>ただ、以下のコードを追加すると肝心のコンパイル時のエラーチェックが効いていないことがわかる。</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">let</span><span style="color:#c0c5ce;"> item = bag.get::&lt;</span><span style="color:#b48ead;">bool</span><span style="color:#c0c5ce;">&gt;();
-println!(&quot;</span><span style="color:#a3be8c;">bool: </span><span style="color:#d08770;">{}</span><span style="color:#c0c5ce;">&quot;, item); </span><span style="color:#65737e;">// =&gt; Compiled successfully, but PANIC!
+<pre style="background-color:#282828;">
+<span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> item </span><span style="color:#fe8019;">=</span><span style="color:#fdf4c1aa;"> bag.get::&lt;</span><span style="color:#fa5c4b;">bool</span><span style="color:#fdf4c1aa;">&gt;();
+</span><span style="color:#fabd2f;">println!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;bool: </span><span style="color:#fdf4c1;">{}</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1aa;">, item); </span><span style="font-style:italic;color:#928374;">// =&gt; Compiled successfully, but PANIC!
 </span></pre>
 <p>原因は明らかで、 <code>get()</code> メソッドの定義において実装対象である <code>Basket&lt;(A, B)&gt;</code> の型パラメータ（<code>A</code>, <code>B</code>）を使っておらず、新たに導入した型パラメータ <code>U</code> にしか依存していないからである。
 かといって、 型パラメータ <code>A</code> を使うようにすると <code>U</code> は不要になるので <code>get()</code> メソッド呼び出し時に型パラメータを指定できない。型パラメータの指定ができなければ欲しい値を取り出せない。</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">impl</span><span style="color:#c0c5ce;">&lt;A: </span><span style="color:#b48ead;">&#39;static</span><span style="color:#c0c5ce;">, B: </span><span style="color:#b48ead;">&#39;static</span><span style="color:#c0c5ce;">&gt; Basket&lt;(A, B)&gt; {
-    </span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">new_with</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">iter</span><span style="color:#c0c5ce;">: Drain&lt;TypeId, Box&lt;dyn Any&gt;&gt;) -&gt; </span><span style="color:#b48ead;">Self </span><span style="color:#c0c5ce;">{
+<pre style="background-color:#282828;">
+<span style="color:#fa5c4b;">impl</span><span style="color:#fdf4c1aa;">&lt;A: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">, B: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt; </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;(A, B)&gt; {
+    </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">new_with</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fdf4c1;">iter</span><span style="color:#fdf4c1aa;">: Drain&lt;TypeId, Box&lt;dyn Any&gt;&gt;) -&gt; </span><span style="color:#fa5c4b;">Self </span><span style="color:#fdf4c1aa;">{
         Basket {
             items: HashMap::from_iter(iter),
             _t: PhantomData,
         }
     }
 
-    </span><span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">get</span><span style="color:#c0c5ce;">(&amp;</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">) -&gt; &amp;A {
-        </span><span style="color:#b48ead;">match </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.items.</span><span style="color:#96b5b4;">get</span><span style="color:#c0c5ce;">(&amp;TypeId::of::&lt;A&gt;()) {
-            Some(item) =&gt; </span><span style="color:#b48ead;">match</span><span style="color:#c0c5ce;"> item.downcast_ref::&lt;A&gt;() {
-                Some(item) =&gt; item,
-                _ =&gt; panic!()
+    </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">get</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">) -&gt; </span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">A {
+        </span><span style="color:#fa5c4b;">match </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">get</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">TypeId::of::&lt;A&gt;()) {
+            </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt; </span><span style="color:#fa5c4b;">match</span><span style="color:#fdf4c1aa;"> item.downcast_ref::&lt;A&gt;() {
+                </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> item,
+                </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
             },
-            _ =&gt; panic!()
+            </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
         }
     }
 }
 </span></pre>
 <p>ちなみに、以下のコードは定義がコンフリクトしてしまってコンパイルできない。</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">impl</span><span style="color:#c0c5ce;">&lt;A: </span><span style="color:#b48ead;">&#39;static</span><span style="color:#c0c5ce;">, B: </span><span style="color:#b48ead;">&#39;static</span><span style="color:#c0c5ce;">&gt; Basket&lt;(A, B)&gt; {
-    </span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">new_with</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">iter</span><span style="color:#c0c5ce;">: Drain&lt;TypeId, Box&lt;dyn Any&gt;&gt;) -&gt; </span><span style="color:#b48ead;">Self </span><span style="color:#c0c5ce;">{
+<pre style="background-color:#282828;">
+<span style="color:#fa5c4b;">impl</span><span style="color:#fdf4c1aa;">&lt;A: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">, B: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt; </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;(A, B)&gt; {
+    </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">new_with</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fdf4c1;">iter</span><span style="color:#fdf4c1aa;">: Drain&lt;TypeId, Box&lt;dyn Any&gt;&gt;) -&gt; </span><span style="color:#fa5c4b;">Self </span><span style="color:#fdf4c1aa;">{
         Basket {
             items: HashMap::from_iter(iter),
             _t: PhantomData,
         }
     }
 
-    </span><span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">get</span><span style="color:#c0c5ce;">(&amp;</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">) -&gt; &amp;A {
-        </span><span style="color:#b48ead;">match </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.items.</span><span style="color:#96b5b4;">get</span><span style="color:#c0c5ce;">(&amp;TypeId::of::&lt;A&gt;()) {
-            Some(item) =&gt; </span><span style="color:#b48ead;">match</span><span style="color:#c0c5ce;"> item.downcast_ref::&lt;A&gt;() {
-                Some(item) =&gt; item,
-                _ =&gt; panic!()
+    </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">get</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">) -&gt; </span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">A {
+        </span><span style="color:#fa5c4b;">match </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">get</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">TypeId::of::&lt;A&gt;()) {
+            </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt; </span><span style="color:#fa5c4b;">match</span><span style="color:#fdf4c1aa;"> item.downcast_ref::&lt;A&gt;() {
+                </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> item,
+                </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
             },
-            _ =&gt; panic!()
+            </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
         }
     }
 
-    </span><span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">get</span><span style="color:#c0c5ce;">(&amp;</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">) -&gt; &amp;B { </span><span style="color:#65737e;">// =&gt; Conflict!
-        </span><span style="color:#b48ead;">match </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.items.</span><span style="color:#96b5b4;">get</span><span style="color:#c0c5ce;">(&amp;TypeId::of::&lt;B&gt;()) {
-            Some(item) =&gt; </span><span style="color:#b48ead;">match</span><span style="color:#c0c5ce;"> item.downcast_ref::&lt;B&gt;() {
-                Some(item) =&gt; item,
-                _ =&gt; panic!()
+    </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">get</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">) -&gt; </span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">B { </span><span style="font-style:italic;color:#928374;">// =&gt; Conflict!
+        </span><span style="color:#fa5c4b;">match </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">get</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">TypeId::of::&lt;B&gt;()) {
+            </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt; </span><span style="color:#fa5c4b;">match</span><span style="color:#fdf4c1aa;"> item.downcast_ref::&lt;B&gt;() {
+                </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> item,
+                </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
             },
-            _ =&gt; panic!()
+            </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
         }
     }
 }
 </span></pre>
 <p>理想的にはメソッドに型パラメータ <code>U</code> を導入しつつ、 <code>A</code> または <code>B</code> と型が一致する、みたいな制約をかけることができればありがたいんだけど、そういう書き方は存在しなさそう。</p>
-<pre style="background-color:#2b303b;">
-<span style="color:#b48ead;">impl</span><span style="color:#c0c5ce;">&lt;A: </span><span style="color:#b48ead;">&#39;static</span><span style="color:#c0c5ce;">, B: </span><span style="color:#b48ead;">&#39;static</span><span style="color:#c0c5ce;">&gt; Basket&lt;(A, B)&gt; {
-    </span><span style="color:#b48ead;">fn </span><span style="color:#8fa1b3;">new_with</span><span style="color:#c0c5ce;">(</span><span style="color:#bf616a;">iter</span><span style="color:#c0c5ce;">: Drain&lt;TypeId, Box&lt;dyn Any&gt;&gt;) -&gt; </span><span style="color:#b48ead;">Self </span><span style="color:#c0c5ce;">{
+<pre style="background-color:#282828;">
+<span style="color:#fa5c4b;">impl</span><span style="color:#fdf4c1aa;">&lt;A: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">, B: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt; </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;(A, B)&gt; {
+    </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">new_with</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fdf4c1;">iter</span><span style="color:#fdf4c1aa;">: Drain&lt;TypeId, Box&lt;dyn Any&gt;&gt;) -&gt; </span><span style="color:#fa5c4b;">Self </span><span style="color:#fdf4c1aa;">{
         Basket {
             items: HashMap::from_iter(iter),
             _t: PhantomData,
         }
     }
 
-    </span><span style="color:#b48ead;">pub fn </span><span style="color:#8fa1b3;">get</span><span style="color:#c0c5ce;">&lt;U: </span><span style="color:#b48ead;">&#39;static</span><span style="color:#c0c5ce;">&gt;(&amp;</span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">) -&gt; &amp;U </span><span style="color:#b48ead;">where</span><span style="color:#c0c5ce;"> U = A | B { </span><span style="color:#65737e;">// =&gt; Invalid Syntax!
-        </span><span style="color:#b48ead;">match </span><span style="color:#bf616a;">self</span><span style="color:#c0c5ce;">.items.</span><span style="color:#96b5b4;">get</span><span style="color:#c0c5ce;">(&amp;TypeId::of::&lt;U&gt;()) {
-            Some(item) =&gt; </span><span style="color:#b48ead;">match</span><span style="color:#c0c5ce;"> item.downcast_ref::&lt;U&gt;() {
-                Some(item) =&gt; item,
-                _ =&gt; panic!()
+    </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">get</span><span style="color:#fdf4c1aa;">&lt;U: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt;(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">) -&gt; </span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">U </span><span style="color:#fa5c4b;">where</span><span style="color:#fdf4c1aa;"> U = A | B { </span><span style="font-style:italic;color:#928374;">// =&gt; Invalid Syntax!
+        </span><span style="color:#fa5c4b;">match </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">get</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">TypeId::of::&lt;U&gt;()) {
+            </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt; </span><span style="color:#fa5c4b;">match</span><span style="color:#fdf4c1aa;"> item.downcast_ref::&lt;U&gt;() {
+                </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> item,
+                </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
             },
-            _ =&gt; panic!()
+            </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
         }
     }
 }
@@ -337,15 +338,17 @@ println!(&quot;</span><span style="color:#a3be8c;">bool: </span><span style="col
             
                 <div class="post-tags">
                     
-                        <a href="https:&#x2F;&#x2F;kuy.github.io&#x2F;tags&#x2F;rust&#x2F;">#rust</a>
+                        <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;tags&#x2F;rust&#x2F;">#rust</a>
                     
                 </div>
             
             
                 <div class="post-nav">
                     
-                        <a class="previous" href="https:&#x2F;&#x2F;kuy.github.io&#x2F;flex-handler&#x2F;">‹ actix-webの柔軟なリクエストハンドラの仕組み</a>
+                        <a class="previous" href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;flex-handler&#x2F;">‹ actix-webの柔軟なリクエストハンドラの仕組み</a>
                     
+                    
+                        <a class="next" href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;learn-program-semantics&#x2F;">プログラム意味論のお勉強 ›</a>
                     
                     
                     
@@ -369,8 +372,8 @@ println!(&quot;</span><span style="color:#a3be8c;">bool: </span><span style="col
         </div>
 
       
-          <script type="text/javascript" src="https:&#x2F;&#x2F;kuy.github.io&#x2F;even.js" ></script>
+          <script type="text/javascript" src="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;even.js" ></script>
       
-    </body>
+    <script src="/livereload.js?port=1024&mindelay=10"></script></body>
 
 </html>

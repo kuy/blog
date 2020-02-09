@@ -1,62 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     
         <url>
-            <loc>https%3A//kuy.github.io/</loc>
+            <loc>http://127.0.0.1:1111/</loc>
             
         </url>
     
         <url>
-            <loc>https%3A//kuy.github.io/about/</loc>
+            <loc>http://127.0.0.1:1111/about/</loc>
             
                 <lastmod>1970-01-01</lastmod>
             
         </url>
     
         <url>
-            <loc>https%3A//kuy.github.io/categories/</loc>
+            <loc>http://127.0.0.1:1111/categories/</loc>
             
         </url>
     
         <url>
-            <loc>https%3A//kuy.github.io/categories/programming/</loc>
+            <loc>http://127.0.0.1:1111/categories/programming/</loc>
             
         </url>
     
         <url>
-            <loc>https%3A//kuy.github.io/categories/programming/page/1/</loc>
+            <loc>http://127.0.0.1:1111/categories/programming/page/1/</loc>
             
         </url>
     
         <url>
-            <loc>https%3A//kuy.github.io/flex-handler/</loc>
+            <loc>http://127.0.0.1:1111/flex-handler/</loc>
             
                 <lastmod>2019-08-12</lastmod>
             
         </url>
     
         <url>
-            <loc>https%3A//kuy.github.io/page/1/</loc>
+            <loc>http://127.0.0.1:1111/learn-program-semantics/</loc>
+            
+                <lastmod>2020-02-09</lastmod>
             
         </url>
     
         <url>
-            <loc>https%3A//kuy.github.io/tags/</loc>
+            <loc>http://127.0.0.1:1111/page/1/</loc>
             
         </url>
     
         <url>
-            <loc>https%3A//kuy.github.io/tags/rust/</loc>
+            <loc>http://127.0.0.1:1111/tags/</loc>
             
         </url>
     
         <url>
-            <loc>https%3A//kuy.github.io/tags/web/</loc>
+            <loc>http://127.0.0.1:1111/tags/computer-science/</loc>
             
         </url>
     
         <url>
-            <loc>https%3A//kuy.github.io/typed-basket/</loc>
+            <loc>http://127.0.0.1:1111/tags/links/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>http://127.0.0.1:1111/tags/program-semantics/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>http://127.0.0.1:1111/tags/rust/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>http://127.0.0.1:1111/tags/web/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>http://127.0.0.1:1111/typed-basket/</loc>
             
                 <lastmod>2019-08-17</lastmod>
             
