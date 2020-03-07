@@ -96,112 +96,6 @@
                     
 
 
-<div class="post-toc" id="post-toc">
-    <h2 class="post-toc-title">Contents</h2>
-    <div class="post-toc-content always-active">
-        <nav id="TableOfContents">
-            <ul>
-                
-                <li>
-                    <a href="http://127.0.0.1:1111/flex-handler/#kitukake" class="toc-link">きっかけ</a>
-                    
-                </li>
-                
-                <li>
-                    <a href="http://127.0.0.1:1111/flex-handler/#yi-wen" class="toc-link">疑問</a>
-                    
-                </li>
-                
-                <li>
-                    <a href="http://127.0.0.1:1111/flex-handler/#tl-dr" class="toc-link">TL;DR</a>
-                    
-                </li>
-                
-                <li>
-                    <a href="http://127.0.0.1:1111/flex-handler/#yi-wen-1-ke-bian-chang-yin-shu-norikuesutohandorahadouyatuteshi-xian-siteiru" class="toc-link">疑問 1: 可変長引数のリクエストハンドラはどうやって実現している？</a>
-                    
-                    <ul>
-                        
-                        <li>
-                            <a href="http://127.0.0.1:1111/flex-handler/#taneakasi" class="toc-link">タネあかし</a>
-                        </li>
-                        
-                        <li>
-                            <a href="http://127.0.0.1:1111/flex-handler/#shi-siniyin-shu-11-ge-nohandorawozuo-tutemiru" class="toc-link">試しに引数 11 個のハンドラを作ってみる</a>
-                        </li>
-                        
-                        <li>
-                            <a href="http://127.0.0.1:1111/flex-handler/#factory-asyncfactory-no-call-self-param-t-nituite" class="toc-link">Factory &#x2F; AsyncFactory の call(&amp;self, param: T) について</a>
-                        </li>
-                        
-                    </ul>
-                    
-                </li>
-                
-                <li>
-                    <a href="http://127.0.0.1:1111/flex-handler/#yi-wen-2-nazeshun-fan-woru-reti-etemodong-ku" class="toc-link">疑問 2: なぜ順番を入れ替えても動く？</a>
-                    
-                    <ul>
-                        
-                        <li>
-                            <a href="http://127.0.0.1:1111/flex-handler/#fromrequest-rikuesutoqing-bao-karahandorayin-shu-nozhi-wochou-chu-suru" class="toc-link">FromRequest: リクエスト情報からハンドラ引数の値を抽出する</a>
-                        </li>
-                        
-                        <li>
-                            <a href="http://127.0.0.1:1111/flex-handler/#extensions-typeid-wokinisita-hashmap" class="toc-link">Extensions: TypeId をキーにした HashMap</a>
-                        </li>
-                        
-                        <li>
-                            <a href="http://127.0.0.1:1111/flex-handler/#ru-rezi-tapurumo-fromrequest-toreitowoshi-zhuang-siteiru" class="toc-link">入れ子: タプルも FromRequest トレイトを実装している</a>
-                        </li>
-                        
-                    </ul>
-                    
-                </li>
-                
-                <li>
-                    <a href="http://127.0.0.1:1111/flex-handler/#yi-wen-3-xing-tietukuhadounatutenno" class="toc-link">疑問 3: 型チェックはどうなってんの？</a>
-                    
-                    <ul>
-                        
-                        <li>
-                            <a href="http://127.0.0.1:1111/flex-handler/#tong-zixing-noapurikesiyondetahafu-shu-bao-chi-dekinai" class="toc-link">同じ型のアプリケーションデータは複数保持できない</a>
-                        </li>
-                        
-                        <li>
-                            <a href="http://127.0.0.1:1111/flex-handler/#data-dege-na-sitenaixing-woyin-shu-niqu-ruhandoraguan-shu-demokonpairutong-ru" class="toc-link">data() で格納してない型を引数に取るハンドラ関数でもコンパイル通る</a>
-                        </li>
-                        
-                    </ul>
-                    
-                </li>
-                
-                <li>
-                    <a href="http://127.0.0.1:1111/flex-handler/#sanpurukodo" class="toc-link">サンプルコード</a>
-                    
-                    <ul>
-                        
-                        <li>
-                            <a href="http://127.0.0.1:1111/flex-handler/#handorading-yi" class="toc-link">ハンドラ定義</a>
-                        </li>
-                        
-                        <li>
-                            <a href="http://127.0.0.1:1111/flex-handler/#hu-bichu-si" class="toc-link">呼び出し</a>
-                        </li>
-                        
-                        <li>
-                            <a href="http://127.0.0.1:1111/flex-handler/#shi-zhuang" class="toc-link">実装</a>
-                        </li>
-                        
-                    </ul>
-                    
-                </li>
-                
-            </ul>
-        </nav>
-    </div>
-</div>
-
 
 <article class="post">
     
@@ -265,8 +159,7 @@
 </span></pre>
 <p><strong>これ、ちゃんと動いてしまう。</strong></p>
 <p>Rust のようなガチガチに検証するタイプの言語でこの柔軟性を一体どうやって実現しているんだろう・・・？ と思ったのがきっかけ。</p>
-<p id="zola-continue-reading"><a name="continue-reading"></a></p>
-<h2 id="yi-wen">疑問</h2>
+<span id="continue-reading"></span><h2 id="yi-wen">疑問</h2>
 <p>謎な部分を分解すると以下になる。</p>
 <ul>
 <li>可変長引数のリクエストハンドラはどうやって実現している？</li>
@@ -475,6 +368,8 @@
                     
                         <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;tags&#x2F;web&#x2F;">#web</a>
                     
+                        <a href="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;tags&#x2F;actix-web&#x2F;">#actix-web</a>
+                    
                 </div>
             
             
@@ -509,6 +404,6 @@
       
           <script type="text/javascript" src="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;even.js" ></script>
       
-    <script src="/livereload.js?port=1024&mindelay=10"></script></body>
+    <script src="/livereload.js?port=1024&amp;mindelay=10"></script></body>
 
 </html>

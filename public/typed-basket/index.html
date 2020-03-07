@@ -96,37 +96,6 @@
                     
 
 
-<div class="post-toc" id="post-toc">
-    <h2 class="post-toc-title">Contents</h2>
-    <div class="post-toc-content always-active">
-        <nav id="TableOfContents">
-            <ul>
-                
-                <li>
-                    <a href="http://127.0.0.1:1111/typed-basket/#jie-guo" class="toc-link">結果</a>
-                    
-                </li>
-                
-                <li>
-                    <a href="http://127.0.0.1:1111/typed-basket/#yaritaikoto-yaritakatutakoto" class="toc-link">やりたいこと（やりたかったこと）</a>
-                    
-                </li>
-                
-                <li>
-                    <a href="http://127.0.0.1:1111/typed-basket/#shi-xing-cuo-wu" class="toc-link">試行錯誤</a>
-                    
-                </li>
-                
-                <li>
-                    <a href="http://127.0.0.1:1111/typed-basket/#dametupoi" class="toc-link">ダメっぽい</a>
-                    
-                </li>
-                
-            </ul>
-        </nav>
-    </div>
-</div>
-
 
 <article class="post">
     
@@ -160,7 +129,7 @@ bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;"
 </span><span style="color:#fabd2f;">println!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;&amp;str: </span><span style="color:#fdf4c1;">{}</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1aa;">, bag.get::&lt;</span><span style="color:#fe8019;">&amp;</span><span style="color:#fa5c4b;">str</span><span style="color:#fdf4c1aa;">&gt;()); </span><span style="font-style:italic;color:#928374;">// =&gt; &quot;&amp;str: Universe&quot;
 
 // println!(&quot;bool: {}&quot;, bag.get::&lt;bool&gt;()); =&gt; Compile Error!
-</span></pre><p id="zola-continue-reading"><a name="continue-reading"></a></p>
+</span></pre><span id="continue-reading"></span>
 <p>こんなことを考えたのは<a href="https://kuy.github.io/flex-handler/">前回の記事</a>で <code>actix-web</code> の <code>data()</code> メソッドでデータを設定せずに <code>web::Data&lt;T&gt;</code> を引数に持つハンドラを渡してもコンパイルエラーにならず、実行時エラーになるのを何とかできないものか、と思ったから。
 根っこの問題としてデータの保管先である <code>Extensions</code> が実行時に特定の型が保管されているか判断しているのが良くない。</p>
 <p>コンパイル時にエラーを検出するには <strong>状態を型として表現</strong> すればいい。上記のコードで言えば <code>new()</code> 直後は何のデータも格納されておらず、1 つ目の <code>set()</code> が呼ばれたら <code>&amp;str</code> が保管されていて、さらに <code>set()</code> が呼ばれると <code>&amp;str</code> と <code>i32</code> が保管されていることを型として表現する。その型情報の中に <code>get()</code> メソッドの呼び出しで渡された型パラメータが含まれているときだけコンパイルが通るようにする。</p>
@@ -374,6 +343,6 @@ bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;"
       
           <script type="text/javascript" src="http:&#x2F;&#x2F;127.0.0.1:1111&#x2F;even.js" ></script>
       
-    <script src="/livereload.js?port=1024&mindelay=10"></script></body>
+    <script src="/livereload.js?port=1024&amp;mindelay=10"></script></body>
 
 </html>

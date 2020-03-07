@@ -7,7 +7,7 @@ in_search_index = true
 template = "page.html"
 
 [taxonomies]
-tags = ["rust", "web"]
+tags = ["rust", "web", "actix-web"]
 categories = ["programming"]
 +++
 

@@ -1,6 +1,6 @@
 +++
 title = "/* @kuy */"
-date = 1970-01-01
+date = 1984-11-04
 draft = false
 slug = "about"
 in_search_index = false

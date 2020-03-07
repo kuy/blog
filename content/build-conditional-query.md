@@ -39,7 +39,7 @@ pub fn find(..., id: IdOrSlug) -> Result<Article> {
 
 ## ダメっぽい
 
-`.filter()` をかますと戻り値にカラムの型が埋め込まれるようで、 incompatible だと怒られる。
+`.filter()` をかますと引数の型が戻り値の型に埋め込まれるようで、 incompatible だと怒られる。
 
 ```
 match arms have incompatible types
@@ -49,6 +49,8 @@ expected struct `schema::articles::columns::id`, found struct `schema::articles:
 note: expected type `diesel::query_builder::SelectStatement<_, _, _, diesel::query_builder::where_clause::WhereClause<diesel::expression::operators::Eq<schema::articles::columns::id, diesel::expression::bound::Bound<diesel::sql_types::Integer, i32>>>>`
        found struct `diesel::query_builder::SelectStatement<_, _, _, diesel::query_builder::where_clause::WhereClause<diesel::expression::operators::Eq<schema::articles::columns::slug, diesel::expression::bound::Bound<diesel::sql_types::Text, &str>>>>`
 ```
+
+<!-- more -->
 
 ## 解決方法
 
@@ -67,7 +69,7 @@ pub fn find(..., id: IdOrSlug) -> Result<ViewProduct> {
     // ...
 ```
 
-## メモ
+## 未解決
 
 最初は条件部分だけ切り出してやろうとしたんだけど、こっちは何か方法が無いんだろうか。
 
