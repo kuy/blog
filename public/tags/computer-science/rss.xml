@@ -2,18 +2,18 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>blog.endflow.net</title>
-        <link>http://127.0.0.1:1111</link>
+        <link>https://blog.endflow.net</link>
         <description></description>
         <generator>Zola</generator>
         <language>en</language>
-        <atom:link href="http://127.0.0.1:1111/tags/computer-science/rss.xml" rel="self" type="application/rss+xml"/>
+        <atom:link href="https://blog.endflow.net/tags/computer-science/rss.xml" rel="self" type="application/rss+xml"/>
         <lastBuildDate>Sun, 09 Feb 2020 00:00:00 +0000</lastBuildDate>
         
             <item>
                 <title>プログラム意味論のお勉強</title>
                 <pubDate>Sun, 09 Feb 2020 00:00:00 +0000</pubDate>
-                <link>http://127.0.0.1:1111/learn-program-semantics/</link>
-                <guid>http://127.0.0.1:1111/learn-program-semantics/</guid>
+                <link>https://blog.endflow.net/learn-program-semantics/</link>
+                <guid>https://blog.endflow.net/learn-program-semantics/</guid>
                 <description>&lt;p&gt;ふと思い出しては何かを読んで、挫折してを繰り返しているのでいつまで経っても理解できていない。
 けど、悔しいのでたぶん今後もチャレンジしていくと思うので自分用のリストを作っておく。&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;uebu&quot;&gt;ウェブ&lt;&#x2F;h2&gt;

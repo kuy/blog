@@ -2,105 +2,105 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     
         <url>
-            <loc>http://127.0.0.1:1111/</loc>
+            <loc>https://blog.endflow.net/</loc>
             
         </url>
     
         <url>
-            <loc>http://127.0.0.1:1111/about/</loc>
+            <loc>https://blog.endflow.net/about/</loc>
             
-                <lastmod>1970-01-01</lastmod>
+                <lastmod>1984-11-04</lastmod>
             
         </url>
     
         <url>
-            <loc>http://127.0.0.1:1111/build-conditional-query/</loc>
+            <loc>https://blog.endflow.net/build-conditional-query/</loc>
             
                 <lastmod>2020-02-11</lastmod>
             
         </url>
     
         <url>
-            <loc>http://127.0.0.1:1111/categories/</loc>
+            <loc>https://blog.endflow.net/categories/</loc>
             
         </url>
     
         <url>
-            <loc>http://127.0.0.1:1111/categories/programming/</loc>
+            <loc>https://blog.endflow.net/categories/programming/</loc>
             
         </url>
     
         <url>
-            <loc>http://127.0.0.1:1111/categories/programming/page/1/</loc>
+            <loc>https://blog.endflow.net/categories/programming/page/1/</loc>
             
         </url>
     
         <url>
-            <loc>http://127.0.0.1:1111/flex-handler/</loc>
+            <loc>https://blog.endflow.net/flex-handler/</loc>
             
                 <lastmod>2019-08-12</lastmod>
             
         </url>
     
         <url>
-            <loc>http://127.0.0.1:1111/learn-program-semantics/</loc>
+            <loc>https://blog.endflow.net/learn-program-semantics/</loc>
             
                 <lastmod>2020-02-09</lastmod>
             
         </url>
     
         <url>
-            <loc>http://127.0.0.1:1111/page/1/</loc>
+            <loc>https://blog.endflow.net/page/1/</loc>
             
         </url>
     
         <url>
-            <loc>http://127.0.0.1:1111/tags/</loc>
+            <loc>https://blog.endflow.net/tags/</loc>
             
         </url>
     
         <url>
-            <loc>http://127.0.0.1:1111/tags/actix-web/</loc>
+            <loc>https://blog.endflow.net/tags/actix-web/</loc>
             
         </url>
     
         <url>
-            <loc>http://127.0.0.1:1111/tags/computer-science/</loc>
+            <loc>https://blog.endflow.net/tags/computer-science/</loc>
             
         </url>
     
         <url>
-            <loc>http://127.0.0.1:1111/tags/diesel/</loc>
+            <loc>https://blog.endflow.net/tags/diesel/</loc>
             
         </url>
     
         <url>
-            <loc>http://127.0.0.1:1111/tags/links/</loc>
+            <loc>https://blog.endflow.net/tags/links/</loc>
             
         </url>
     
         <url>
-            <loc>http://127.0.0.1:1111/tags/program-semantics/</loc>
+            <loc>https://blog.endflow.net/tags/program-semantics/</loc>
             
         </url>
     
         <url>
-            <loc>http://127.0.0.1:1111/tags/rust/</loc>
+            <loc>https://blog.endflow.net/tags/rust/</loc>
             
         </url>
     
         <url>
-            <loc>http://127.0.0.1:1111/tags/sql/</loc>
+            <loc>https://blog.endflow.net/tags/sql/</loc>
             
         </url>
     
         <url>
-            <loc>http://127.0.0.1:1111/tags/web/</loc>
+            <loc>https://blog.endflow.net/tags/web/</loc>
             
         </url>
     
         <url>
-            <loc>http://127.0.0.1:1111/typed-basket/</loc>
+            <loc>https://blog.endflow.net/typed-basket/</loc>
             
                 <lastmod>2019-08-17</lastmod>
             

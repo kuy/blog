@@ -1,9 +1,6 @@
 # The URL the site will be built for
-# base_url = "https://blog.endflow.net"
-base_url = "https://kuy.github.io"
-
+base_url = "https://blog.endflow.net"
 title = "blog.endflow.net"
-
 
 # Theme name to use
 theme = "endflow"

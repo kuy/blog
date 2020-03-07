@@ -2,18 +2,18 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>blog.endflow.net</title>
-        <link>http://127.0.0.1:1111</link>
+        <link>https://blog.endflow.net</link>
         <description></description>
         <generator>Zola</generator>
         <language>en</language>
-        <atom:link href="http://127.0.0.1:1111/tags/diesel/rss.xml" rel="self" type="application/rss+xml"/>
+        <atom:link href="https://blog.endflow.net/tags/diesel/rss.xml" rel="self" type="application/rss+xml"/>
         <lastBuildDate>Tue, 11 Feb 2020 00:00:00 +0000</lastBuildDate>
         
             <item>
                 <title>dieselで条件に基づいたクエリを構築する</title>
                 <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
-                <link>http://127.0.0.1:1111/build-conditional-query/</link>
-                <guid>http://127.0.0.1:1111/build-conditional-query/</guid>
+                <link>https://blog.endflow.net/build-conditional-query/</link>
+                <guid>https://blog.endflow.net/build-conditional-query/</guid>
                 <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;diesel-rs&#x2F;diesel&quot;&gt;diesel&lt;&#x2F;a&gt; 小ネタ。&lt;&#x2F;p&gt;
 &lt;p&gt;参考: &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;diesel-rs&#x2F;diesel&#x2F;issues&#x2F;455&quot;&gt;https:&#x2F;&#x2F;github.com&#x2F;diesel-rs&#x2F;diesel&#x2F;issues&#x2F;455&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;yaritaikoto&quot;&gt;やりたいこと&lt;&#x2F;h2&gt;
@@ -35,7 +35,7 @@
 
     &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#928374;&quot;&gt;&#x2F;&#x2F; ...
 &lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;&lt;h2 id=&quot;dametupoi&quot;&gt;ダメっぽい&lt;&#x2F;h2&gt;
-&lt;p&gt;&lt;code&gt;.filter()&lt;&#x2F;code&gt; をかますと戻り値にカラムの型が埋め込まれるようで、 incompatible だと怒られる。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;.filter()&lt;&#x2F;code&gt; をかますと引数の型が戻り値の型に埋め込まれるようで、 incompatible だと怒られる。&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#282828;&quot;&gt;
 &lt;span style=&quot;color:#fdf4c1aa;&quot;&gt;match arms have incompatible types
 
