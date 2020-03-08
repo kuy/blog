@@ -26,12 +26,29 @@
         </url>
     
         <url>
+            <loc>https://blog.endflow.net/categories/coffee/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://blog.endflow.net/categories/coffee/page/1/</loc>
+            
+        </url>
+    
+        <url>
             <loc>https://blog.endflow.net/categories/programming/</loc>
             
         </url>
     
         <url>
             <loc>https://blog.endflow.net/categories/programming/page/1/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://blog.endflow.net/cores-grinder-review/</loc>
+            
+                <lastmod>2020-03-08</lastmod>
             
         </url>
     
@@ -51,6 +68,11 @@
     
         <url>
             <loc>https://blog.endflow.net/page/1/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://blog.endflow.net/page/2/</loc>
             
         </url>
     
@@ -75,12 +97,27 @@
         </url>
     
         <url>
+            <loc>https://blog.endflow.net/tags/equipment/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://blog.endflow.net/tags/grinder/</loc>
+            
+        </url>
+    
+        <url>
             <loc>https://blog.endflow.net/tags/links/</loc>
             
         </url>
     
         <url>
             <loc>https://blog.endflow.net/tags/program-semantics/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://blog.endflow.net/tags/review/</loc>
             
         </url>
     
