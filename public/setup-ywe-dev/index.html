@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title>blog.endflow.net - Yew: Setup development environment</title>
+
+      
+
+      
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
+          
+      
+
+      
+          <link href="https://fonts.googleapis.com/css?family=Roboto:400,700|Source+Code+Pro&display=swap" rel="stylesheet">
+          <link rel="stylesheet" href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;site.css">
+          
+      
+
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-3511180-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-3511180-1');
+      </script>
+
+      
+      
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="mobile-navbar" class="mobile-navbar">
+              <div class="mobile-header-logo">
+                <a href="/" class="logo">&#x2F;* blog.endflow.net *&#x2F;</a>
+              </div>
+              <div class="mobile-navbar-icon icon-out">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
+              <ul class="mobile-menu-list">
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;categories">
+                            Categories
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags">
+                            Tags
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;about">
+                            @kuy
+                        </a>
+                    </li>
+                
+              </ul>
+            </nav>
+
+            <header id="header">
+                <div class="logo"><a href="https:&#x2F;&#x2F;blog.endflow.net">&#x2F;* blog.endflow.net *&#x2F;</a></div>
+                <nav class="menu">
+                    <ul>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;categories">
+                                    Categories
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags">
+                                    Tags
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;about">
+                                    @kuy
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="content" id="mobile-panel">
+                    
+
+
+
+<article class="post">
+    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;setup-ywe-dev&#x2F;">Yew: Setup development environment</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2020-03-22</span>
+            
+        </div>
+    </header>
+
+    <div class="post-content">
+      <p>This post is a supplemental note for setting up <a href="https://yew.rs">Yew</a>'s development environment (not development environment using Yew). Hope this save your time.</p>
+<span id="continue-reading"></span><h2 id="rtfm">RTFM</h2>
+<p>Do it first: <a href="https://github.com/yewstack/yew/blob/master/CONTRIBUTING.md">Contribution Guide</a></p>
+<h2 id="rtfs">RTFS</h2>
+<p>Yes, <a href="https://github.com/yewstack/yew/blob/master/examples/build_all.sh">fabulous script</a>.</p>
+<h2 id="run-stdweb-examples">Run <code>stdweb</code> examples</h2>
+<p>It's pretty easy. For example, here is an example to run <code>counter</code> example of <code>stdweb</code> version.</p>
+<pre style="background-color:#282828;">
+<span style="color:#fdf4c1aa;">cd examples/std_web/counter
+cargo web start --target wasm32-unknown-unknown
+</span></pre>
+<p>Open <code>http://localhost:8000</code> in your browser.</p>
+<h2 id="run-web-sys-examples">Run <code>web-sys</code> examples</h2>
+<pre style="background-color:#282828;">
+<span style="color:#fdf4c1aa;">cd examples/web_sys/counter
+cargo build --target wasm32-unknown-unknown
+wasm-bindgen --target web --no-typescript --out-dir ../../static/ --out-name wasm ../../target/wasm32-unknown-unknown/debug/counter_web_sys.wasm
+</span></pre><h2 id="error-thread-main-panicked-at-index-out-of-bounds-the-len-is-0-but-the-index-is-0-users-yourname-cargo-registry-src-github-com-1ecc6299db9ec823-wasm-bindgen-cli-support-0-2-58-src-descriptor-rs-198-15">ERROR: thread 'main' panicked at 'index out of bounds: the len is 0 but the index is 0', /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15</h2>
+<p>Welcome to the main section of this post. In my environment, I couldn't create wasm module and got errors:</p>
+<pre style="background-color:#282828;">
+<span style="color:#fdf4c1aa;">thread &#39;main&#39; panicked at &#39;index out of bounds: the len is 0 but the index is 0&#39;, /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace.
+</span></pre>
+<p>Here is a verbose report.</p>
+<pre style="background-color:#282828;">
+<span style="color:#fdf4c1aa;">thread &#39;main&#39; panicked at &#39;index out of bounds: the len is 0 but the index is 0&#39;, /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15
+stack backtrace:
+   0: &lt;std::sys_common::backtrace::_print::DisplayBacktrace as core::fmt::Display&gt;::fmt
+   1: core::fmt::write
+   2: std::io::Write::write_fmt
+   3: std::panicking::default_hook::{{closure}}
+   4: std::panicking::default_hook
+   5: std::panicking::rust_panic_with_hook
+   6: rust_begin_unwind
+   7: core::panicking::panic_fmt
+   8: core::panicking::panic_bounds_check
+   9: wasm_bindgen_cli_support::descriptor::Descriptor::_decode
+  10: wasm_bindgen_cli_support::descriptor::Descriptor::_decode
+  11: wasm_bindgen_cli_support::descriptor::Function::decode
+  12: wasm_bindgen_cli_support::descriptor::Descriptor::_decode
+  13: wasm_bindgen_cli_support::descriptors::execute
+  14: wasm_bindgen_cli_support::Bindgen::generate_output
+  15: wasm_bindgen_cli_support::Bindgen::generate
+  16: wasm_bindgen::main
+  17: std::rt::lang_start::{{closure}}
+  18: std::panicking::try::do_call
+  19: __rust_maybe_catch_panic
+  20: std::rt::lang_start_internal
+  21: main
+note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
+</span></pre><h3 id="reason-version-mismatch">Reason: Version mismatch</h3>
+<p>Yew's <code>Cargo.toml</code> has <code>wasm-bindgen = { version = &quot;0.2.59&quot;, optional = true }</code>. But my <code>wasm-bindgen-cli</code> is <code>0.2.58</code>.</p>
+<pre style="background-color:#282828;">
+<span style="color:#fdf4c1aa;">$ wasm-bindgen --version
+wasm-bindgen 0.2.58
+</span></pre><h3 id="upgrade-toolchains">Upgrade toolchains</h3>
+<p>Upgrade all toolchains before starting developing Yew. Don't forget to use <code>--force</code> option, which is required to upgrade to latest version.</p>
+<ul>
+<li><code>rustup update stable</code></li>
+<li><code>cargo install cargo-web --force</code></li>
+<li><code>cargo install wasm-bindgen-cli --force</code></li>
+</ul>
+
+    </div>
+
+    
+    
+
+    <div class="post-footer">
+        
+            
+                <div class="post-tags">
+                    
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;rust&#x2F;">#rust</a>
+                    
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;yew&#x2F;">#yew</a>
+                    
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;frontend&#x2F;">#frontend</a>
+                    
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;tips&#x2F;">#tips</a>
+                    
+                </div>
+            
+            
+                <div class="post-nav">
+                    
+                        <a class="previous" href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;cores-grinder-review&#x2F;">‹ Cores コーングラインダー C330</a>
+                    
+                    
+                    
+                    
+                </div>
+            
+
+        
+
+    </div>
+
+    
+    
+</article>
+
+
+                </div>
+            </main>
+
+            
+            
+        </div>
+
+      
+          <script type="text/javascript" src="https:&#x2F;&#x2F;blog.endflow.net&#x2F;even.js" ></script>
+      
+    </body>
+
+</html>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>blog.endflow.net</title>
+        <link>https://blog.endflow.net</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>en</language>
+        <atom:link href="https://blog.endflow.net/tags/tips/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Sun, 22 Mar 2020 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>Yew: Setup development environment</title>
+                <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
+                <link>https://blog.endflow.net/setup-ywe-dev/</link>
+                <guid>https://blog.endflow.net/setup-ywe-dev/</guid>
+                <description>&lt;p&gt;This post is a supplemental note for setting up &lt;a href=&quot;https:&#x2F;&#x2F;yew.rs&quot;&gt;Yew&lt;&#x2F;a&gt;&#x27;s development environment (not development environment using Yew). Hope this save your time.&lt;&#x2F;p&gt;
+</description>
+            </item>
+        
+    </channel>
+</rss>

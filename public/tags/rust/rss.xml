@@ -7,7 +7,16 @@
         <generator>Zola</generator>
         <language>en</language>
         <atom:link href="https://blog.endflow.net/tags/rust/rss.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Tue, 11 Feb 2020 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Sun, 22 Mar 2020 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>Yew: Setup development environment</title>
+                <pubDate>Sun, 22 Mar 2020 00:00:00 +0000</pubDate>
+                <link>https://blog.endflow.net/setup-ywe-dev/</link>
+                <guid>https://blog.endflow.net/setup-ywe-dev/</guid>
+                <description>&lt;p&gt;This post is a supplemental note for setting up &lt;a href=&quot;https:&#x2F;&#x2F;yew.rs&quot;&gt;Yew&lt;&#x2F;a&gt;&#x27;s development environment (not development environment using Yew). Hope this save your time.&lt;&#x2F;p&gt;
+</description>
+            </item>
         
             <item>
                 <title>dieselで条件に基づいたクエリを構築する</title>
