@@ -23,7 +23,7 @@ Do it first: [Contribution Guide](https://github.com/yewstack/yew/blob/master/CO
 
 Yes, [fabulous script](https://github.com/yewstack/yew/blob/master/examples/build_all.sh).
 
-## Run `stdweb` examples
+## Build & Run `stdweb` examples
 
 It's pretty easy. For example, here is an example to run `counter` example of `stdweb` version.
 
@@ -34,7 +34,9 @@ cargo web start --target wasm32-unknown-unknown
 
 Open `http://localhost:8000` in your browser.
 
-## Run `web-sys` examples
+## Build `web-sys` examples
+
+In `web-sys` examples, you need to run separated build commands (`cargo build` and `wasm-bindgen`) because `cargo-web` doesn't support `web-sys` at this time.
 
 ```
 cd examples/web_sys/counter
@@ -42,16 +44,18 @@ cargo build --target wasm32-unknown-unknown
 wasm-bindgen --target web --no-typescript --out-dir ../../static/ --out-name wasm ../../target/wasm32-unknown-unknown/debug/counter_web_sys.wasm
 ```
 
+I got following error on running `wasm-bindgen`.
+
 ## ERROR: thread 'main' panicked at 'index out of bounds: the len is 0 but the index is 0', /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15
 
-Welcome to the main section of this post. In my environment, I couldn't create wasm module and got errors:
+Welcome to the main section of this post.
 
 ```
 thread 'main' panicked at 'index out of bounds: the len is 0 but the index is 0', /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace.
 ```
 
-Here is a verbose report.
+Here is a verbose output.
 
 ```
 thread 'main' panicked at 'index out of bounds: the len is 0 but the index is 0', /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15
@@ -90,10 +94,27 @@ $ wasm-bindgen --version
 wasm-bindgen 0.2.58
 ```
 
-### Upgrade toolchains
+### Update toolchains
 
-Upgrade all toolchains before starting developing Yew. Don't forget to use `--force` option, which is required to upgrade to latest version.
+Update `wasm-bindgen-cli` to `0.2.59` to match a version used in `Cargo.toml`.
+
+```
+cargo install wasm-bindgen-cli --force
+```
+
+Most of Rust projects assume you use the latest version of toolchains. I recommend you to also update other toolchains:
 
 - `rustup update stable`
 - `cargo install cargo-web --force`
-- `cargo install wasm-bindgen-cli --force`
+
+After updates, I confirmed `wasm-bindgen` is `0.2.59` and rebuilt successfully. Note that `wasm-bindgen` outputs nothing on success (according to UNIX philosophy).
+
+## Run `web-sys` examples
+
+All builds were done. Let's run it. To serve local files, I'm using [http-server](https://www.npmjs.com/package/http-server). If you have favorite [one-liners](https://gist.github.com/willurd/5720255), it's okay to use it of course.
+
+```
+http-server ../../static -p 9000
+```
+
+Open `http://localhost:9000` in your browser.
