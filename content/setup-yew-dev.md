@@ -2,7 +2,7 @@
 title = "Yew: Setup development environment"
 date = 2020-03-22
 draft = false
-slug = "setup-ywe-dev"
+slug = "setup-yew-dev"
 in_search_index = true
 template = "page.html"
 
