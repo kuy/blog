@@ -124,25 +124,28 @@
 <p>Do it first: <a href="https://github.com/yewstack/yew/blob/master/CONTRIBUTING.md">Contribution Guide</a></p>
 <h2 id="rtfs">RTFS</h2>
 <p>Yes, <a href="https://github.com/yewstack/yew/blob/master/examples/build_all.sh">fabulous script</a>.</p>
-<h2 id="run-stdweb-examples">Run <code>stdweb</code> examples</h2>
+<h2 id="build-run-stdweb-examples">Build &amp; Run <code>stdweb</code> examples</h2>
 <p>It's pretty easy. For example, here is an example to run <code>counter</code> example of <code>stdweb</code> version.</p>
 <pre style="background-color:#282828;">
 <span style="color:#fdf4c1aa;">cd examples/std_web/counter
 cargo web start --target wasm32-unknown-unknown
 </span></pre>
 <p>Open <code>http://localhost:8000</code> in your browser.</p>
-<h2 id="run-web-sys-examples">Run <code>web-sys</code> examples</h2>
+<h2 id="build-web-sys-examples">Build <code>web-sys</code> examples</h2>
+<p>In <code>web-sys</code> examples, you need to run separated build commands (<code>cargo build</code> and <code>wasm-bindgen</code>) because <code>cargo-web</code> doesn't support <code>web-sys</code> at this time.</p>
 <pre style="background-color:#282828;">
 <span style="color:#fdf4c1aa;">cd examples/web_sys/counter
 cargo build --target wasm32-unknown-unknown
 wasm-bindgen --target web --no-typescript --out-dir ../../static/ --out-name wasm ../../target/wasm32-unknown-unknown/debug/counter_web_sys.wasm
-</span></pre><h2 id="error-thread-main-panicked-at-index-out-of-bounds-the-len-is-0-but-the-index-is-0-users-yourname-cargo-registry-src-github-com-1ecc6299db9ec823-wasm-bindgen-cli-support-0-2-58-src-descriptor-rs-198-15">ERROR: thread 'main' panicked at 'index out of bounds: the len is 0 but the index is 0', /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15</h2>
-<p>Welcome to the main section of this post. In my environment, I couldn't create wasm module and got errors:</p>
+</span></pre>
+<p>I got following error on running <code>wasm-bindgen</code>.</p>
+<h2 id="error-thread-main-panicked-at-index-out-of-bounds-the-len-is-0-but-the-index-is-0-users-yourname-cargo-registry-src-github-com-1ecc6299db9ec823-wasm-bindgen-cli-support-0-2-58-src-descriptor-rs-198-15">ERROR: thread 'main' panicked at 'index out of bounds: the len is 0 but the index is 0', /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15</h2>
+<p>Welcome to the main section of this post.</p>
 <pre style="background-color:#282828;">
 <span style="color:#fdf4c1aa;">thread &#39;main&#39; panicked at &#39;index out of bounds: the len is 0 but the index is 0&#39;, /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace.
 </span></pre>
-<p>Here is a verbose report.</p>
+<p>Here is a verbose output.</p>
 <pre style="background-color:#282828;">
 <span style="color:#fdf4c1aa;">thread &#39;main&#39; panicked at &#39;index out of bounds: the len is 0 but the index is 0&#39;, /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15
 stack backtrace:
@@ -174,13 +177,23 @@ note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose bac
 <pre style="background-color:#282828;">
 <span style="color:#fdf4c1aa;">$ wasm-bindgen --version
 wasm-bindgen 0.2.58
-</span></pre><h3 id="upgrade-toolchains">Upgrade toolchains</h3>
-<p>Upgrade all toolchains before starting developing Yew. Don't forget to use <code>--force</code> option, which is required to upgrade to latest version.</p>
+</span></pre><h3 id="update-toolchains">Update toolchains</h3>
+<p>Update <code>wasm-bindgen-cli</code> to <code>0.2.59</code> to match a version used in <code>Cargo.toml</code>.</p>
+<pre style="background-color:#282828;">
+<span style="color:#fdf4c1aa;">cargo install wasm-bindgen-cli --force
+</span></pre>
+<p>Most of Rust projects assume you use the latest version of toolchains. I recommend you to also update other toolchains:</p>
 <ul>
 <li><code>rustup update stable</code></li>
 <li><code>cargo install cargo-web --force</code></li>
-<li><code>cargo install wasm-bindgen-cli --force</code></li>
 </ul>
+<p>After updates, I confirmed <code>wasm-bindgen</code> is <code>0.2.59</code> and rebuilt successfully. Note that <code>wasm-bindgen</code> outputs nothing on success (according to UNIX philosophy).</p>
+<h2 id="run-web-sys-examples">Run <code>web-sys</code> examples</h2>
+<p>All builds were done. Let's run it. To serve local files, I'm using <a href="https://www.npmjs.com/package/http-server">http-server</a>. If you have favorite <a href="https://gist.github.com/willurd/5720255">one-liners</a>, it's okay to use it of course.</p>
+<pre style="background-color:#282828;">
+<span style="color:#fdf4c1aa;">http-server ../../static -p 9000
+</span></pre>
+<p>Open <code>http://localhost:9000</code> in your browser.</p>
 
     </div>
 
