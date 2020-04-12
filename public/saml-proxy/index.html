@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title>blog.endflow.net - 社内システム向けにSAML用認証プロキシをFargateで立ててVPNを撲滅した話</title>
+
+      
+
+      
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
+          
+      
+
+      
+          <link href="https://fonts.googleapis.com/css?family=Roboto:400,700|Source+Code+Pro&display=swap" rel="stylesheet">
+          <link rel="stylesheet" href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;site.css">
+          
+      
+
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-3511180-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-3511180-1');
+      </script>
+
+      
+      
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="mobile-navbar" class="mobile-navbar">
+              <div class="mobile-header-logo">
+                <a href="/" class="logo">&#x2F;* blog.endflow.net *&#x2F;</a>
+              </div>
+              <div class="mobile-navbar-icon icon-out">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
+              <ul class="mobile-menu-list">
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;categories">
+                            Categories
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags">
+                            Tags
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;about">
+                            @kuy
+                        </a>
+                    </li>
+                
+              </ul>
+            </nav>
+
+            <header id="header">
+                <div class="logo"><a href="https:&#x2F;&#x2F;blog.endflow.net">&#x2F;* blog.endflow.net *&#x2F;</a></div>
+                <nav class="menu">
+                    <ul>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;categories">
+                                    Categories
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags">
+                                    Tags
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;about">
+                                    @kuy
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="content" id="mobile-panel">
+                    
+
+
+
+<article class="post">
+    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;saml-proxy&#x2F;">社内システム向けにSAML用認証プロキシをFargateで立ててVPNを撲滅した話</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2020-04-13</span>
+            
+        </div>
+    </header>
+
+    <div class="post-content">
+      <h2 id="jing-wei">経緯</h2>
+<p>Work from Home への対応を進める中で、部署によっては社内システムへのアクセスで VPN が必須になっている。でも、VPN 経由だと回線は細くなるので接続しっぱなしで作業するのはつらいことが多い。もちろんエンジニアであれば特定の IP だけ VPN 経由に、とかそういう設定もできるけど、みんなが手軽にできるわけでもない。それに、最近は <a href="https://www.wikiwand.com/en/Zero_Trust">Zero Trust Network</a> みたいな考え方も出てきているし、社内システムを G Suite の Google アカウントで SSO できるように対応できればセキュリティも強化されるし VPN 不要になってみんなハッピー！と思った。</p>
+<p>とはいえ、社内システムは他システムからの依存もあり、あんまり適当に認証まわりをいじりたくない。そこで、社内システム自体はそのままにして、SAML 対応の認証プロキシを別ドメインで立てるという構想に至った。</p>
+<span id="continue-reading"></span><h2 id="quan-ti-imezi">全体イメージ</h2>
+<p><img src="/img/saml-system-overview.png" alt="system-overview" /></p>
+<h2 id="sanpurukodo">サンプルコード</h2>
+<p><a href="https://github.com/kuy/saml-proxy">https://github.com/kuy/saml-proxy</a></p>
+<h2 id="gou-cheng">構成</h2>
+<ul>
+<li>SAML 認証とプロキシは Node.js で作る（手軽！）</li>
+<li>Docker で固めて Fargate で運用（メンテフリー！）</li>
+</ul>
+<h2 id="setutoatupu">セットアップ</h2>
+<p>力尽きたのであとで書く。</p>
+<p>この記事がかなり参考になった。 <a href="https://artsnet.jp/archives/gsuite_sso_private_gitbook/">https://artsnet.jp/archives/gsuite_sso_private_gitbook/</a></p>
+<h2 id="hamaripointo">ハマりポイント</h2>
+<ul>
+<li>private subnet で作るとヘルスチェックがおかしい</li>
+<li>public subnet で作るときは Public IP を有効にしないと ECR からイメージを pull できない</li>
+<li>AWS CLI だけで作るにはかなり慣れが必要</li>
+</ul>
+<h2 id="jin-hou-nogai-shan">今後の改善</h2>
+<ul>
+<li>ECS 側の外部 IP を固定化する
+<ul>
+<li>private subnet で Task を立ち上げて NAT Gateway を経由させればいけそう</li>
+</ul>
+</li>
+<li>AWS CLI で完全に構築できるようにしたい</li>
+</ul>
+
+    </div>
+
+    
+    
+
+    <div class="post-footer">
+        
+            
+                <div class="post-tags">
+                    
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;saml&#x2F;">#saml</a>
+                    
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;sso&#x2F;">#sso</a>
+                    
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;node-js&#x2F;">#node-js</a>
+                    
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;fargate&#x2F;">#fargate</a>
+                    
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;docker&#x2F;">#docker</a>
+                    
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;aws&#x2F;">#aws</a>
+                    
+                </div>
+            
+            
+                <div class="post-nav">
+                    
+                        <a class="previous" href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;pouring-tips&#x2F;">‹ ハンドドリップでエグみが強く出てしまうときの対処方法</a>
+                    
+                    
+                    
+                    
+                </div>
+            
+
+        
+
+    </div>
+
+    
+    
+</article>
+
+
+                </div>
+            </main>
+
+            
+            
+        </div>
+
+      
+          <script type="text/javascript" src="https:&#x2F;&#x2F;blog.endflow.net&#x2F;even.js" ></script>
+      
+    </body>
+
+</html>

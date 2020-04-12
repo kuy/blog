@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>blog.endflow.net</title>
+        <link>https://blog.endflow.net</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>en</language>
+        <atom:link href="https://blog.endflow.net/tags/fargate/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Mon, 13 Apr 2020 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>社内システム向けにSAML用認証プロキシをFargateで立ててVPNを撲滅した話</title>
+                <pubDate>Mon, 13 Apr 2020 00:00:00 +0000</pubDate>
+                <link>https://blog.endflow.net/saml-proxy/</link>
+                <guid>https://blog.endflow.net/saml-proxy/</guid>
+                <description>&lt;h2 id=&quot;jing-wei&quot;&gt;経緯&lt;&#x2F;h2&gt;
+&lt;p&gt;Work from Home への対応を進める中で、部署によっては社内システムへのアクセスで VPN が必須になっている。でも、VPN 経由だと回線は細くなるので接続しっぱなしで作業するのはつらいことが多い。もちろんエンジニアであれば特定の IP だけ VPN 経由に、とかそういう設定もできるけど、みんなが手軽にできるわけでもない。それに、最近は &lt;a href=&quot;https:&#x2F;&#x2F;www.wikiwand.com&#x2F;en&#x2F;Zero_Trust&quot;&gt;Zero Trust Network&lt;&#x2F;a&gt; みたいな考え方も出てきているし、社内システムを G Suite の Google アカウントで SSO できるように対応できればセキュリティも強化されるし VPN 不要になってみんなハッピー！と思った。&lt;&#x2F;p&gt;
+&lt;p&gt;とはいえ、社内システムは他システムからの依存もあり、あんまり適当に認証まわりをいじりたくない。そこで、社内システム自体はそのままにして、SAML 対応の認証プロキシを別ドメインで立てるという構想に至った。&lt;&#x2F;p&gt;
+</description>
+            </item>
+        
+    </channel>
+</rss>

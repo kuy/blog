@@ -125,14 +125,14 @@
 <h2 id="rtfs">RTFS</h2>
 <p>Yes, <a href="https://github.com/yewstack/yew/blob/master/examples/build_all.sh">fabulous script</a>.</p>
 <h2 id="build-run-stdweb-examples">Build &amp; Run <code>stdweb</code> examples</h2>
-<p>It's pretty easy. For example, here is an example to run <code>counter</code> example of <code>stdweb</code> version.</p>
+<p>It's pretty easy. For example, here is an example to run <a href="https://github.com/yewstack/yew/tree/master/examples/std_web/counter">counter</a> example of <a href="https://github.com/yewstack/yew/tree/master/examples/std_web">stdweb</a> version.</p>
 <pre style="background-color:#282828;">
 <span style="color:#fdf4c1aa;">cd examples/std_web/counter
 cargo web start --target wasm32-unknown-unknown
 </span></pre>
 <p>Open <code>http://localhost:8000</code> in your browser.</p>
 <h2 id="build-web-sys-examples">Build <code>web-sys</code> examples</h2>
-<p>In <code>web-sys</code> examples, you need to run separated build commands (<code>cargo build</code> and <code>wasm-bindgen</code>) because <code>cargo-web</code> doesn't support <code>web-sys</code> at this time.</p>
+<p>In <a href="https://github.com/yewstack/yew/tree/master/examples/web_sys">web-sys</a> examples, you need to run separated build commands (<code>cargo build</code> and <code>wasm-bindgen</code>) because <code>cargo-web</code> doesn't support <code>web-sys</code> at this time.</p>
 <pre style="background-color:#282828;">
 <span style="color:#fdf4c1aa;">cd examples/web_sys/counter
 cargo build --target wasm32-unknown-unknown
@@ -189,12 +189,25 @@ wasm-bindgen 0.2.58
 </ul>
 <p>After updates, I confirmed <code>wasm-bindgen</code> is <code>0.2.59</code> and rebuilt successfully. Note that <code>wasm-bindgen</code> outputs nothing on success (according to UNIX philosophy).</p>
 <h2 id="run-web-sys-examples">Run <code>web-sys</code> examples</h2>
-<p>All builds were done. Let's run it. To serve local files, I'm using <a href="https://www.npmjs.com/package/http-server">http-server</a>. If you have favorite <a href="https://gist.github.com/willurd/5720255">one-liners</a>, it's okay to use it of course.</p>
+<p>Let's run it. To serve local files, I'm using <a href="https://www.npmjs.com/package/http-server">http-server</a>. If you have favorite <a href="https://gist.github.com/willurd/5720255">one-liners</a>, it's okay to use it of course.</p>
 <pre style="background-color:#282828;">
-<span style="color:#fdf4c1aa;">http-server ../../static -p 9000
+<span style="color:#fdf4c1aa;">http-server ../../static -p 8000
 </span></pre>
-<p>Open <code>http://localhost:9000</code> in your browser.</p>
-
+<p>Open <code>http://localhost:8000</code> in your browser.</p>
+<h2 id="build-run-mixed-examples">Build &amp; Run mixed examples</h2>
+<p>Now you can launch <a href="https://github.com/yewstack/yew/tree/master/examples/std_web">stdweb</a> and <a href="https://github.com/yewstack/yew/tree/master/examples/web_sys">web-sys</a> examples, but how about other examples? For instance, <a href="https://github.com/yewstack/yew/tree/master/examples/showcase">showcase</a> contains both backends.</p>
+<p>To build it, use <code>--features</code> option to indicate which backend you want to use.</p>
+<pre style="background-color:#282828;">
+<span style="color:#fdf4c1aa;">cd examples/showcase
+cargo web start --target wasm32-unknown-unknown --features std_web
+</span></pre>
+<p>and</p>
+<pre style="background-color:#282828;">
+<span style="color:#fdf4c1aa;">cd examples/showcase
+cargo build --target wasm32-unknown-unknown --features web_sys
+wasm-bindgen --target web --no-typescript --out-dir ../static/ --out-name wasm ../target/wasm32-unknown-unknown/debug/showcase.wasm
+http-server ../static -p 8000
+</span></pre>
     </div>
 
     

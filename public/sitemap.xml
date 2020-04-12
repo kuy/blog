@@ -84,6 +84,13 @@
         </url>
     
         <url>
+            <loc>https://blog.endflow.net/saml-proxy/</loc>
+            
+                <lastmod>2020-04-13</lastmod>
+            
+        </url>
+    
+        <url>
             <loc>https://blog.endflow.net/setup-yew-dev/</loc>
             
                 <lastmod>2020-03-22</lastmod>
@@ -101,6 +108,11 @@
         </url>
     
         <url>
+            <loc>https://blog.endflow.net/tags/aws/</loc>
+            
+        </url>
+    
+        <url>
             <loc>https://blog.endflow.net/tags/computer-science/</loc>
             
         </url>
@@ -111,7 +123,17 @@
         </url>
     
         <url>
+            <loc>https://blog.endflow.net/tags/docker/</loc>
+            
+        </url>
+    
+        <url>
             <loc>https://blog.endflow.net/tags/equipment/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://blog.endflow.net/tags/fargate/</loc>
             
         </url>
     
@@ -127,6 +149,11 @@
     
         <url>
             <loc>https://blog.endflow.net/tags/links/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://blog.endflow.net/tags/node-js/</loc>
             
         </url>
     
@@ -151,7 +178,17 @@
         </url>
     
         <url>
+            <loc>https://blog.endflow.net/tags/saml/</loc>
+            
+        </url>
+    
+        <url>
             <loc>https://blog.endflow.net/tags/sql/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://blog.endflow.net/tags/sso/</loc>
             
         </url>
     

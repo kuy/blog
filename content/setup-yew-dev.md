@@ -25,7 +25,7 @@ Yes, [fabulous script](https://github.com/yewstack/yew/blob/master/examples/buil
 
 ## Build & Run `stdweb` examples
 
-It's pretty easy. For example, here is an example to run `counter` example of `stdweb` version.
+It's pretty easy. For example, here is an example to run [counter](https://github.com/yewstack/yew/tree/master/examples/std_web/counter) example of [stdweb](https://github.com/yewstack/yew/tree/master/examples/std_web) version.
 
 ```
 cd examples/std_web/counter
@@ -36,7 +36,7 @@ Open `http://localhost:8000` in your browser.
 
 ## Build `web-sys` examples
 
-In `web-sys` examples, you need to run separated build commands (`cargo build` and `wasm-bindgen`) because `cargo-web` doesn't support `web-sys` at this time.
+In [web-sys](https://github.com/yewstack/yew/tree/master/examples/web_sys) examples, you need to run separated build commands (`cargo build` and `wasm-bindgen`) because `cargo-web` doesn't support `web-sys` at this time.
 
 ```
 cd examples/web_sys/counter
@@ -111,10 +111,30 @@ After updates, I confirmed `wasm-bindgen` is `0.2.59` and rebuilt successfully. 
 
 ## Run `web-sys` examples
 
-All builds were done. Let's run it. To serve local files, I'm using [http-server](https://www.npmjs.com/package/http-server). If you have favorite [one-liners](https://gist.github.com/willurd/5720255), it's okay to use it of course.
+Let's run it. To serve local files, I'm using [http-server](https://www.npmjs.com/package/http-server). If you have favorite [one-liners](https://gist.github.com/willurd/5720255), it's okay to use it of course.
 
 ```
-http-server ../../static -p 9000
+http-server ../../static -p 8000
 ```
 
-Open `http://localhost:9000` in your browser.
+Open `http://localhost:8000` in your browser.
+
+## Build & Run mixed examples
+
+Now you can launch [stdweb](https://github.com/yewstack/yew/tree/master/examples/std_web) and [web-sys](https://github.com/yewstack/yew/tree/master/examples/web_sys) examples, but how about other examples? For instance, [showcase](https://github.com/yewstack/yew/tree/master/examples/showcase) contains both backends.
+
+To build it, use `--features` option to indicate which backend you want to use.
+
+```
+cd examples/showcase
+cargo web start --target wasm32-unknown-unknown --features std_web
+```
+
+and
+
+```
+cd examples/showcase
+cargo build --target wasm32-unknown-unknown --features web_sys
+wasm-bindgen --target web --no-typescript --out-dir ../static/ --out-name wasm ../target/wasm32-unknown-unknown/debug/showcase.wasm
+http-server ../static -p 8000
+```
