@@ -7,7 +7,7 @@
       <!-- Enable responsiveness on mobile devices-->
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
-      <title>blog.endflow.net - 社内システム向けにSAML用認証プロキシをFargateで立ててVPNを撲滅した話</title>
+      <title>blog.endflow.net - 社内システム向けにSAML用認証プロキシをFargateで立ててVPNを撲滅する話</title>
 
       
 
@@ -110,7 +110,7 @@
     
     <header class="post__header">
         <h1 class="post__title">
-            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;saml-proxy&#x2F;">社内システム向けにSAML用認証プロキシをFargateで立ててVPNを撲滅した話</a>
+            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;saml-proxy&#x2F;">社内システム向けにSAML用認証プロキシをFargateで立ててVPNを撲滅する話</a>
         </h1>
         <div class="post__meta">
             <span class="post__time">2020-04-13</span>
@@ -122,7 +122,9 @@
       <h2 id="jing-wei">経緯</h2>
 <p>Work from Home への対応を進める中で、部署によっては社内システムへのアクセスで VPN が必須になっている。でも、VPN 経由だと回線は細くなるので接続しっぱなしで作業するのはつらいことが多い。もちろんエンジニアであれば特定の IP だけ VPN 経由に、とかそういう設定もできるけど、みんなが手軽にできるわけでもない。それに、最近は <a href="https://www.wikiwand.com/en/Zero_Trust">Zero Trust Network</a> みたいな考え方も出てきているし、社内システムを G Suite の Google アカウントで SSO できるように対応できればセキュリティも強化されるし VPN 不要になってみんなハッピー！と思った。</p>
 <p>とはいえ、社内システムは他システムからの依存もあり、あんまり適当に認証まわりをいじりたくない。そこで、社内システム自体はそのままにして、SAML 対応の認証プロキシを別ドメインで立てるという構想に至った。</p>
-<span id="continue-reading"></span><h2 id="quan-ti-imezi">全体イメージ</h2>
+<span id="continue-reading"></span><h3 id="ding-zheng-2020-04-13-03-19-35">訂正: 2020/04/13 03:19:35</h3>
+<p>最初「社内システム向けに SAML 用認証プロキシを Fargate で立てて VPN を撲滅した話」というタイトルにしてたけど、現段階ではまだ撲滅できていない。歴史的経緯で複数のドメインがあり、ひとまず自分の管理権限でカスタム SAML アプリケーションを追加できる組織だけ SSO できる状態にした。他組織に展開するのは明日以降になる。</p>
+<h2 id="quan-ti-imezi">全体イメージ</h2>
 <p><img src="/img/saml-system-overview.png" alt="system-overview" /></p>
 <h2 id="sanpurukodo">サンプルコード</h2>
 <p><a href="https://github.com/kuy/saml-proxy">https://github.com/kuy/saml-proxy</a></p>
