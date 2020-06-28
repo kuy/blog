@@ -109,6 +109,55 @@
                                     
     <header class="post__header">
         <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;build-conditional-query&#x2F;">dieselで条件に基づいたクエリを構築する</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2020-02-11</span>
+            
+        </div>
+    </header>
+
+                                    <div class="post__summary">
+                                        <p><a href="https://github.com/diesel-rs/diesel">diesel</a> 小ネタ。</p>
+<p>参考: <a href="https://github.com/diesel-rs/diesel/issues/455">https://github.com/diesel-rs/diesel/issues/455</a></p>
+<h2 id="yaritaikoto">やりたいこと</h2>
+<p>数字の ID でも文字列の slug でも１つの関数で検索できるようにしたい。</p>
+<pre style="background-color:#282828;">
+<span style="color:#fa5c4b;">pub enum </span><span style="color:#8ec07c;">IdOrSlug </span><span style="color:#fdf4c1aa;">{
+    Id(</span><span style="color:#fa5c4b;">i32</span><span style="color:#fdf4c1aa;">),
+    Slug(</span><span style="color:#fabd2f;">String</span><span style="color:#fdf4c1aa;">),
+}
+
+</span><span style="font-style:italic;color:#928374;">// ...
+
+</span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">find</span><span style="color:#fdf4c1aa;">(..., </span><span style="color:#fdf4c1;">id</span><span style="color:#fdf4c1aa;">: IdOrSlug) -&gt; Result&lt;Article&gt; {
+    </span><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> query </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1aa;">articles::table.</span><span style="color:#fabd2f;">left_join</span><span style="color:#fdf4c1aa;">(categories::table);
+    </span><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> query </span><span style="color:#fe8019;">= </span><span style="color:#fa5c4b;">match</span><span style="color:#fdf4c1aa;"> id {
+        IdOrSlug::Id(id) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> query.</span><span style="color:#fabd2f;">filter</span><span style="color:#fdf4c1aa;">(articles::id.</span><span style="color:#fabd2f;">eq</span><span style="color:#fdf4c1aa;">(id)),
+        IdOrSlug::Slug(slug) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> query.</span><span style="color:#fabd2f;">filter</span><span style="color:#fdf4c1aa;">(articles::slug.</span><span style="color:#fabd2f;">eq</span><span style="color:#fdf4c1aa;">(slug.</span><span style="color:#fabd2f;">as_str</span><span style="color:#fdf4c1aa;">())),
+    };
+
+    </span><span style="font-style:italic;color:#928374;">// ...
+</span></pre><h2 id="dametupoi">ダメっぽい</h2>
+<p><code>.filter()</code> をかますと引数の型が戻り値の型に埋め込まれるようで、 incompatible だと怒られる。</p>
+<pre style="background-color:#282828;">
+<span style="color:#fdf4c1aa;">match arms have incompatible types
+
+expected struct `schema::articles::columns::id`, found struct `schema::articles::columns::slug`
+
+note: expected type `diesel::query_builder::SelectStatement&lt;_, _, _, diesel::query_builder::where_clause::WhereClause&lt;diesel::expression::operators::Eq&lt;schema::articles::columns::id, diesel::expression::bound::Bound&lt;diesel::sql_types::Integer, i32&gt;&gt;&gt;&gt;`
+       found struct `diesel::query_builder::SelectStatement&lt;_, _, _, diesel::query_builder::where_clause::WhereClause&lt;diesel::expression::operators::Eq&lt;schema::articles::columns::slug, diesel::expression::bound::Bound&lt;diesel::sql_types::Text, &amp;str&gt;&gt;&gt;&gt;`
+</span></pre>
+                                    </div>
+                                    <div class="read-more">
+                                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;build-conditional-query&#x2F;">Read more...</a>
+                                    </div>
+                                </article>
+                            
+                                <article class="post">
+                                    
+    <header class="post__header">
+        <h1 class="post__title">
             <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;learn-program-semantics&#x2F;">プログラム意味論のお勉強</a>
         </h1>
         <div class="post__meta">

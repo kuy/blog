@@ -53,6 +53,13 @@
         </url>
     
         <url>
+            <loc>https://blog.endflow.net/first-cupping/</loc>
+            
+                <lastmod>2020-06-28</lastmod>
+            
+        </url>
+    
+        <url>
             <loc>https://blog.endflow.net/flex-handler/</loc>
             
                 <lastmod>2019-08-12</lastmod>
@@ -118,6 +125,11 @@
         </url>
     
         <url>
+            <loc>https://blog.endflow.net/tags/cupping/</loc>
+            
+        </url>
+    
+        <url>
             <loc>https://blog.endflow.net/tags/diesel/</loc>
             
         </url>
@@ -164,6 +176,11 @@
     
         <url>
             <loc>https://blog.endflow.net/tags/program-semantics/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://blog.endflow.net/tags/report/</loc>
             
         </url>
     

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>blog.endflow.net</title>
+        <link>https://blog.endflow.net</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>en</language>
+        <atom:link href="https://blog.endflow.net/tags/cupping/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Sun, 28 Jun 2020 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>カッピングやってみた</title>
+                <pubDate>Sun, 28 Jun 2020 00:00:00 +0000</pubDate>
+                <link>https://blog.endflow.net/first-cupping/</link>
+                <guid>https://blog.endflow.net/first-cupping/</guid>
+                <description>&lt;h2 id=&quot;hazimetenokatupingu&quot;&gt;はじめてのカッピング&lt;&#x2F;h2&gt;
+&lt;p&gt;コーヒーめちゃくちゃ好きなんですが、実はカッピングってちゃんとやったことなかったので、やってみたよ！という話です。&lt;&#x2F;p&gt;
+&lt;p&gt;実際にやってみると自分が想像していた以上の世界が広がっていて、得られた知見をもとに日々のドリップにも活かせそうなので、コーヒーを自分で淹れ始めた人とかはぜひ試してみてほしい。&lt;&#x2F;p&gt;
+</description>
+            </item>
+        
+    </channel>
+</rss>
