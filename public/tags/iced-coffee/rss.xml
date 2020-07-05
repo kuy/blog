@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>blog.endflow.net</title>
+        <link>https://blog.endflow.net</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>en</language>
+        <atom:link href="https://blog.endflow.net/tags/iced-coffee/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Sun, 05 Jul 2020 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>アイスコーヒー 2.0</title>
+                <pubDate>Sun, 05 Jul 2020 00:00:00 +0000</pubDate>
+                <link>https://blog.endflow.net/iced-coffee-20/</link>
+                <guid>https://blog.endflow.net/iced-coffee-20/</guid>
+                <description>&lt;h2 id=&quot;aisukohi-2-0&quot;&gt;アイスコーヒー 2.0&lt;&#x2F;h2&gt;
+&lt;p&gt;「〜 2.0」って表現は古いよ、というのはさておき、今の自分の心境をかなりうまく表しているタイトルになっている。&lt;&#x2F;p&gt;
+&lt;p&gt;というのも、この 1 ヶ月ほどで自分の中でのアイスコーヒーの概念が大きく変わった。きっかけはフグレンで飲んだアイスコーヒーで、ひと口味わった瞬間、想像していた味と違いすぎて「えっ？なにこれ？」ってなった（正体は後述）。清涼感のある酸味とゆっくり効いてくる甘みと優しい苦味・・・。もうこれはコーヒーとは別の飲み物だな、と。&lt;&#x2F;p&gt;
+&lt;p&gt;今回は思い立ったらすぐに手軽に作れるアイスコーヒーのレシピを書こうと思う。&lt;&#x2F;p&gt;
+</description>
+            </item>
+        
+    </channel>
+</rss>

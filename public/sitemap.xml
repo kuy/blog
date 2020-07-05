@@ -67,6 +67,13 @@
         </url>
     
         <url>
+            <loc>https://blog.endflow.net/iced-coffee-20/</loc>
+            
+                <lastmod>2020-07-05</lastmod>
+            
+        </url>
+    
+        <url>
             <loc>https://blog.endflow.net/learn-program-semantics/</loc>
             
                 <lastmod>2020-02-09</lastmod>
@@ -80,6 +87,11 @@
     
         <url>
             <loc>https://blog.endflow.net/page/2/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://blog.endflow.net/page/3/</loc>
             
         </url>
     
@@ -160,6 +172,11 @@
         </url>
     
         <url>
+            <loc>https://blog.endflow.net/tags/iced-coffee/</loc>
+            
+        </url>
+    
+        <url>
             <loc>https://blog.endflow.net/tags/links/</loc>
             
         </url>
@@ -176,6 +193,11 @@
     
         <url>
             <loc>https://blog.endflow.net/tags/program-semantics/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://blog.endflow.net/tags/recipe/</loc>
             
         </url>
     
