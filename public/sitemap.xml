@@ -1,256 +1,156 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    
-        <url>
-            <loc>https://blog.endflow.net/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/about/</loc>
-            
-                <lastmod>1984-11-04</lastmod>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/build-conditional-query/</loc>
-            
-                <lastmod>2020-02-11</lastmod>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/categories/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/categories/coffee/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/categories/coffee/page/1/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/categories/programming/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/categories/programming/page/1/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/cores-grinder-review/</loc>
-            
-                <lastmod>2020-03-08</lastmod>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/first-cupping/</loc>
-            
-                <lastmod>2020-06-28</lastmod>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/flex-handler/</loc>
-            
-                <lastmod>2019-08-12</lastmod>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/iced-coffee-20/</loc>
-            
-                <lastmod>2020-07-05</lastmod>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/learn-program-semantics/</loc>
-            
-                <lastmod>2020-02-09</lastmod>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/page/1/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/page/2/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/page/3/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/pouring-tips/</loc>
-            
-                <lastmod>2020-03-22</lastmod>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/saml-proxy/</loc>
-            
-                <lastmod>2020-04-13</lastmod>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/setup-yew-dev/</loc>
-            
-                <lastmod>2020-03-22</lastmod>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/actix-web/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/aws/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/computer-science/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/cupping/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/diesel/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/docker/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/equipment/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/fargate/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/frontend/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/grinder/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/iced-coffee/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/links/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/node-js/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/pour-over/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/program-semantics/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/recipe/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/report/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/review/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/rust/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/saml/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/sql/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/sso/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/tips/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/web/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/tags/yew/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://blog.endflow.net/typed-basket/</loc>
-            
-                <lastmod>2019-08-17</lastmod>
-            
-        </url>
-    
+    <url>
+        <loc>https://blog.endflow.net/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/about/</loc>
+        <lastmod>1984-11-04</lastmod>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/build-conditional-query/</loc>
+        <lastmod>2020-02-11</lastmod>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/categories/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/categories/coffee/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/categories/coffee/page/1/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/categories/programming/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/categories/programming/page/1/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/cores-grinder-review/</loc>
+        <lastmod>2020-03-08</lastmod>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/first-cupping/</loc>
+        <lastmod>2020-06-28</lastmod>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/flex-handler/</loc>
+        <lastmod>2019-08-12</lastmod>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/iced-coffee-20/</loc>
+        <lastmod>2020-07-05</lastmod>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/learn-program-semantics/</loc>
+        <lastmod>2020-02-09</lastmod>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/page/1/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/page/2/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/page/3/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/pour-over-tips/</loc>
+        <lastmod>2021-01-01</lastmod>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/pouring-tips/</loc>
+        <lastmod>2020-03-22</lastmod>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/saml-proxy/</loc>
+        <lastmod>2020-04-13</lastmod>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/setup-yew-dev/</loc>
+        <lastmod>2020-03-22</lastmod>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/actix-web/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/aws/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/computer-science/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/cupping/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/diesel/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/docker/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/equipment/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/fargate/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/frontend/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/grinder/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/iced-coffee/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/links/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/node-js/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/pour-over/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/program-semantics/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/recipe/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/report/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/review/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/rust/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/saml/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/sql/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/sso/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/tips/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/web/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/yew/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/typed-basket/</loc>
+        <lastmod>2019-08-17</lastmod>
+    </url>
 </urlset>
