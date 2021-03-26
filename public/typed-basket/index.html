@@ -130,7 +130,7 @@
 <li>保管していない型を指定した場合は <strong>コンパイルエラー</strong> が発生</li>
 </ul>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> bag </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1aa;">Basket::new();
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> bag </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1aa;">Basket::new();
 bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;Universe&quot;</span><span style="color:#fdf4c1aa;">);
 bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;">(</span><span style="color:#d3869b;">42</span><span style="color:#fdf4c1aa;">);
 
@@ -146,7 +146,7 @@ bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;"
 <p>基本的なアイデアは簡単で、初期状態を <code>Basket&lt;()&gt;</code> 、<code>&amp;str</code> を格納した状態を <code>Basket&lt;(&amp;str,)&gt;</code> 、さらに <code>i32</code> を格納した状態を <code>Basket&lt;(&amp;str, i32)&gt;</code> という感じで <code>Basket&lt;T&gt;</code> の型パラメータを変えて、それぞれの型ごとに呼び出せるメソッドに制限をかければいい。型が変化するのは <code>set()</code> メソッドの呼び出し時なので、単純にその時点で格納しているデータを引き継ぎつつ、新しく格納する値の型を含めた新たなコンテナの型で <code>new()</code> すればいい。型パラメータを使わないと怒られるので <code>PhantomData</code> を使っている。 <code>HashMap</code> のデータを引き継ぐ部分は <code>Drain</code> を使ってみた。</p>
 <p>以下がとりあえず書いたコード。 <code>panic!</code> しまくってるけど気にしてはいけない。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">pub struct </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;T&gt; {
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">pub struct </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;T&gt; {
     </span><span style="color:#fdf4c1;">items</span><span style="color:#fdf4c1aa;">: HashMap&lt;TypeId, </span><span style="color:#fabd2f;">Box</span><span style="color:#fdf4c1aa;">&lt;dyn Any&gt;&gt;,
     </span><span style="color:#fdf4c1;">_t</span><span style="color:#fdf4c1aa;">: PhantomData&lt;T&gt;,
 }
@@ -210,7 +210,7 @@ bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;"
 </span></code></pre>
 <p>このコードは一見正しく動いてしまう。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">main</span><span style="color:#fdf4c1aa;">() {
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">main</span><span style="color:#fdf4c1aa;">() {
     </span><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> bag </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1aa;">Basket::new()
         .</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;Universe&quot;</span><span style="color:#fdf4c1aa;">)
         .</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;">(</span><span style="color:#d3869b;">42</span><span style="color:#fdf4c1aa;">);
@@ -224,13 +224,13 @@ bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;"
 </span></code></pre>
 <p>ただ、以下のコードを追加すると肝心のコンパイル時のエラーチェックが効いていないことがわかる。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> item </span><span style="color:#fe8019;">=</span><span style="color:#fdf4c1aa;"> bag.get::&lt;</span><span style="color:#fa5c4b;">bool</span><span style="color:#fdf4c1aa;">&gt;();
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> item </span><span style="color:#fe8019;">=</span><span style="color:#fdf4c1aa;"> bag.get::&lt;</span><span style="color:#fa5c4b;">bool</span><span style="color:#fdf4c1aa;">&gt;();
 </span><span style="color:#fabd2f;">println!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;bool: </span><span style="color:#fdf4c1;">{}</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1aa;">, item); </span><span style="font-style:italic;color:#928374;">// =&gt; Compiled successfully, but PANIC!
 </span></code></pre>
 <p>原因は明らかで、 <code>get()</code> メソッドの定義において実装対象である <code>Basket&lt;(A, B)&gt;</code> の型パラメータ（<code>A</code>, <code>B</code>）を使っておらず、新たに導入した型パラメータ <code>U</code> にしか依存していないからである。
 かといって、 型パラメータ <code>A</code> を使うようにすると <code>U</code> は不要になるので <code>get()</code> メソッド呼び出し時に型パラメータを指定できない。型パラメータの指定ができなければ欲しい値を取り出せない。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">impl</span><span style="color:#fdf4c1aa;">&lt;A: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">, B: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt; </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;(A, B)&gt; {
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">impl</span><span style="color:#fdf4c1aa;">&lt;A: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">, B: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt; </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;(A, B)&gt; {
     </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">new_with</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fdf4c1;">iter</span><span style="color:#fdf4c1aa;">: Drain&lt;TypeId, </span><span style="color:#fabd2f;">Box</span><span style="color:#fdf4c1aa;">&lt;dyn Any&gt;&gt;) -&gt; </span><span style="color:#fa5c4b;">Self </span><span style="color:#fdf4c1aa;">{
         Basket {
             items: HashMap::from_iter(iter),
@@ -251,7 +251,7 @@ bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;"
 </span></code></pre>
 <p>ちなみに、以下のコードは定義がコンフリクトしてしまってコンパイルできない。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">impl</span><span style="color:#fdf4c1aa;">&lt;A: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">, B: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt; </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;(A, B)&gt; {
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">impl</span><span style="color:#fdf4c1aa;">&lt;A: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">, B: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt; </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;(A, B)&gt; {
     </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">new_with</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fdf4c1;">iter</span><span style="color:#fdf4c1aa;">: Drain&lt;TypeId, </span><span style="color:#fabd2f;">Box</span><span style="color:#fdf4c1aa;">&lt;dyn Any&gt;&gt;) -&gt; </span><span style="color:#fa5c4b;">Self </span><span style="color:#fdf4c1aa;">{
         Basket {
             items: HashMap::from_iter(iter),
@@ -282,7 +282,7 @@ bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;"
 </span></code></pre>
 <p>理想的にはメソッドに型パラメータ <code>U</code> を導入しつつ、 <code>A</code> または <code>B</code> と型が一致する、みたいな制約をかけることができればありがたいんだけど、そういう書き方は存在しなさそう。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">impl</span><span style="color:#fdf4c1aa;">&lt;A: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">, B: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt; </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;(A, B)&gt; {
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">impl</span><span style="color:#fdf4c1aa;">&lt;A: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">, B: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt; </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;(A, B)&gt; {
     </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">new_with</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fdf4c1;">iter</span><span style="color:#fdf4c1aa;">: Drain&lt;TypeId, </span><span style="color:#fabd2f;">Box</span><span style="color:#fdf4c1aa;">&lt;dyn Any&gt;&gt;) -&gt; </span><span style="color:#fa5c4b;">Self </span><span style="color:#fdf4c1aa;">{
         Basket {
             items: HashMap::from_iter(iter),

@@ -123,7 +123,7 @@
 <p>業務で Rust を使っていこうということになったので、Rust を勉強しながら何か Web アプリでも作ってみようと思って <a href="https://actix.rs/">actix-web</a> を触り始めた。サンプルコードをいじっていて気になったのはリクエストハンドラの引数の柔軟さで、まるでスクリプト言語のように扱える。</p>
 <p>例えば以下は <code>http://localhost:8080/hoge</code> にリクエストを受けると path 部分である <code>/hoge</code> をレスポンスとして返す。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">index</span><span style="color:#fdf4c1aa;">(
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">index</span><span style="color:#fdf4c1aa;">(
     </span><span style="color:#fdf4c1;">req</span><span style="color:#fdf4c1aa;">: HttpRequest,
 ) -&gt; impl IntoFuture&lt;Item = </span><span style="color:#fabd2f;">String</span><span style="color:#fdf4c1aa;">, Error = Error&gt; {
     </span><span style="color:#fabd2f;">Ok</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fabd2f;">String</span><span style="color:#fdf4c1aa;">::from(req.</span><span style="color:#fabd2f;">path</span><span style="color:#fdf4c1aa;">()))
@@ -140,7 +140,7 @@
 </span></code></pre>
 <p>リクエストハンドラに何かデータ（普通はアプリケーションの状態など）を渡すこともできる。この例だと <code>http://localhost:8080/spacecat</code> にアクセスすると <code>http://www.example.com/spacecat</code> が表示される。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">index</span><span style="color:#fdf4c1aa;">(
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">index</span><span style="color:#fdf4c1aa;">(
     </span><span style="color:#fdf4c1;">req</span><span style="color:#fdf4c1aa;">: HttpRequest,
     </span><span style="color:#fdf4c1;">prefix</span><span style="color:#fdf4c1aa;">: web::Data&lt;</span><span style="color:#fe8019;">&amp;</span><span style="color:#fa5c4b;">str</span><span style="color:#fdf4c1aa;">&gt;,
 ) -&gt; impl IntoFuture&lt;Item = </span><span style="color:#fabd2f;">String</span><span style="color:#fdf4c1aa;">, Error = Error&gt; {
@@ -159,7 +159,7 @@
 </span></code></pre>
 <p>ここで「どこまで柔軟性があるんだろうか？」と思って、試しにリクエストハンドラの引数の順番を入れ替えてみた。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">index</span><span style="color:#fdf4c1aa;">(
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">index</span><span style="color:#fdf4c1aa;">(
     </span><span style="color:#fdf4c1;">prefix</span><span style="color:#fdf4c1aa;">: web::Data&lt;</span><span style="color:#fe8019;">&amp;</span><span style="color:#fa5c4b;">str</span><span style="color:#fdf4c1aa;">&gt;,
     </span><span style="color:#fdf4c1;">req</span><span style="color:#fdf4c1aa;">: HttpRequest,
 ) -&gt; impl IntoFuture&lt;Item = </span><span style="color:#fabd2f;">String</span><span style="color:#fdf4c1aa;">, Error = Error&gt; {
@@ -191,9 +191,9 @@
 <p>そんなバカな、ということで <a href="https://github.com/actix/actix-web/blob/master/src/handler.rs"><code>handler.rs</code></a> を見てみると <a href="https://github.com/actix/actix-web/blob/master/src/handler.rs#L375"><code>factory_tuple!</code></a> というマクロ定義があり、引数 1 個から 10 個までの関数に対して <code>Factory</code> と <code>AsyncFactory</code> それぞれの実装が<a href="https://github.com/actix/actix-web/blob/master/src/handler.rs#L401-L410">マクロによって生成</a>されていた。</p>
 <p>例えば以下はマクロによって生成された「引数が 3 個で <code>Responder</code> を返す関数」をハンドラとして受け入れるようにする <code>Factory</code> トレイトの実装である。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">impl </span><span style="color:#fdf4c1aa;">&lt;Func, A, B, C, Res&gt; Factory&lt;(A, B, C), Res&gt; </span><span style="color:#fa5c4b;">for </span><span style="color:#8ec07c;">Func
-</span><span style="color:#fa5c4b;">where</span><span style="color:#fdf4c1aa;">
-    Func: Fn(A, B, C) -&gt; Res + Clone,
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">impl </span><span style="color:#fdf4c1aa;">&lt;Func, A, B, C, Res&gt; Factory&lt;(A, B, C), Res&gt; </span><span style="color:#fa5c4b;">for </span><span style="color:#8ec07c;">Func
+</span><span style="color:#fa5c4b;">where
+</span><span style="color:#fdf4c1aa;">    Func: Fn(A, B, C) -&gt; Res + Clone,
     Res: Responder,
 {
     </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">call</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">, </span><span style="color:#fdf4c1;">param</span><span style="color:#fdf4c1aa;">: (</span><span style="color:#fdf4c1;">A</span><span style="color:#fdf4c1aa;">, </span><span style="color:#fdf4c1;">B</span><span style="color:#fdf4c1aa;">, </span><span style="color:#fdf4c1;">C</span><span style="color:#fdf4c1aa;">)) -&gt; Res {
@@ -203,9 +203,9 @@
 </span></code></pre>
 <p>同様に以下は <code>AsyncFactory</code> トレイトの実装。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">impl </span><span style="color:#fdf4c1aa;">&lt;Func, A, B, C, Res&gt; AsyncFactory&lt;(A, B, C), Res&gt; </span><span style="color:#fa5c4b;">for </span><span style="color:#8ec07c;">Func
-</span><span style="color:#fa5c4b;">where</span><span style="color:#fdf4c1aa;">
-    Func: Fn(A, B, C) -&gt; Res + Clone + </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">,
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">impl </span><span style="color:#fdf4c1aa;">&lt;Func, A, B, C, Res&gt; AsyncFactory&lt;(A, B, C), Res&gt; </span><span style="color:#fa5c4b;">for </span><span style="color:#8ec07c;">Func
+</span><span style="color:#fa5c4b;">where
+</span><span style="color:#fdf4c1aa;">    Func: Fn(A, B, C) -&gt; Res + Clone + </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">,
     Res: IntoFuture,
     </span><span style="color:#fa5c4b;">Res::</span><span style="color:#fdf4c1aa;">Item: Responder,
     </span><span style="color:#fa5c4b;">Res::</span><span style="color:#fdf4c1aa;">Error: </span><span style="color:#fabd2f;">Into</span><span style="color:#fdf4c1aa;">&lt;Error&gt;,
@@ -219,7 +219,7 @@
 <h3 id="shi-siniyin-shu-11-ge-nohandorawozuo-tutemiru">試しに引数 11 個のハンドラを作ってみる</h3>
 <p>引数 10 個はコンパイル通る。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">forward</span><span style="color:#fdf4c1aa;">(
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">forward</span><span style="color:#fdf4c1aa;">(
     </span><span style="color:#fdf4c1;">req</span><span style="color:#fdf4c1aa;">: HttpRequest,
     </span><span style="color:#fdf4c1;">payload</span><span style="color:#fdf4c1aa;">: web::Payload,
     </span><span style="color:#fdf4c1;">client</span><span style="color:#fdf4c1aa;">: web::Data&lt;Client&gt;,
@@ -234,7 +234,7 @@
 </span></code></pre>
 <p>引数 11 個はコンパイル通らない。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">forward</span><span style="color:#fdf4c1aa;">(
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">forward</span><span style="color:#fdf4c1aa;">(
     </span><span style="color:#fdf4c1;">req</span><span style="color:#fdf4c1aa;">: HttpRequest,
     </span><span style="color:#fdf4c1;">payload</span><span style="color:#fdf4c1aa;">: web::Payload,
     </span><span style="color:#fdf4c1;">client</span><span style="color:#fdf4c1aa;">: web::Data&lt;Client&gt;,
@@ -253,9 +253,9 @@
 <p>もう 1 つは <code>param: T</code> の実際の型としてタプルを使うことで、<code>call()</code> メソッド呼び出し時にいったんタプルに集約しつつも、要素の型と並び順を保ち、ハンドラ関数の呼び出し時にはタプルを関数引数に展開している部分。</p>
 <p>さきほどの 3 引数の <code>Factory</code> トレイト実装をもう一度見てみる。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">impl </span><span style="color:#fdf4c1aa;">&lt;Func, A, B, C, Res&gt; Factory&lt;(A, B, C), Res&gt; </span><span style="color:#fa5c4b;">for </span><span style="color:#8ec07c;">Func
-</span><span style="color:#fa5c4b;">where</span><span style="color:#fdf4c1aa;">
-    Func: Fn(A, B, C) -&gt; Res + Clone,
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">impl </span><span style="color:#fdf4c1aa;">&lt;Func, A, B, C, Res&gt; Factory&lt;(A, B, C), Res&gt; </span><span style="color:#fa5c4b;">for </span><span style="color:#8ec07c;">Func
+</span><span style="color:#fa5c4b;">where
+</span><span style="color:#fdf4c1aa;">    Func: Fn(A, B, C) -&gt; Res + Clone,
     Res: Responder,
 {
     </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">call</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">, </span><span style="color:#fdf4c1;">param</span><span style="color:#fdf4c1aa;">: (</span><span style="color:#fdf4c1;">A</span><span style="color:#fdf4c1aa;">, </span><span style="color:#fdf4c1;">B</span><span style="color:#fdf4c1aa;">, </span><span style="color:#fdf4c1;">C</span><span style="color:#fdf4c1aa;">)) -&gt; Res {
@@ -279,7 +279,7 @@
 <p>ここまでの話で、ハンドラ関数の呼び出しには同じ型で同じ並びのタプルが必要なこと、そして <code>FromRequest</code> トレイトによって引数の値をリクエスト情報から抽出できる仕組みを知った。あとはこれらの要素をつないで「引数の順番を入れ替えても動く」ようにする。</p>
 <p>以下は <a href="https://github.com/actix/actix-web/blob/master/src/extract.rs#L194"><code>tuple_from_req!</code> マクロ</a> が生成した、３要素タプル <code>(A, B, C)</code> への <code>FromRequest</code> トレイト実装である。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">impl </span><span style="color:#fdf4c1aa;">&lt;A: FromRequest </span><span style="color:#fe8019;">+ </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">, B: FromRequest </span><span style="color:#fe8019;">+ </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">,
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">impl </span><span style="color:#fdf4c1aa;">&lt;A: FromRequest </span><span style="color:#fe8019;">+ </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">, B: FromRequest </span><span style="color:#fe8019;">+ </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">,
       C: FromRequest </span><span style="color:#fe8019;">+ </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt; FromRequest </span><span style="color:#fa5c4b;">for</span><span style="color:#fdf4c1aa;"> (</span><span style="color:#8ec07c;">A</span><span style="color:#fdf4c1aa;">, </span><span style="color:#8ec07c;">B</span><span style="color:#fdf4c1aa;">, </span><span style="color:#8ec07c;">C</span><span style="color:#fdf4c1aa;">) {
     </span><span style="color:#fa5c4b;">type </span><span style="color:#8ec07c;">Error </span><span style="color:#fe8019;">=</span><span style="color:#fdf4c1aa;"> Error;
     </span><span style="color:#fa5c4b;">type </span><span style="color:#8ec07c;">Future </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1aa;">TupleFromRequest3&lt;A, B, C&gt;;
@@ -311,7 +311,7 @@
 <p>以上の仕組みの理解を深めるために、引数の数や順番を入れ替えてもいい感じに引数を fill して呼び出してくれるやつを作ってみた。仕組みがわかりやすいようにマクロなどは使っていないのと、上記で説明した部分とはかなり異なる部分もあるので注意。あくまで雰囲気を感じてもらえれば。</p>
 <h3 id="handorading-yi">ハンドラ定義</h3>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">handler0</span><span style="color:#fdf4c1aa;">() {
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">handler0</span><span style="color:#fdf4c1aa;">() {
     </span><span style="color:#fabd2f;">println!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;handler[0]&quot;</span><span style="color:#fdf4c1aa;">);
 }
 
@@ -334,7 +334,7 @@
 <p><code>Dispatcher</code> 構造体を作ってハンドラ関数を格納しておいて、 <code>run()</code> メソッドで呼ぶときに引数の代わりに <code>Extensions</code> を渡して、ハンドラが必要とするタプルの生成とディスパッチを行う。</p>
 <p><code>TypeId</code> をキーにした <code>HashMap</code>、今の自分にはハイレベルすぎて詰んだので、<code>actix-web</code> から拝借した <code>Extensions</code> 実装を使っている。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">main</span><span style="color:#fdf4c1aa;">() {
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">main</span><span style="color:#fdf4c1aa;">() {
     env::set_var(</span><span style="color:#b8bb26;">&quot;RUST_LOG&quot;</span><span style="color:#fdf4c1aa;">, </span><span style="color:#b8bb26;">&quot;info&quot;</span><span style="color:#fdf4c1aa;">);
     env_logger::init();
 

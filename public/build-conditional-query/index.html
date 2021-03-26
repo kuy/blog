@@ -124,7 +124,7 @@
 <h2 id="yaritaikoto">やりたいこと</h2>
 <p>数字の ID でも文字列の slug でも１つの関数で検索できるようにしたい。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">pub enum </span><span style="color:#8ec07c;">IdOrSlug </span><span style="color:#fdf4c1aa;">{
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">pub enum </span><span style="color:#8ec07c;">IdOrSlug </span><span style="color:#fdf4c1aa;">{
     Id(</span><span style="color:#fa5c4b;">i32</span><span style="color:#fdf4c1aa;">),
     Slug(</span><span style="color:#fabd2f;">String</span><span style="color:#fdf4c1aa;">),
 }
@@ -151,7 +151,7 @@ note: expected type `diesel::query_builder::SelectStatement&lt;_, _, _, diesel::
 </span></code></pre><span id="continue-reading"></span><h2 id="jie-jue-fang-fa">解決方法</h2>
 <p><code>.filter()</code> の呼び出しのあとに <code>into_boxed()</code> を使って Box する。</p>
 <pre style="background-color:#282828;">
-<code><span style="font-style:italic;color:#928374;">// ...
+<code class="language-rust" data-lang="rust"><span style="font-style:italic;color:#928374;">// ...
 
 </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">find</span><span style="color:#fdf4c1aa;">(..., </span><span style="color:#fdf4c1;">id</span><span style="color:#fdf4c1aa;">: IdOrSlug) -&gt; </span><span style="color:#fabd2f;">Result</span><span style="color:#fdf4c1aa;">&lt;ViewProduct&gt; {
     </span><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> query </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1aa;">articles::table.</span><span style="color:#fabd2f;">left_join</span><span style="color:#fdf4c1aa;">(categories::table);
@@ -164,7 +164,7 @@ note: expected type `diesel::query_builder::SelectStatement&lt;_, _, _, diesel::
 </span></code></pre><h2 id="wei-jie-jue">未解決</h2>
 <p>最初は条件部分だけ切り出してやろうとしたんだけど、こっちは何か方法が無いんだろうか。</p>
 <pre style="background-color:#282828;">
-<code><span style="font-style:italic;color:#928374;">// ...
+<code class="language-rust" data-lang="rust"><span style="font-style:italic;color:#928374;">// ...
 
 </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">find</span><span style="color:#fdf4c1aa;">(..., </span><span style="color:#fdf4c1;">id</span><span style="color:#fdf4c1aa;">: IdOrSlug) -&gt; </span><span style="color:#fabd2f;">Result</span><span style="color:#fdf4c1aa;">&lt;Article&gt; {
     </span><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> cond </span><span style="color:#fe8019;">= </span><span style="color:#fa5c4b;">match</span><span style="color:#fdf4c1aa;"> id {

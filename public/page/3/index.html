@@ -109,6 +109,45 @@
                                     
     <header class="post__header">
         <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;typed-basket&#x2F;">中身を型で表現するコンテナを作ろうとした</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2019-08-17</span>
+            
+        </div>
+    </header>
+
+                                    <div class="post__summary">
+                                        <h2 id="jie-guo">結果</h2>
+<p>自分には思い通りのものを作ることはできなかった。</p>
+<h2 id="yaritaikoto-yaritakatutakoto">やりたいこと（やりたかったこと）</h2>
+<p>以下みたいなことを実現したい。</p>
+<ul>
+<li>型をキーとした <code>HashMap</code></li>
+<li>値を与えると格納される</li>
+<li>型を指定することで値を取り出せる</li>
+<li>保管していない型を指定した場合は <strong>コンパイルエラー</strong> が発生</li>
+</ul>
+<pre style="background-color:#282828;">
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> bag </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1aa;">Basket::new();
+bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;Universe&quot;</span><span style="color:#fdf4c1aa;">);
+bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;">(</span><span style="color:#d3869b;">42</span><span style="color:#fdf4c1aa;">);
+
+</span><span style="color:#fabd2f;">println!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;i32: </span><span style="color:#fdf4c1;">{}</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1aa;">, bag.get::&lt;</span><span style="color:#fa5c4b;">i32</span><span style="color:#fdf4c1aa;">&gt;());   </span><span style="font-style:italic;color:#928374;">// =&gt; &quot;i32: 42&quot;
+</span><span style="color:#fabd2f;">println!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;&amp;str: </span><span style="color:#fdf4c1;">{}</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1aa;">, bag.get::&lt;</span><span style="color:#fe8019;">&amp;</span><span style="color:#fa5c4b;">str</span><span style="color:#fdf4c1aa;">&gt;()); </span><span style="font-style:italic;color:#928374;">// =&gt; &quot;&amp;str: Universe&quot;
+
+// println!(&quot;bool: {}&quot;, bag.get::&lt;bool&gt;()); =&gt; Compile Error!
+</span></code></pre>
+                                    </div>
+                                    <div class="read-more">
+                                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;typed-basket&#x2F;">Read more...</a>
+                                    </div>
+                                </article>
+                            
+                                <article class="post">
+                                    
+    <header class="post__header">
+        <h1 class="post__title">
             <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;flex-handler&#x2F;">actix-webの柔軟なリクエストハンドラの仕組み</a>
         </h1>
         <div class="post__meta">
@@ -122,7 +161,7 @@
 <p>業務で Rust を使っていこうということになったので、Rust を勉強しながら何か Web アプリでも作ってみようと思って <a href="https://actix.rs/">actix-web</a> を触り始めた。サンプルコードをいじっていて気になったのはリクエストハンドラの引数の柔軟さで、まるでスクリプト言語のように扱える。</p>
 <p>例えば以下は <code>http://localhost:8080/hoge</code> にリクエストを受けると path 部分である <code>/hoge</code> をレスポンスとして返す。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">index</span><span style="color:#fdf4c1aa;">(
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">index</span><span style="color:#fdf4c1aa;">(
     </span><span style="color:#fdf4c1;">req</span><span style="color:#fdf4c1aa;">: HttpRequest,
 ) -&gt; impl IntoFuture&lt;Item = </span><span style="color:#fabd2f;">String</span><span style="color:#fdf4c1aa;">, Error = Error&gt; {
     </span><span style="color:#fabd2f;">Ok</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fabd2f;">String</span><span style="color:#fdf4c1aa;">::from(req.</span><span style="color:#fabd2f;">path</span><span style="color:#fdf4c1aa;">()))
@@ -139,7 +178,7 @@
 </span></code></pre>
 <p>リクエストハンドラに何かデータ（普通はアプリケーションの状態など）を渡すこともできる。この例だと <code>http://localhost:8080/spacecat</code> にアクセスすると <code>http://www.example.com/spacecat</code> が表示される。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">index</span><span style="color:#fdf4c1aa;">(
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">index</span><span style="color:#fdf4c1aa;">(
     </span><span style="color:#fdf4c1;">req</span><span style="color:#fdf4c1aa;">: HttpRequest,
     </span><span style="color:#fdf4c1;">prefix</span><span style="color:#fdf4c1aa;">: web::Data&lt;</span><span style="color:#fe8019;">&amp;</span><span style="color:#fa5c4b;">str</span><span style="color:#fdf4c1aa;">&gt;,
 ) -&gt; impl IntoFuture&lt;Item = </span><span style="color:#fabd2f;">String</span><span style="color:#fdf4c1aa;">, Error = Error&gt; {
@@ -158,7 +197,7 @@
 </span></code></pre>
 <p>ここで「どこまで柔軟性があるんだろうか？」と思って、試しにリクエストハンドラの引数の順番を入れ替えてみた。</p>
 <pre style="background-color:#282828;">
-<code><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">index</span><span style="color:#fdf4c1aa;">(
+<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">index</span><span style="color:#fdf4c1aa;">(
     </span><span style="color:#fdf4c1;">prefix</span><span style="color:#fdf4c1aa;">: web::Data&lt;</span><span style="color:#fe8019;">&amp;</span><span style="color:#fa5c4b;">str</span><span style="color:#fdf4c1aa;">&gt;,
     </span><span style="color:#fdf4c1;">req</span><span style="color:#fdf4c1aa;">: HttpRequest,
 ) -&gt; impl IntoFuture&lt;Item = </span><span style="color:#fabd2f;">String</span><span style="color:#fdf4c1aa;">, Error = Error&gt; {
