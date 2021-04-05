@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title>blog.endflow.net - acot の Reporter プラグインを作ってみる #1</title>
+
+      
+
+      
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
+          
+      
+
+      
+          <link href="https://fonts.googleapis.com/css?family=Roboto:400,700|Source+Code+Pro&display=swap" rel="stylesheet">
+          <link rel="stylesheet" href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;site.css">
+          
+      
+
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-3511180-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-3511180-1');
+      </script>
+
+      
+      
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="mobile-navbar" class="mobile-navbar">
+              <div class="mobile-header-logo">
+                <a href="/" class="logo">&#x2F;* blog.endflow.net *&#x2F;</a>
+              </div>
+              <div class="mobile-navbar-icon icon-out">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
+              <ul class="mobile-menu-list">
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;categories">
+                            Categories
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags">
+                            Tags
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;about">
+                            @kuy
+                        </a>
+                    </li>
+                
+              </ul>
+            </nav>
+
+            <header id="header">
+                <div class="logo"><a href="https:&#x2F;&#x2F;blog.endflow.net">&#x2F;* blog.endflow.net *&#x2F;</a></div>
+                <nav class="menu">
+                    <ul>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;categories">
+                                    Categories
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags">
+                                    Tags
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;about">
+                                    @kuy
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="content" id="mobile-panel">
+                    
+
+
+
+<article class="post">
+    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;acot-reporter-null&#x2F;">acot の Reporter プラグインを作ってみる #1</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2021-04-05</span>
+            
+        </div>
+    </header>
+
+    <div class="post-content">
+      <h2 id="acot-toiunoha">acot というのは</h2>
+<p><a href="https://github.com/puppeteer/puppeteer">puppeteer</a> を使ったアクセシビリティテストフレームワークで、
+ウェブサイトや Web アプリケーションに対してルールに基づいて機械的にチェックを行って結果をレポートしてくれます。
+似たような目的を持ったツールは他にもあるようですが、静的解析ではなく、実際にブラウザに表示して AOM や DOM を使って検証を行うため、
+マウスカーソルを要素にホバーしたときにどうなるかなど動的な検証が得意なのが特徴です。</p>
+<p>ルールは ESLint のように <code>extends</code> で拡張可能なので、自社のアクセシビリティガイドラインに基づいたルールを構築することもできますし、
+まだガイドラインのようなものがなければ、acot のプリセットも使えるし、スモールスタートで小さなルールセットから始めることもできます。</p>
+<p>さらに実行戦略である Runner や結果表示の Reporter などプラグイン機構によって様々な環境に適用できそうです。
+例えば GitHub の PR ごとに GitHub Actions で実行して結果をコメントとして残すようにしたり、
+本番環境に対して定期実行させて結果を Slack に流したりできそうです。</p>
+<h2 id="wu-xian-noke-neng-xing">無限の可能性</h2>
+<p>ということで無限の可能性を秘めているのでプラグインを作ってみようと思います。</p>
+<span id="continue-reading"></span><h2 id="acot-nopuraguinji-gou">acot のプラグイン機構</h2>
+<p>acot のプラグイン機構はシンプルで以下のような流れです。</p>
+<ol>
+<li>ModuleLoader に名前を渡す</li>
+<li>モジュールの resolve を試みる</li>
+<li>Factory が返却される</li>
+<li>インスタンス化</li>
+</ol>
+<h2 id="acot-reporter-null-puraguinwozuo-ru"><code>acot-reporter-null</code> プラグインを作る</h2>
+<p>いわゆる「何もしない」プラグインです。仕組みがわかってない状態で中身までやるとだいたい挫折するので、
+まずは中身は空っぽ、開発環境やデバッグ方法などを固めていくことを目的としたプラグインを作ってみます。</p>
+<p>とりあえず先にコードを見たい人は <a href="https://github.com/kuy/acot-reporter-null">kuy/acot-reporter-null</a> にあります。</p>
+<h2 id="rokaru-package-notesuto">ローカル package のテスト</h2>
+<p>やり方はいろいろありますが、今回は一番楽そうな <code>npm link</code> を使ってみます。
+<code>acot-reporter-null</code> というディレクトリを作って、 <code>package.json</code> を書きます。</p>
+<p>そしたら <code>npm link</code> を実行して「被リンク package」としての準備は OK です。</p>
+<p>次にテスト用に <code>acot-study</code> というディレクトリを作って、ここで <code>npx acot run</code> できるように準備します。
+そのあとローカル package を使えるように <code>npm link acot-reporter-null</code> を実行してシンボリックリンクを作成します。</p>
+<p>最後に <code>acot.config.js</code> を変更して <code>reporter: &quot;null&quot;</code> を追加します。</p>
+<pre style="background-color:#282828;">
+<code class="language-javascript" data-lang="javascript"><span style="color:#fabd2f;">module</span><span style="color:#fdf4c1aa;">.</span><span style="color:#fabd2f;">exports </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1aa;">{
+  presets: [</span><span style="color:#b8bb26;">&quot;@acot/wcag&quot;</span><span style="color:#fdf4c1aa;">],
+  reporter: </span><span style="color:#b8bb26;">&quot;null&quot;</span><span style="color:#fdf4c1aa;">,
+  origin: </span><span style="color:#b8bb26;">&quot;https://example.com&quot;</span><span style="color:#fdf4c1aa;">,
+  paths: [</span><span style="color:#b8bb26;">&quot;/pages&quot;</span><span style="color:#fdf4c1aa;">],
+  rules: {
+    </span><span style="color:#b8bb26;">&quot;@acot/wcag/page-has-title&quot;</span><span style="color:#fdf4c1aa;">: </span><span style="color:#b8bb26;">&quot;error&quot;</span><span style="color:#fdf4c1aa;">,
+    </span><span style="color:#b8bb26;">&quot;@acot/wcag/img-has-name&quot;</span><span style="color:#fdf4c1aa;">: </span><span style="color:#b8bb26;">&quot;error&quot;</span><span style="color:#fdf4c1aa;">,
+    </span><span style="color:#b8bb26;">&quot;@acot/wcag/focusable-has-indicator&quot;</span><span style="color:#fdf4c1aa;">: </span><span style="color:#b8bb26;">&quot;error&quot;</span><span style="color:#fdf4c1aa;">,
+  },
+};
+</span></code></pre><h2 id="debatugufang-fa">デバッグ方法</h2>
+<p>これで <code>npx acot run</code> を実行すれば動くんですが、なんの手がかりもなくプラグイン開発を進めるのは厳しいものがあります。
+そういうときは <code>DEBUG='acot:module-loader' npx acot run</code> のように環境変数の <code>DEBUG</code> を使うとデバッグログ全体や
+特定のログだけを見ることができます。便利。</p>
+<h2 id="wan-cheng">完成</h2>
+<p>package 全体は <a href="https://github.com/kuy/acot-reporter-null">kuy/acot-reporter-null</a> を見てください。</p>
+<p>次はちゃんと中身を書いて欲しいプラグインを作っていこうと思います。</p>
+
+    </div>
+
+    
+    
+
+    <div class="post-footer">
+        
+            
+                <div class="post-tags">
+                    
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;acot&#x2F;">#acot</a>
+                    
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;plugin&#x2F;">#plugin</a>
+                    
+                </div>
+            
+            
+                <div class="post-nav">
+                    
+                        <a class="previous" href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;delter-coffee-press&#x2F;">‹ Delter Coffee Pressが最高な件について</a>
+                    
+                    
+                    
+                    
+                </div>
+            
+
+        
+
+    </div>
+
+    
+    
+</article>
+
+
+                </div>
+            </main>
+
+            
+            
+        </div>
+
+      
+          <script type="text/javascript" src="https:&#x2F;&#x2F;blog.endflow.net&#x2F;even.js" ></script>
+      
+    </body>
+
+</html>
