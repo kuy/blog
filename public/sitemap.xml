@@ -12,6 +12,10 @@
         <lastmod>2021-04-05</lastmod>
     </url>
     <url>
+        <loc>https://blog.endflow.net/bike-upgrade-202104/</loc>
+        <lastmod>2021-04-16</lastmod>
+    </url>
+    <url>
         <loc>https://blog.endflow.net/build-conditional-query/</loc>
         <lastmod>2020-02-11</lastmod>
     </url>
@@ -29,6 +33,12 @@
     </url>
     <url>
         <loc>https://blog.endflow.net/categories/programming/page/1/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/categories/roadbike/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/categories/roadbike/page/1/</loc>
     </url>
     <url>
         <loc>https://blog.endflow.net/cores-grinder-review/</loc>
@@ -107,10 +117,16 @@
         <loc>https://blog.endflow.net/tags/docker/</loc>
     </url>
     <url>
+        <loc>https://blog.endflow.net/tags/enve/</loc>
+    </url>
+    <url>
         <loc>https://blog.endflow.net/tags/equipment/</loc>
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/fargate/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/fizik/</loc>
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/frontend/</loc>
@@ -149,6 +165,9 @@
         <loc>https://blog.endflow.net/tags/rust/</loc>
     </url>
     <url>
+        <loc>https://blog.endflow.net/tags/s-works/</loc>
+    </url>
+    <url>
         <loc>https://blog.endflow.net/tags/saml/</loc>
     </url>
     <url>
@@ -159,6 +178,9 @@
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/tips/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/upgrade-log/</loc>
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/web/</loc>
