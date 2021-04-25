@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title>blog.endflow.net - sccacheでGitHub Actions上のRustビルドを高速化するやつ試した</title>
+
+      
+
+      
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
+          
+      
+
+      
+          <link href="https://fonts.googleapis.com/css?family=Roboto:400,700|Source+Code+Pro&display=swap" rel="stylesheet">
+          <link rel="stylesheet" href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;site.css">
+          
+      
+
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-3511180-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-3511180-1');
+      </script>
+
+      
+      
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="mobile-navbar" class="mobile-navbar">
+              <div class="mobile-header-logo">
+                <a href="/" class="logo">&#x2F;* blog.endflow.net *&#x2F;</a>
+              </div>
+              <div class="mobile-navbar-icon icon-out">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
+              <ul class="mobile-menu-list">
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;categories">
+                            Categories
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags">
+                            Tags
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;about">
+                            @kuy
+                        </a>
+                    </li>
+                
+              </ul>
+            </nav>
+
+            <header id="header">
+                <div class="logo"><a href="https:&#x2F;&#x2F;blog.endflow.net">&#x2F;* blog.endflow.net *&#x2F;</a></div>
+                <nav class="menu">
+                    <ul>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;categories">
+                                    Categories
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags">
+                                    Tags
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;about">
+                                    @kuy
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="content" id="mobile-panel">
+                    
+
+
+
+<article class="post">
+    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;speedup-rust-build&#x2F;">sccacheでGitHub Actions上のRustビルドを高速化するやつ試した</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2021-04-26</span>
+            
+        </div>
+    </header>
+
+    <div class="post-content">
+      <h2 id="rust-puroziekutonobirudosu-du">Rust プロジェクトのビルド速度</h2>
+<p>ご存知の通り、Rust のコンパイル速度は遅い。まぁそれだけ高級なことをやっているんだから仕方ないとは思う。
+それに<a href="https://perf.rust-lang.org/dashboard.html">パフォーマンスダッシュボード</a>を見てみると着実に改善していてすごい。</p>
+<p>とはいえ、現実にはその遅さによって微妙な待ちが発生してしまうのは事実。何とかならないかな・・・と思っていたら <a href="https://www.fluvio.io/blog/2021/04/github-actions-best-practices/">「GitHub Actions best practices for Rust projects」</a> という記事を見つけた。</p>
+<p>記事自体のテーマは GitHub Actions における Rust プロジェクトだけど、そのうちの１つはビルド速度の改善。</p>
+<p>これはうってつけだ！ということで早速趣味プロジェクトの CI に導入して試してみた。</p>
+<span id="continue-reading"></span><h2 id="jie-lun-2-bei-zao-kunatuta">結論: 2 倍早くなった</h2>
+<p>忙しい人のために結論から言うと 2 倍も早くなった。 crate のダウンロードキャッシュなども導入することでさらに早くなりそう。</p>
+<h2 id="github-actions-no-workflow">GitHub Actions の workflow</h2>
+<p>記事の内容だとそのまま動かない部分があったので、とりあえず workflow を掲載しておく。</p>
+<pre style="background-color:#282828;">
+<code class="language-yml" data-lang="yml"><span style="font-weight:bold;color:#8ec07c;">name</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">Build
+
+</span><span style="color:#d3869b;">on</span><span style="color:#fdf4c1aa;">:
+  </span><span style="font-weight:bold;color:#8ec07c;">push</span><span style="color:#fdf4c1aa;">:
+
+</span><span style="font-weight:bold;color:#8ec07c;">jobs</span><span style="color:#fdf4c1aa;">:
+  </span><span style="font-weight:bold;color:#8ec07c;">build</span><span style="color:#fdf4c1aa;">:
+    </span><span style="font-weight:bold;color:#8ec07c;">name</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">Build
+    runs-on</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">ubuntu-20.04
+    env</span><span style="color:#fdf4c1aa;">:
+      </span><span style="font-weight:bold;color:#8ec07c;">RUSTC_WRAPPER</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">sccache
+      SCCACHE_CACHE_SIZE</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">1G
+      SCCACHE_DIR</span><span style="color:#fdf4c1aa;">: </span><span style="color:#b8bb26;">/home/runner/.cache/sccache
+      </span><span style="font-style:italic;color:#928374;"># SCCACHE_RECACHE: 1 # Uncomment this to clear cache, then comment it back out
+    </span><span style="font-weight:bold;color:#8ec07c;">steps</span><span style="color:#fdf4c1aa;">:
+      - </span><span style="font-weight:bold;color:#8ec07c;">uses</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">actions/checkout@v2
+      </span><span style="color:#fdf4c1aa;">- </span><span style="font-weight:bold;color:#8ec07c;">name</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">Install sccache
+        env</span><span style="color:#fdf4c1aa;">:
+          </span><span style="font-weight:bold;color:#8ec07c;">LINK</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">https://github.com/mozilla/sccache/releases/download
+          SCCACHE_VERSION</span><span style="color:#fdf4c1aa;">: </span><span style="color:#d3869b;">0.2.15
+        </span><span style="font-weight:bold;color:#8ec07c;">run</span><span style="color:#fdf4c1aa;">: </span><span style="color:#fa5c4b;">|
+</span><span style="color:#b8bb26;">          SCCACHE_FILE=sccache-v$SCCACHE_VERSION-x86_64-unknown-linux-musl
+          mkdir -p $HOME/.local/bin
+          curl -L &quot;$LINK/v$SCCACHE_VERSION/$SCCACHE_FILE.tar.gz&quot; | tar xz
+          mv -f $SCCACHE_FILE/sccache $HOME/.local/bin/sccache
+          chmod +x $HOME/.local/bin/sccache
+          echo &quot;$HOME/.local/bin&quot; &gt;&gt; $GITHUB_PATH
+      </span><span style="color:#fdf4c1aa;">- </span><span style="font-weight:bold;color:#8ec07c;">name</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">Install Rust toolchain
+        uses</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">actions-rs/toolchain@v1
+        with</span><span style="color:#fdf4c1aa;">:
+          </span><span style="font-weight:bold;color:#8ec07c;">profile</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">minimal
+          toolchain</span><span style="color:#fdf4c1aa;">: </span><span style="color:#d3869b;">1.51.0
+          </span><span style="font-weight:bold;color:#8ec07c;">override</span><span style="color:#fdf4c1aa;">: </span><span style="color:#d3869b;">true
+      </span><span style="color:#fdf4c1aa;">- </span><span style="font-weight:bold;color:#8ec07c;">name</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">Prepare sccache
+        uses</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">actions/cache@v2
+        continue-on-error</span><span style="color:#fdf4c1aa;">: </span><span style="color:#d3869b;">false
+        </span><span style="font-weight:bold;color:#8ec07c;">with</span><span style="color:#fdf4c1aa;">:
+          </span><span style="font-weight:bold;color:#8ec07c;">path</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">/home/runner/.cache/sccache
+          key</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">${{ runner.os }}-sccache-${{ hashFiles(&#39;**/Cargo.lock&#39;) }}
+          restore-keys</span><span style="color:#fdf4c1aa;">: </span><span style="color:#fa5c4b;">|
+</span><span style="color:#b8bb26;">            ${{ runner.os }}-sccache-
+      </span><span style="color:#fdf4c1aa;">- </span><span style="font-weight:bold;color:#8ec07c;">name</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">Start sccache server
+        run</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">sccache --start-server
+      </span><span style="color:#fdf4c1aa;">- </span><span style="font-weight:bold;color:#8ec07c;">name</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">Build
+        uses</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">actions-rs/cargo@v1
+        with</span><span style="color:#fdf4c1aa;">:
+          </span><span style="font-weight:bold;color:#8ec07c;">command</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">build
+          args</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">--release
+      </span><span style="color:#fdf4c1aa;">- </span><span style="font-weight:bold;color:#8ec07c;">name</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">Print sccache stats
+        run</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">sccache --show-stats
+      </span><span style="color:#fdf4c1aa;">- </span><span style="font-weight:bold;color:#8ec07c;">name</span><span style="color:#fdf4c1aa;">: </span><span style="font-weight:bold;color:#8ec07c;">Stop sccache server
+        run</span><span style="color:#fdf4c1aa;">: </span><span style="color:#b8bb26;">sccache --stop-server || true
+</span></code></pre>
+<p>変更点としては、</p>
+<ul>
+<li>最新の <code>0.2.15</code> だと GitHub 上でのタグ付けフォーマットが変わった
+<ul>
+<li><code>v</code> が入るようになった</li>
+</ul>
+</li>
+<li>ダウンロードした <code>sccache</code> の実行ファイルに権限付与</li>
+</ul>
+
+    </div>
+
+    
+    
+
+    <div class="post-footer">
+        
+            
+                <div class="post-tags">
+                    
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;rust&#x2F;">#rust</a>
+                    
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;optimization&#x2F;">#optimization</a>
+                    
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;sccache&#x2F;">#sccache</a>
+                    
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;tool&#x2F;">#tool</a>
+                    
+                </div>
+            
+            
+                <div class="post-nav">
+                    
+                        <a class="previous" href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;bike-upgrade-202104&#x2F;">‹ CHAPTER2 TEREのアップグレード - 2021年4月</a>
+                    
+                    
+                    
+                    
+                </div>
+            
+
+        
+
+    </div>
+
+    
+    
+</article>
+
+
+                </div>
+            </main>
+
+            
+            
+        </div>
+
+      
+          <script type="text/javascript" src="https:&#x2F;&#x2F;blog.endflow.net&#x2F;even.js" ></script>
+      
+    </body>
+
+</html>

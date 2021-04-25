@@ -74,6 +74,9 @@
         <loc>https://blog.endflow.net/page/3/</loc>
     </url>
     <url>
+        <loc>https://blog.endflow.net/page/4/</loc>
+    </url>
+    <url>
         <loc>https://blog.endflow.net/pour-over-tips/</loc>
         <lastmod>2021-01-01</lastmod>
     </url>
@@ -88,6 +91,10 @@
     <url>
         <loc>https://blog.endflow.net/setup-yew-dev/</loc>
         <lastmod>2020-03-22</lastmod>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/speedup-rust-build/</loc>
+        <lastmod>2021-04-26</lastmod>
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/</loc>
@@ -144,6 +151,9 @@
         <loc>https://blog.endflow.net/tags/node-js/</loc>
     </url>
     <url>
+        <loc>https://blog.endflow.net/tags/optimization/</loc>
+    </url>
+    <url>
         <loc>https://blog.endflow.net/tags/plugin/</loc>
     </url>
     <url>
@@ -171,6 +181,9 @@
         <loc>https://blog.endflow.net/tags/saml/</loc>
     </url>
     <url>
+        <loc>https://blog.endflow.net/tags/sccache/</loc>
+    </url>
+    <url>
         <loc>https://blog.endflow.net/tags/sql/</loc>
     </url>
     <url>
@@ -178,6 +191,9 @@
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/tips/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/tool/</loc>
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/upgrade-log/</loc>
