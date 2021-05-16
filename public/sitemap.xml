@@ -57,6 +57,10 @@
         <lastmod>2019-08-12</lastmod>
     </url>
     <url>
+        <loc>https://blog.endflow.net/hanno-ride/</loc>
+        <lastmod>2021-05-08</lastmod>
+    </url>
+    <url>
         <loc>https://blog.endflow.net/iced-coffee-20/</loc>
         <lastmod>2020-07-05</lastmod>
     </url>
@@ -142,6 +146,9 @@
         <loc>https://blog.endflow.net/tags/grinder/</loc>
     </url>
     <url>
+        <loc>https://blog.endflow.net/tags/hanno/</loc>
+    </url>
+    <url>
         <loc>https://blog.endflow.net/tags/iced-coffee/</loc>
     </url>
     <url>
@@ -170,6 +177,9 @@
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/review/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/ride/</loc>
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/rust/</loc>
