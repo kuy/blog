@@ -5,5 +5,8 @@
   "devDependencies": {
     "@acot/acot-config": "^0.0.8",
     "@acot/cli": "0.0.8"
+  },
+  "scripts": {
+    "build": "zola build && cp -r ./public/ ../blog-production"
   }
 }
