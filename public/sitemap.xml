@@ -129,6 +129,9 @@
         <loc>https://blog.endflow.net/tags/actix-web/</loc>
     </url>
     <url>
+        <loc>https://blog.endflow.net/tags/aerodynamics/</loc>
+    </url>
+    <url>
         <loc>https://blog.endflow.net/tags/apparel/</loc>
     </url>
     <url>
@@ -225,6 +228,9 @@
         <loc>https://blog.endflow.net/tags/ride/</loc>
     </url>
     <url>
+        <loc>https://blog.endflow.net/tags/rim/</loc>
+    </url>
+    <url>
         <loc>https://blog.endflow.net/tags/rust/</loc>
     </url>
     <url>
@@ -246,6 +252,9 @@
         <loc>https://blog.endflow.net/tags/tips/</loc>
     </url>
     <url>
+        <loc>https://blog.endflow.net/tags/tire/</loc>
+    </url>
+    <url>
         <loc>https://blog.endflow.net/tags/tool/</loc>
     </url>
     <url>
@@ -258,6 +267,9 @@
         <loc>https://blog.endflow.net/tags/weight/</loc>
     </url>
     <url>
+        <loc>https://blog.endflow.net/tags/wheel/</loc>
+    </url>
+    <url>
         <loc>https://blog.endflow.net/tags/wilfa/</loc>
     </url>
     <url>
@@ -266,5 +278,9 @@
     <url>
         <loc>https://blog.endflow.net/typed-basket/</loc>
         <lastmod>2019-08-17</lastmod>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/width-of-rim-and-tire/</loc>
+        <lastmod>2021-06-19</lastmod>
     </url>
 </urlset>
