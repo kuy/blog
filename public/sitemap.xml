@@ -57,6 +57,10 @@
         <lastmod>2021-05-16</lastmod>
     </url>
     <url>
+        <loc>https://blog.endflow.net/disc-brake-rotors/</loc>
+        <lastmod>2021-06-24</lastmod>
+    </url>
+    <url>
         <loc>https://blog.endflow.net/first-cupping/</loc>
         <lastmod>2020-06-28</lastmod>
     </url>
@@ -136,6 +140,9 @@
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/aws/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/brake/</loc>
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/computer-science/</loc>
@@ -229,6 +236,9 @@
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/rim/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/rotors/</loc>
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/rust/</loc>
