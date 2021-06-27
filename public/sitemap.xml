@@ -41,6 +41,10 @@
         <loc>https://blog.endflow.net/categories/roadbike/page/1/</loc>
     </url>
     <url>
+        <loc>https://blog.endflow.net/competitive-cyclist-part1/</loc>
+        <lastmod>2021-06-25</lastmod>
+    </url>
+    <url>
         <loc>https://blog.endflow.net/cores-grinder-review/</loc>
         <lastmod>2020-03-08</lastmod>
     </url>
@@ -190,6 +194,9 @@
         <loc>https://blog.endflow.net/tags/grinder/</loc>
     </url>
     <url>
+        <loc>https://blog.endflow.net/tags/handlebar/</loc>
+    </url>
+    <url>
         <loc>https://blog.endflow.net/tags/hanno/</loc>
     </url>
     <url>
@@ -257,6 +264,9 @@
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/sso/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/stem/</loc>
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/tips/</loc>
