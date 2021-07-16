@@ -1,6 +1,6 @@
 +++
 title = "Competitive CyclistからENVEパーツを買う Part2"
-date = 2021-07-14
+date = 2021-07-16
 draft = false
 slug = "competitive-cyclist-part2"
 in_search_index = true
