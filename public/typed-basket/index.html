@@ -18,7 +18,7 @@
 
       
           <link href="https://fonts.googleapis.com/css?family=Roboto:400,700|Source+Code+Pro&display=swap" rel="stylesheet">
-          <link rel="stylesheet" href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;site.css">
+          <link rel="stylesheet" href="https://blog.endflow.net/site.css">
           
       
 
@@ -129,178 +129,172 @@
 <li>型を指定することで値を取り出せる</li>
 <li>保管していない型を指定した場合は <strong>コンパイルエラー</strong> が発生</li>
 </ul>
-<pre style="background-color:#282828;">
-<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> bag </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1aa;">Basket::new();
-bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;Universe&quot;</span><span style="color:#fdf4c1aa;">);
-bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;">(</span><span style="color:#d3869b;">42</span><span style="color:#fdf4c1aa;">);
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">let bag = Basket::new();
+bag.set("Universe");
+bag.set(42);
 
-</span><span style="color:#fabd2f;">println!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;i32: </span><span style="color:#fdf4c1;">{}</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1aa;">, bag.get::&lt;</span><span style="color:#fa5c4b;">i32</span><span style="color:#fdf4c1aa;">&gt;());   </span><span style="font-style:italic;color:#928374;">// =&gt; &quot;i32: 42&quot;
-</span><span style="color:#fabd2f;">println!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;&amp;str: </span><span style="color:#fdf4c1;">{}</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1aa;">, bag.get::&lt;</span><span style="color:#fe8019;">&amp;</span><span style="color:#fa5c4b;">str</span><span style="color:#fdf4c1aa;">&gt;()); </span><span style="font-style:italic;color:#928374;">// =&gt; &quot;&amp;str: Universe&quot;
+println!("i32: {}", bag.get::<i32>());   // => "i32: 42"
+println!("&str: {}", bag.get::<&str>()); // => "&str: Universe"
 
-// println!(&quot;bool: {}&quot;, bag.get::&lt;bool&gt;()); =&gt; Compile Error!
-</span></code></pre><span id="continue-reading"></span>
+// println!("bool: {}", bag.get::<bool>()); => Compile Error!
+</code></pre>
+<span id="continue-reading"></span>
 <p>こんなことを考えたのは<a href="https://kuy.github.io/flex-handler/">前回の記事</a>で <code>actix-web</code> の <code>data()</code> メソッドでデータを設定せずに <code>web::Data&lt;T&gt;</code> を引数に持つハンドラを渡してもコンパイルエラーにならず、実行時エラーになるのを何とかできないものか、と思ったから。
 根っこの問題としてデータの保管先である <code>Extensions</code> が実行時に特定の型が保管されているか判断しているのが良くない。</p>
 <p>コンパイル時にエラーを検出するには <strong>状態を型として表現</strong> すればいい。上記のコードで言えば <code>new()</code> 直後は何のデータも格納されておらず、1 つ目の <code>set()</code> が呼ばれたら <code>&amp;str</code> が保管されていて、さらに <code>set()</code> が呼ばれると <code>&amp;str</code> と <code>i32</code> が保管されていることを型として表現する。その型情報の中に <code>get()</code> メソッドの呼び出しで渡された型パラメータが含まれているときだけコンパイルが通るようにする。</p>
 <h2 id="shi-xing-cuo-wu">試行錯誤</h2>
 <p>基本的なアイデアは簡単で、初期状態を <code>Basket&lt;()&gt;</code> 、<code>&amp;str</code> を格納した状態を <code>Basket&lt;(&amp;str,)&gt;</code> 、さらに <code>i32</code> を格納した状態を <code>Basket&lt;(&amp;str, i32)&gt;</code> という感じで <code>Basket&lt;T&gt;</code> の型パラメータを変えて、それぞれの型ごとに呼び出せるメソッドに制限をかければいい。型が変化するのは <code>set()</code> メソッドの呼び出し時なので、単純にその時点で格納しているデータを引き継ぎつつ、新しく格納する値の型を含めた新たなコンテナの型で <code>new()</code> すればいい。型パラメータを使わないと怒られるので <code>PhantomData</code> を使っている。 <code>HashMap</code> のデータを引き継ぐ部分は <code>Drain</code> を使ってみた。</p>
 <p>以下がとりあえず書いたコード。 <code>panic!</code> しまくってるけど気にしてはいけない。</p>
-<pre style="background-color:#282828;">
-<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">pub struct </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;T&gt; {
-    </span><span style="color:#fdf4c1;">items</span><span style="color:#fdf4c1aa;">: HashMap&lt;TypeId, </span><span style="color:#fabd2f;">Box</span><span style="color:#fdf4c1aa;">&lt;dyn Any&gt;&gt;,
-    </span><span style="color:#fdf4c1;">_t</span><span style="color:#fdf4c1aa;">: PhantomData&lt;T&gt;,
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">pub struct Basket<T> {
+    items: HashMap<TypeId, Box<dyn Any>>,
+    _t: PhantomData<T>,
 }
 
-</span><span style="color:#fa5c4b;">impl </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;()&gt; {
-    </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">new</span><span style="color:#fdf4c1aa;">() -&gt; </span><span style="color:#fa5c4b;">Self </span><span style="color:#fdf4c1aa;">{
+impl Basket<()> {
+    pub fn new() -> Self {
         Basket {
             items: HashMap::new(),
             _t: PhantomData,
         }
     }
 
-    </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">set</span><span style="color:#fdf4c1aa;">&lt;U: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt;(</span><span style="color:#fa5c4b;">mut </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">, </span><span style="color:#fdf4c1;">val</span><span style="color:#fdf4c1aa;">: U) -&gt; Basket&lt;(U,)&gt; {
-        </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">insert</span><span style="color:#fdf4c1aa;">(TypeId::of::&lt;U&gt;(), </span><span style="color:#fabd2f;">Box</span><span style="color:#fdf4c1aa;">::new(val));
-        Basket::&lt;(U,)&gt;::new_with(</span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">drain</span><span style="color:#fdf4c1aa;">())
+    pub fn set<U: 'static>(mut self, val: U) -> Basket<(U,)> {
+        self.items.insert(TypeId::of::<U>(), Box::new(val));
+        Basket::<(U,)>::new_with(self.items.drain())
     }
 }
 
-</span><span style="color:#fa5c4b;">impl</span><span style="color:#fdf4c1aa;">&lt;A: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt; </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;(A,)&gt; {
-    </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">new_with</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fdf4c1;">iter</span><span style="color:#fdf4c1aa;">: Drain&lt;TypeId, </span><span style="color:#fabd2f;">Box</span><span style="color:#fdf4c1aa;">&lt;dyn Any&gt;&gt;) -&gt; </span><span style="color:#fa5c4b;">Self </span><span style="color:#fdf4c1aa;">{
+impl<A: 'static> Basket<(A,)> {
+    fn new_with(iter: Drain<TypeId, Box<dyn Any>>) -> Self {
         Basket {
             items: HashMap::from_iter(iter),
             _t: PhantomData,
         }
     }
 
-    </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">set</span><span style="color:#fdf4c1aa;">&lt;U: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt;(</span><span style="color:#fa5c4b;">mut </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">, </span><span style="color:#fdf4c1;">val</span><span style="color:#fdf4c1aa;">: U) -&gt; Basket&lt;(A, U)&gt; {
-        </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">insert</span><span style="color:#fdf4c1aa;">(TypeId::of::&lt;U&gt;(), </span><span style="color:#fabd2f;">Box</span><span style="color:#fdf4c1aa;">::new(val));
-        Basket::&lt;(A, U)&gt;::new_with(</span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">drain</span><span style="color:#fdf4c1aa;">())
+    pub fn set<U: 'static>(mut self, val: U) -> Basket<(A, U)> {
+        self.items.insert(TypeId::of::<U>(), Box::new(val));
+        Basket::<(A, U)>::new_with(self.items.drain())
     }
 
-    </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">get</span><span style="color:#fdf4c1aa;">&lt;U: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt;(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">) -&gt; </span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">U {
-        </span><span style="color:#fa5c4b;">match </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">get</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">TypeId::of::&lt;U&gt;()) {
-            </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt; </span><span style="color:#fa5c4b;">match</span><span style="color:#fdf4c1aa;"> item.downcast_ref::&lt;U&gt;() {
-                </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> item,
-                </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
+    pub fn get<U: 'static>(&self) -> &U {
+        match self.items.get(&TypeId::of::<U>()) {
+            Some(item) => match item.downcast_ref::<U>() {
+                Some(item) => item,
+                _ => panic!()
             },
-            </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
+            _ => panic!()
         }
     }
 }
 
-</span><span style="color:#fa5c4b;">impl</span><span style="color:#fdf4c1aa;">&lt;A: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">, B: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt; </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;(A, B)&gt; {
-    </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">new_with</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fdf4c1;">iter</span><span style="color:#fdf4c1aa;">: Drain&lt;TypeId, </span><span style="color:#fabd2f;">Box</span><span style="color:#fdf4c1aa;">&lt;dyn Any&gt;&gt;) -&gt; </span><span style="color:#fa5c4b;">Self </span><span style="color:#fdf4c1aa;">{
+impl<A: 'static, B: 'static> Basket<(A, B)> {
+    fn new_with(iter: Drain<TypeId, Box<dyn Any>>) -> Self {
         Basket {
             items: HashMap::from_iter(iter),
             _t: PhantomData,
         }
     }
 
-    </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">get</span><span style="color:#fdf4c1aa;">&lt;U: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt;(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">) -&gt; </span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">U {
-        </span><span style="color:#fa5c4b;">match </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">get</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">TypeId::of::&lt;U&gt;()) {
-            </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt; </span><span style="color:#fa5c4b;">match</span><span style="color:#fdf4c1aa;"> item.downcast_ref::&lt;U&gt;() {
-                </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> item,
-                </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
+    pub fn get<U: 'static>(&self) -> &U {
+        match self.items.get(&TypeId::of::<U>()) {
+            Some(item) => match item.downcast_ref::<U>() {
+                Some(item) => item,
+                _ => panic!()
             },
-            </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
+            _ => panic!()
         }
     }
 }
-</span></code></pre>
+</code></pre>
 <p>このコードは一見正しく動いてしまう。</p>
-<pre style="background-color:#282828;">
-<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">main</span><span style="color:#fdf4c1aa;">() {
-    </span><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> bag </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1aa;">Basket::new()
-        .</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;Universe&quot;</span><span style="color:#fdf4c1aa;">)
-        .</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;">(</span><span style="color:#d3869b;">42</span><span style="color:#fdf4c1aa;">);
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">fn main() {
+    let bag = Basket::new()
+        .set("Universe")
+        .set(42);
 
-    </span><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> item </span><span style="color:#fe8019;">=</span><span style="color:#fdf4c1aa;"> bag.get::&lt;</span><span style="color:#fa5c4b;">i32</span><span style="color:#fdf4c1aa;">&gt;();
-    </span><span style="color:#fabd2f;">println!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;i32: </span><span style="color:#fdf4c1;">{}</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1aa;">, item); </span><span style="font-style:italic;color:#928374;">// =&gt; &quot;i32: 42&quot;
+    let item = bag.get::<i32>();
+    println!("i32: {}", item); // => "i32: 42"
 
-    </span><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> item </span><span style="color:#fe8019;">=</span><span style="color:#fdf4c1aa;"> bag.get::&lt;</span><span style="color:#fe8019;">&amp;</span><span style="color:#fa5c4b;">str</span><span style="color:#fdf4c1aa;">&gt;();
-    </span><span style="color:#fabd2f;">println!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;&amp;str: </span><span style="color:#fdf4c1;">{}</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1aa;">, item); </span><span style="font-style:italic;color:#928374;">// =&gt; &quot;&amp;str: Universe&quot;
-</span><span style="color:#fdf4c1aa;">}
-</span></code></pre>
+    let item = bag.get::<&str>();
+    println!("&str: {}", item); // => "&str: Universe"
+}
+</code></pre>
 <p>ただ、以下のコードを追加すると肝心のコンパイル時のエラーチェックが効いていないことがわかる。</p>
-<pre style="background-color:#282828;">
-<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> item </span><span style="color:#fe8019;">=</span><span style="color:#fdf4c1aa;"> bag.get::&lt;</span><span style="color:#fa5c4b;">bool</span><span style="color:#fdf4c1aa;">&gt;();
-</span><span style="color:#fabd2f;">println!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;bool: </span><span style="color:#fdf4c1;">{}</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1aa;">, item); </span><span style="font-style:italic;color:#928374;">// =&gt; Compiled successfully, but PANIC!
-</span></code></pre>
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">let item = bag.get::<bool>();
+println!("bool: {}", item); // => Compiled successfully, but PANIC!
+</code></pre>
 <p>原因は明らかで、 <code>get()</code> メソッドの定義において実装対象である <code>Basket&lt;(A, B)&gt;</code> の型パラメータ（<code>A</code>, <code>B</code>）を使っておらず、新たに導入した型パラメータ <code>U</code> にしか依存していないからである。
 かといって、 型パラメータ <code>A</code> を使うようにすると <code>U</code> は不要になるので <code>get()</code> メソッド呼び出し時に型パラメータを指定できない。型パラメータの指定ができなければ欲しい値を取り出せない。</p>
-<pre style="background-color:#282828;">
-<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">impl</span><span style="color:#fdf4c1aa;">&lt;A: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">, B: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt; </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;(A, B)&gt; {
-    </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">new_with</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fdf4c1;">iter</span><span style="color:#fdf4c1aa;">: Drain&lt;TypeId, </span><span style="color:#fabd2f;">Box</span><span style="color:#fdf4c1aa;">&lt;dyn Any&gt;&gt;) -&gt; </span><span style="color:#fa5c4b;">Self </span><span style="color:#fdf4c1aa;">{
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">impl<A: 'static, B: 'static> Basket<(A, B)> {
+    fn new_with(iter: Drain<TypeId, Box<dyn Any>>) -> Self {
         Basket {
             items: HashMap::from_iter(iter),
             _t: PhantomData,
         }
     }
 
-    </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">get</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">) -&gt; </span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">A {
-        </span><span style="color:#fa5c4b;">match </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">get</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">TypeId::of::&lt;A&gt;()) {
-            </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt; </span><span style="color:#fa5c4b;">match</span><span style="color:#fdf4c1aa;"> item.downcast_ref::&lt;A&gt;() {
-                </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> item,
-                </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
+    pub fn get(&self) -> &A {
+        match self.items.get(&TypeId::of::<A>()) {
+            Some(item) => match item.downcast_ref::<A>() {
+                Some(item) => item,
+                _ => panic!()
             },
-            </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
+            _ => panic!()
         }
     }
 }
-</span></code></pre>
+</code></pre>
 <p>ちなみに、以下のコードは定義がコンフリクトしてしまってコンパイルできない。</p>
-<pre style="background-color:#282828;">
-<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">impl</span><span style="color:#fdf4c1aa;">&lt;A: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">, B: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt; </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;(A, B)&gt; {
-    </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">new_with</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fdf4c1;">iter</span><span style="color:#fdf4c1aa;">: Drain&lt;TypeId, </span><span style="color:#fabd2f;">Box</span><span style="color:#fdf4c1aa;">&lt;dyn Any&gt;&gt;) -&gt; </span><span style="color:#fa5c4b;">Self </span><span style="color:#fdf4c1aa;">{
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">impl<A: 'static, B: 'static> Basket<(A, B)> {
+    fn new_with(iter: Drain<TypeId, Box<dyn Any>>) -> Self {
         Basket {
             items: HashMap::from_iter(iter),
             _t: PhantomData,
         }
     }
 
-    </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">get</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">) -&gt; </span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">A {
-        </span><span style="color:#fa5c4b;">match </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">get</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">TypeId::of::&lt;A&gt;()) {
-            </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt; </span><span style="color:#fa5c4b;">match</span><span style="color:#fdf4c1aa;"> item.downcast_ref::&lt;A&gt;() {
-                </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> item,
-                </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
+    pub fn get(&self) -> &A {
+        match self.items.get(&TypeId::of::<A>()) {
+            Some(item) => match item.downcast_ref::<A>() {
+                Some(item) => item,
+                _ => panic!()
             },
-            </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
+            _ => panic!()
         }
     }
 
-    </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">get</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">) -&gt; </span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">B { </span><span style="font-style:italic;color:#928374;">// =&gt; Conflict!
-        </span><span style="color:#fa5c4b;">match </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">get</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">TypeId::of::&lt;B&gt;()) {
-            </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt; </span><span style="color:#fa5c4b;">match</span><span style="color:#fdf4c1aa;"> item.downcast_ref::&lt;B&gt;() {
-                </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> item,
-                </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
+    pub fn get(&self) -> &B { // => Conflict!
+        match self.items.get(&TypeId::of::<B>()) {
+            Some(item) => match item.downcast_ref::<B>() {
+                Some(item) => item,
+                _ => panic!()
             },
-            </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
+            _ => panic!()
         }
     }
 }
-</span></code></pre>
+</code></pre>
 <p>理想的にはメソッドに型パラメータ <code>U</code> を導入しつつ、 <code>A</code> または <code>B</code> と型が一致する、みたいな制約をかけることができればありがたいんだけど、そういう書き方は存在しなさそう。</p>
-<pre style="background-color:#282828;">
-<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">impl</span><span style="color:#fdf4c1aa;">&lt;A: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">, B: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt; </span><span style="color:#8ec07c;">Basket</span><span style="color:#fdf4c1aa;">&lt;(A, B)&gt; {
-    </span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">new_with</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fdf4c1;">iter</span><span style="color:#fdf4c1aa;">: Drain&lt;TypeId, </span><span style="color:#fabd2f;">Box</span><span style="color:#fdf4c1aa;">&lt;dyn Any&gt;&gt;) -&gt; </span><span style="color:#fa5c4b;">Self </span><span style="color:#fdf4c1aa;">{
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">impl<A: 'static, B: 'static> Basket<(A, B)> {
+    fn new_with(iter: Drain<TypeId, Box<dyn Any>>) -> Self {
         Basket {
             items: HashMap::from_iter(iter),
             _t: PhantomData,
         }
     }
 
-    </span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">get</span><span style="color:#fdf4c1aa;">&lt;U: </span><span style="color:#fa5c4b;">&#39;static</span><span style="color:#fdf4c1aa;">&gt;(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">) -&gt; </span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">U </span><span style="color:#fa5c4b;">where</span><span style="color:#fdf4c1aa;"> U = A | B { </span><span style="font-style:italic;color:#928374;">// =&gt; Invalid Syntax!
-        </span><span style="color:#fa5c4b;">match </span><span style="color:#fdf4c1;">self</span><span style="color:#fdf4c1aa;">.items.</span><span style="color:#fabd2f;">get</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fe8019;">&amp;</span><span style="color:#fdf4c1aa;">TypeId::of::&lt;U&gt;()) {
-            </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt; </span><span style="color:#fa5c4b;">match</span><span style="color:#fdf4c1aa;"> item.downcast_ref::&lt;U&gt;() {
-                </span><span style="color:#fabd2f;">Some</span><span style="color:#fdf4c1aa;">(item) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> item,
-                </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
+    pub fn get<U: 'static>(&self) -> &U where U = A | B { // => Invalid Syntax!
+        match self.items.get(&TypeId::of::<U>()) {
+            Some(item) => match item.downcast_ref::<U>() {
+                Some(item) => item,
+                _ => panic!()
             },
-            </span><span style="color:#fe8019;">_ =&gt; </span><span style="color:#fabd2f;">panic!</span><span style="color:#fdf4c1aa;">()
+            _ => panic!()
         }
     }
 }
-</span></code></pre>
+</code></pre>
 <p>上記で <code>TypeId::of::&lt;U&gt;</code> と <code>TypeId::of::&lt;A&gt;</code> を比較する方法だと実行時になっちゃうのでダメ。</p>
 <h2 id="dametupoi">ダメっぽい</h2>
 <p><code>get()</code> メソッドをそのまま実装せず、 <code>Get</code> トレイトを定義して associated type を使って制約をかけようとコードをこねくりまわしたり（失敗に終わった）、それらを調べていたら <a href="https://github.com/rust-lang/rfcs/blob/master/text/1598-generic_associated_types.md"><code>Generic Associated Types</code></a> なるものが unstable では使えて <code>Associated Type Constructor</code> の存在を知り、その背後にある <a href="https://keens.github.io/blog/2016/02/28/rustnohigherkinded_type_trait/"><code>Higher-Kinded Types</code></a> に出会ってしまって数時間潰したりしたけど、結局目的のものを組むことはできなかった。</p>
@@ -316,7 +310,7 @@ bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;"
             
                 <div class="post-tags">
                     
-                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;rust&#x2F;">#rust</a>
+                        <a href="https://blog.endflow.net/tags/rust/">#rust</a>
                     
                 </div>
             
@@ -350,7 +344,7 @@ bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;"
         </div>
 
       
-          <script type="text/javascript" src="https:&#x2F;&#x2F;blog.endflow.net&#x2F;even.js" ></script>
+          <script type="text/javascript" src="https://blog.endflow.net/even.js" ></script>
       
     </body>
 

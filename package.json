@@ -7,7 +7,7 @@
     "@acot/cli": "0.0.8"
   },
   "scripts": {
-    "build": "zola build && cp -r ./public/ ../blog-production",
+    "build": "zola build && cp -r ./public/* ../kuy.github.io/",
     "serve": "zola serve"
   }
 }

@@ -18,7 +18,7 @@
 
       
           <link href="https://fonts.googleapis.com/css?family=Roboto:400,700|Source+Code+Pro&display=swap" rel="stylesheet">
-          <link rel="stylesheet" href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;site.css">
+          <link rel="stylesheet" href="https://blog.endflow.net/site.css">
           
       
 
@@ -150,19 +150,19 @@
 <p>次にテスト用に <code>acot-study</code> というディレクトリを作って、ここで <code>npx acot run</code> できるように準備します。
 そのあとローカル package を使えるように <code>npm link acot-reporter-null</code> を実行してシンボリックリンクを作成します。</p>
 <p>最後に <code>acot.config.js</code> を変更して <code>reporter: &quot;null&quot;</code> を追加します。</p>
-<pre style="background-color:#282828;">
-<code class="language-javascript" data-lang="javascript"><span style="color:#fabd2f;">module</span><span style="color:#fdf4c1aa;">.</span><span style="color:#fabd2f;">exports </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1aa;">{
-  presets: [</span><span style="color:#b8bb26;">&quot;@acot/wcag&quot;</span><span style="color:#fdf4c1aa;">],
-  reporter: </span><span style="color:#b8bb26;">&quot;null&quot;</span><span style="color:#fdf4c1aa;">,
-  origin: </span><span style="color:#b8bb26;">&quot;https://example.com&quot;</span><span style="color:#fdf4c1aa;">,
-  paths: [</span><span style="color:#b8bb26;">&quot;/pages&quot;</span><span style="color:#fdf4c1aa;">],
+<pre data-lang="javascript" class="language-javascript "><code class="language-javascript" data-lang="javascript">module.exports = {
+  presets: ["@acot/wcag"],
+  reporter: "null",
+  origin: "https://example.com",
+  paths: ["/pages"],
   rules: {
-    </span><span style="color:#b8bb26;">&quot;@acot/wcag/page-has-title&quot;</span><span style="color:#fdf4c1aa;">: </span><span style="color:#b8bb26;">&quot;error&quot;</span><span style="color:#fdf4c1aa;">,
-    </span><span style="color:#b8bb26;">&quot;@acot/wcag/img-has-name&quot;</span><span style="color:#fdf4c1aa;">: </span><span style="color:#b8bb26;">&quot;error&quot;</span><span style="color:#fdf4c1aa;">,
-    </span><span style="color:#b8bb26;">&quot;@acot/wcag/focusable-has-indicator&quot;</span><span style="color:#fdf4c1aa;">: </span><span style="color:#b8bb26;">&quot;error&quot;</span><span style="color:#fdf4c1aa;">,
+    "@acot/wcag/page-has-title": "error",
+    "@acot/wcag/img-has-name": "error",
+    "@acot/wcag/focusable-has-indicator": "error",
   },
 };
-</span></code></pre><h2 id="debatugufang-fa">デバッグ方法</h2>
+</code></pre>
+<h2 id="debatugufang-fa">デバッグ方法</h2>
 <p>これで <code>npx acot run</code> を実行すれば動くんですが、なんの手がかりもなくプラグイン開発を進めるのは厳しいものがあります。
 そういうときは <code>DEBUG='acot:module-loader' npx acot run</code> のように環境変数の <code>DEBUG</code> を使うとデバッグログ全体や
 特定のログだけを見ることができます。便利。</p>
@@ -180,9 +180,9 @@
             
                 <div class="post-tags">
                     
-                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;acot&#x2F;">#acot</a>
+                        <a href="https://blog.endflow.net/tags/acot/">#acot</a>
                     
-                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;plugin&#x2F;">#plugin</a>
+                        <a href="https://blog.endflow.net/tags/plugin/">#plugin</a>
                     
                 </div>
             
@@ -216,7 +216,7 @@
         </div>
 
       
-          <script type="text/javascript" src="https:&#x2F;&#x2F;blog.endflow.net&#x2F;even.js" ></script>
+          <script type="text/javascript" src="https://blog.endflow.net/even.js" ></script>
       
     </body>
 

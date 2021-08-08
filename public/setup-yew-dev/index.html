@@ -18,7 +18,7 @@
 
       
           <link href="https://fonts.googleapis.com/css?family=Roboto:400,700|Source+Code+Pro&display=swap" rel="stylesheet">
-          <link rel="stylesheet" href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;site.css">
+          <link rel="stylesheet" href="https://blog.endflow.net/site.css">
           
       
 
@@ -126,30 +126,26 @@
 <p>Yes, <a href="https://github.com/yewstack/yew/blob/master/examples/build_all.sh">fabulous script</a>.</p>
 <h2 id="build-run-stdweb-examples">Build &amp; Run <code>stdweb</code> examples</h2>
 <p>It's pretty easy. For example, here is an example to run <a href="https://github.com/yewstack/yew/tree/master/examples/std_web/counter">counter</a> example of <a href="https://github.com/yewstack/yew/tree/master/examples/std_web">stdweb</a> version.</p>
-<pre style="background-color:#282828;">
-<code><span style="color:#fdf4c1aa;">cd examples/std_web/counter
+<pre><code>cd examples/std_web/counter
 cargo web start --target wasm32-unknown-unknown
-</span></code></pre>
+</code></pre>
 <p>Open <code>http://localhost:8000</code> in your browser.</p>
 <h2 id="build-web-sys-examples">Build <code>web-sys</code> examples</h2>
 <p>In <a href="https://github.com/yewstack/yew/tree/master/examples/web_sys">web-sys</a> examples, you need to run separated build commands (<code>cargo build</code> and <code>wasm-bindgen</code>) because <code>cargo-web</code> doesn't support <code>web-sys</code> at this time.</p>
-<pre style="background-color:#282828;">
-<code><span style="color:#fdf4c1aa;">cd examples/web_sys/counter
+<pre><code>cd examples/web_sys/counter
 cargo build --target wasm32-unknown-unknown
 wasm-bindgen --target web --no-typescript --out-dir ../../static/ --out-name wasm ../../target/wasm32-unknown-unknown/debug/counter_web_sys.wasm
-</span></code></pre>
+</code></pre>
 <p>I got following error on running <code>wasm-bindgen</code>.</p>
 <h2 id="error-thread-main-panicked-at-index-out-of-bounds-the-len-is-0-but-the-index-is-0-users-yourname-cargo-registry-src-github-com-1ecc6299db9ec823-wasm-bindgen-cli-support-0-2-58-src-descriptor-rs-198-15">ERROR: thread 'main' panicked at 'index out of bounds: the len is 0 but the index is 0', /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15</h2>
 <p>Welcome to the main section of this post.</p>
-<pre style="background-color:#282828;">
-<code><span style="color:#fdf4c1aa;">thread &#39;main&#39; panicked at &#39;index out of bounds: the len is 0 but the index is 0&#39;, /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15
+<pre><code>thread 'main' panicked at 'index out of bounds: the len is 0 but the index is 0', /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15
 note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace.
-</span></code></pre>
+</code></pre>
 <p>Here is a verbose output.</p>
-<pre style="background-color:#282828;">
-<code><span style="color:#fdf4c1aa;">thread &#39;main&#39; panicked at &#39;index out of bounds: the len is 0 but the index is 0&#39;, /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15
+<pre><code>thread 'main' panicked at 'index out of bounds: the len is 0 but the index is 0', /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15
 stack backtrace:
-   0: &lt;std::sys_common::backtrace::_print::DisplayBacktrace as core::fmt::Display&gt;::fmt
+   0: <std::sys_common::backtrace::_print::DisplayBacktrace as core::fmt::Display>::fmt
    1: core::fmt::write
    2: std::io::Write::write_fmt
    3: std::panicking::default_hook::{{closure}}
@@ -172,16 +168,16 @@ stack backtrace:
   20: std::rt::lang_start_internal
   21: main
 note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
-</span></code></pre><h3 id="reason-version-mismatch">Reason: Version mismatch</h3>
+</code></pre>
+<h3 id="reason-version-mismatch">Reason: Version mismatch</h3>
 <p>Yew's <code>Cargo.toml</code> has <code>wasm-bindgen = { version = &quot;0.2.59&quot;, optional = true }</code>. But my <code>wasm-bindgen-cli</code> is <code>0.2.58</code>.</p>
-<pre style="background-color:#282828;">
-<code><span style="color:#fdf4c1aa;">$ wasm-bindgen --version
+<pre><code>$ wasm-bindgen --version
 wasm-bindgen 0.2.58
-</span></code></pre><h3 id="update-toolchains">Update toolchains</h3>
+</code></pre>
+<h3 id="update-toolchains">Update toolchains</h3>
 <p>Update <code>wasm-bindgen-cli</code> to <code>0.2.59</code> to match a version used in <code>Cargo.toml</code>.</p>
-<pre style="background-color:#282828;">
-<code><span style="color:#fdf4c1aa;">cargo install wasm-bindgen-cli --force
-</span></code></pre>
+<pre><code>cargo install wasm-bindgen-cli --force
+</code></pre>
 <p>Most of Rust projects assume you use the latest version of toolchains. I recommend you to also update other toolchains:</p>
 <ul>
 <li><code>rustup update stable</code></li>
@@ -190,24 +186,22 @@ wasm-bindgen 0.2.58
 <p>After updates, I confirmed <code>wasm-bindgen</code> is <code>0.2.59</code> and rebuilt successfully. Note that <code>wasm-bindgen</code> outputs nothing on success (according to UNIX philosophy).</p>
 <h2 id="run-web-sys-examples">Run <code>web-sys</code> examples</h2>
 <p>Let's run it. To serve local files, I'm using <a href="https://www.npmjs.com/package/http-server">http-server</a>. If you have favorite <a href="https://gist.github.com/willurd/5720255">one-liners</a>, it's okay to use it of course.</p>
-<pre style="background-color:#282828;">
-<code><span style="color:#fdf4c1aa;">http-server ../../static -p 8000
-</span></code></pre>
+<pre><code>http-server ../../static -p 8000
+</code></pre>
 <p>Open <code>http://localhost:8000</code> in your browser.</p>
 <h2 id="build-run-mixed-examples">Build &amp; Run mixed examples</h2>
 <p>Now you can launch <a href="https://github.com/yewstack/yew/tree/master/examples/std_web">stdweb</a> and <a href="https://github.com/yewstack/yew/tree/master/examples/web_sys">web-sys</a> examples, but how about other examples? For instance, <a href="https://github.com/yewstack/yew/tree/master/examples/showcase">showcase</a> contains both backends.</p>
 <p>To build it, use <code>--features</code> option to indicate which backend you want to use.</p>
-<pre style="background-color:#282828;">
-<code><span style="color:#fdf4c1aa;">cd examples/showcase
+<pre><code>cd examples/showcase
 cargo web start --target wasm32-unknown-unknown --features std_web
-</span></code></pre>
+</code></pre>
 <p>and</p>
-<pre style="background-color:#282828;">
-<code><span style="color:#fdf4c1aa;">cd examples/showcase
+<pre><code>cd examples/showcase
 cargo build --target wasm32-unknown-unknown --features web_sys
 wasm-bindgen --target web --no-typescript --out-dir ../static/ --out-name wasm ../target/wasm32-unknown-unknown/debug/showcase.wasm
 http-server ../static -p 8000
-</span></code></pre>
+</code></pre>
+
     </div>
 
     
@@ -218,13 +212,13 @@ http-server ../static -p 8000
             
                 <div class="post-tags">
                     
-                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;rust&#x2F;">#rust</a>
+                        <a href="https://blog.endflow.net/tags/rust/">#rust</a>
                     
-                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;yew&#x2F;">#yew</a>
+                        <a href="https://blog.endflow.net/tags/yew/">#yew</a>
                     
-                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;frontend&#x2F;">#frontend</a>
+                        <a href="https://blog.endflow.net/tags/frontend/">#frontend</a>
                     
-                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;tips&#x2F;">#tips</a>
+                        <a href="https://blog.endflow.net/tags/tips/">#tips</a>
                     
                 </div>
             
@@ -258,7 +252,7 @@ http-server ../static -p 8000
         </div>
 
       
-          <script type="text/javascript" src="https:&#x2F;&#x2F;blog.endflow.net&#x2F;even.js" ></script>
+          <script type="text/javascript" src="https://blog.endflow.net/even.js" ></script>
       
     </body>
 

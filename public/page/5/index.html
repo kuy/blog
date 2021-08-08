@@ -18,7 +18,7 @@
 
       
           <link href="https://fonts.googleapis.com/css?family=Roboto:400,700|Source+Code+Pro&display=swap" rel="stylesheet">
-          <link rel="stylesheet" href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;site.css">
+          <link rel="stylesheet" href="https://blog.endflow.net/site.css">
           
       
 
@@ -145,32 +145,32 @@
 <p>参考: <a href="https://github.com/diesel-rs/diesel/issues/455">https://github.com/diesel-rs/diesel/issues/455</a></p>
 <h2 id="yaritaikoto">やりたいこと</h2>
 <p>数字の ID でも文字列の slug でも１つの関数で検索できるようにしたい。</p>
-<pre style="background-color:#282828;">
-<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">pub enum </span><span style="color:#8ec07c;">IdOrSlug </span><span style="color:#fdf4c1aa;">{
-    Id(</span><span style="color:#fa5c4b;">i32</span><span style="color:#fdf4c1aa;">),
-    Slug(</span><span style="color:#fabd2f;">String</span><span style="color:#fdf4c1aa;">),
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">pub enum IdOrSlug {
+    Id(i32),
+    Slug(String),
 }
 
-</span><span style="font-style:italic;color:#928374;">// ...
+// ...
 
-</span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">find</span><span style="color:#fdf4c1aa;">(..., </span><span style="color:#fdf4c1;">id</span><span style="color:#fdf4c1aa;">: IdOrSlug) -&gt; </span><span style="color:#fabd2f;">Result</span><span style="color:#fdf4c1aa;">&lt;Article&gt; {
-    </span><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> query </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1aa;">articles::table.</span><span style="color:#fabd2f;">left_join</span><span style="color:#fdf4c1aa;">(categories::table);
-    </span><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> query </span><span style="color:#fe8019;">= </span><span style="color:#fa5c4b;">match</span><span style="color:#fdf4c1aa;"> id {
-        IdOrSlug::Id(id) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> query.</span><span style="color:#fabd2f;">filter</span><span style="color:#fdf4c1aa;">(articles::id.</span><span style="color:#fabd2f;">eq</span><span style="color:#fdf4c1aa;">(id)),
-        IdOrSlug::Slug(slug) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> query.</span><span style="color:#fabd2f;">filter</span><span style="color:#fdf4c1aa;">(articles::slug.</span><span style="color:#fabd2f;">eq</span><span style="color:#fdf4c1aa;">(slug.</span><span style="color:#fabd2f;">as_str</span><span style="color:#fdf4c1aa;">())),
+pub fn find(..., id: IdOrSlug) -> Result<Article> {
+    let query = articles::table.left_join(categories::table);
+    let query = match id {
+        IdOrSlug::Id(id) => query.filter(articles::id.eq(id)),
+        IdOrSlug::Slug(slug) => query.filter(articles::slug.eq(slug.as_str())),
     };
 
-    </span><span style="font-style:italic;color:#928374;">// ...
-</span></code></pre><h2 id="dametupoi">ダメっぽい</h2>
+    // ...
+</code></pre>
+<h2 id="dametupoi">ダメっぽい</h2>
 <p><code>.filter()</code> をかますと引数の型が戻り値の型に埋め込まれるようで、 incompatible だと怒られる。</p>
-<pre style="background-color:#282828;">
-<code><span style="color:#fdf4c1aa;">match arms have incompatible types
+<pre><code>match arms have incompatible types
 
 expected struct `schema::articles::columns::id`, found struct `schema::articles::columns::slug`
 
-note: expected type `diesel::query_builder::SelectStatement&lt;_, _, _, diesel::query_builder::where_clause::WhereClause&lt;diesel::expression::operators::Eq&lt;schema::articles::columns::id, diesel::expression::bound::Bound&lt;diesel::sql_types::Integer, i32&gt;&gt;&gt;&gt;`
-       found struct `diesel::query_builder::SelectStatement&lt;_, _, _, diesel::query_builder::where_clause::WhereClause&lt;diesel::expression::operators::Eq&lt;schema::articles::columns::slug, diesel::expression::bound::Bound&lt;diesel::sql_types::Text, &amp;str&gt;&gt;&gt;&gt;`
-</span></code></pre>
+note: expected type `diesel::query_builder::SelectStatement<_, _, _, diesel::query_builder::where_clause::WhereClause<diesel::expression::operators::Eq<schema::articles::columns::id, diesel::expression::bound::Bound<diesel::sql_types::Integer, i32>>>>`
+       found struct `diesel::query_builder::SelectStatement<_, _, _, diesel::query_builder::where_clause::WhereClause<diesel::expression::operators::Eq<schema::articles::columns::slug, diesel::expression::bound::Bound<diesel::sql_types::Text, &str>>>>`
+</code></pre>
+
                                     </div>
                                     <div class="read-more">
                                         <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;build-conditional-query&#x2F;">Read more...</a>
@@ -233,16 +233,16 @@ note: expected type `diesel::query_builder::SelectStatement&lt;_, _, _, diesel::
 <li>型を指定することで値を取り出せる</li>
 <li>保管していない型を指定した場合は <strong>コンパイルエラー</strong> が発生</li>
 </ul>
-<pre style="background-color:#282828;">
-<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> bag </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1aa;">Basket::new();
-bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;Universe&quot;</span><span style="color:#fdf4c1aa;">);
-bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;">(</span><span style="color:#d3869b;">42</span><span style="color:#fdf4c1aa;">);
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">let bag = Basket::new();
+bag.set("Universe");
+bag.set(42);
 
-</span><span style="color:#fabd2f;">println!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;i32: </span><span style="color:#fdf4c1;">{}</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1aa;">, bag.get::&lt;</span><span style="color:#fa5c4b;">i32</span><span style="color:#fdf4c1aa;">&gt;());   </span><span style="font-style:italic;color:#928374;">// =&gt; &quot;i32: 42&quot;
-</span><span style="color:#fabd2f;">println!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;&amp;str: </span><span style="color:#fdf4c1;">{}</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1aa;">, bag.get::&lt;</span><span style="color:#fe8019;">&amp;</span><span style="color:#fa5c4b;">str</span><span style="color:#fdf4c1aa;">&gt;()); </span><span style="font-style:italic;color:#928374;">// =&gt; &quot;&amp;str: Universe&quot;
+println!("i32: {}", bag.get::<i32>());   // => "i32: 42"
+println!("&str: {}", bag.get::<&str>()); // => "&str: Universe"
 
-// println!(&quot;bool: {}&quot;, bag.get::&lt;bool&gt;()); =&gt; Compile Error!
-</span></code></pre>
+// println!("bool: {}", bag.get::<bool>()); => Compile Error!
+</code></pre>
+
                                     </div>
                                     <div class="read-more">
                                         <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;typed-basket&#x2F;">Read more...</a>
@@ -265,50 +265,47 @@ bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;"
                                         <h2 id="kitukake">きっかけ</h2>
 <p>業務で Rust を使っていこうということになったので、Rust を勉強しながら何か Web アプリでも作ってみようと思って <a href="https://actix.rs/">actix-web</a> を触り始めた。サンプルコードをいじっていて気になったのはリクエストハンドラの引数の柔軟さで、まるでスクリプト言語のように扱える。</p>
 <p>例えば以下は <code>http://localhost:8080/hoge</code> にリクエストを受けると path 部分である <code>/hoge</code> をレスポンスとして返す。</p>
-<pre style="background-color:#282828;">
-<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">index</span><span style="color:#fdf4c1aa;">(
-    </span><span style="color:#fdf4c1;">req</span><span style="color:#fdf4c1aa;">: HttpRequest,
-) -&gt; impl IntoFuture&lt;Item = </span><span style="color:#fabd2f;">String</span><span style="color:#fdf4c1aa;">, Error = Error&gt; {
-    </span><span style="color:#fabd2f;">Ok</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fabd2f;">String</span><span style="color:#fdf4c1aa;">::from(req.</span><span style="color:#fabd2f;">path</span><span style="color:#fdf4c1aa;">()))
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">fn index(
+    req: HttpRequest,
+) -> impl IntoFuture<Item = String, Error = Error> {
+    Ok(String::from(req.path()))
 }
 
-</span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">main</span><span style="color:#fdf4c1aa;">() -&gt; std::io::</span><span style="color:#fabd2f;">Result</span><span style="color:#fdf4c1aa;">&lt;()&gt; {
+fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
-            .</span><span style="color:#fabd2f;">default_service</span><span style="color:#fdf4c1aa;">(web::route().</span><span style="color:#fabd2f;">to_async</span><span style="color:#fdf4c1aa;">(index))
+            .default_service(web::route().to_async(index))
     })
-    .</span><span style="color:#fabd2f;">bind</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;127.0.0.1:8080&quot;</span><span style="color:#fdf4c1aa;">)</span><span style="color:#fe8019;">?
-    </span><span style="color:#fdf4c1aa;">.</span><span style="color:#fabd2f;">run</span><span style="color:#fdf4c1aa;">()
+    .bind("127.0.0.1:8080")?
+    .run()
 }
-</span></code></pre>
+</code></pre>
 <p>リクエストハンドラに何かデータ（普通はアプリケーションの状態など）を渡すこともできる。この例だと <code>http://localhost:8080/spacecat</code> にアクセスすると <code>http://www.example.com/spacecat</code> が表示される。</p>
-<pre style="background-color:#282828;">
-<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">index</span><span style="color:#fdf4c1aa;">(
-    </span><span style="color:#fdf4c1;">req</span><span style="color:#fdf4c1aa;">: HttpRequest,
-    </span><span style="color:#fdf4c1;">prefix</span><span style="color:#fdf4c1aa;">: web::Data&lt;</span><span style="color:#fe8019;">&amp;</span><span style="color:#fa5c4b;">str</span><span style="color:#fdf4c1aa;">&gt;,
-) -&gt; impl IntoFuture&lt;Item = </span><span style="color:#fabd2f;">String</span><span style="color:#fdf4c1aa;">, Error = Error&gt; {
-    </span><span style="color:#fabd2f;">Ok</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fabd2f;">format!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1;">{}{}</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1aa;">, prefix, req.</span><span style="color:#fabd2f;">path</span><span style="color:#fdf4c1aa;">()))
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">fn index(
+    req: HttpRequest,
+    prefix: web::Data<&str>,
+) -> impl IntoFuture<Item = String, Error = Error> {
+    Ok(format!("{}{}", prefix, req.path()))
 }
 
-</span><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">main</span><span style="color:#fdf4c1aa;">() -&gt; std::io::</span><span style="color:#fabd2f;">Result</span><span style="color:#fdf4c1aa;">&lt;()&gt; {
+fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
-            .</span><span style="color:#fabd2f;">data</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;http://www.example.com&quot;</span><span style="color:#fdf4c1aa;">)
-            .</span><span style="color:#fabd2f;">default_service</span><span style="color:#fdf4c1aa;">(web::route().</span><span style="color:#fabd2f;">to_async</span><span style="color:#fdf4c1aa;">(index))
+            .data("http://www.example.com")
+            .default_service(web::route().to_async(index))
     })
-    .</span><span style="color:#fabd2f;">bind</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;127.0.0.1:8080&quot;</span><span style="color:#fdf4c1aa;">)</span><span style="color:#fe8019;">?
-    </span><span style="color:#fdf4c1aa;">.</span><span style="color:#fabd2f;">run</span><span style="color:#fdf4c1aa;">()
+    .bind("127.0.0.1:8080")?
+    .run()
 }
-</span></code></pre>
+</code></pre>
 <p>ここで「どこまで柔軟性があるんだろうか？」と思って、試しにリクエストハンドラの引数の順番を入れ替えてみた。</p>
-<pre style="background-color:#282828;">
-<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">fn </span><span style="color:#8ec07c;">index</span><span style="color:#fdf4c1aa;">(
-    </span><span style="color:#fdf4c1;">prefix</span><span style="color:#fdf4c1aa;">: web::Data&lt;</span><span style="color:#fe8019;">&amp;</span><span style="color:#fa5c4b;">str</span><span style="color:#fdf4c1aa;">&gt;,
-    </span><span style="color:#fdf4c1;">req</span><span style="color:#fdf4c1aa;">: HttpRequest,
-) -&gt; impl IntoFuture&lt;Item = </span><span style="color:#fabd2f;">String</span><span style="color:#fdf4c1aa;">, Error = Error&gt; {
-    </span><span style="color:#fabd2f;">Ok</span><span style="color:#fdf4c1aa;">(</span><span style="color:#fabd2f;">format!</span><span style="color:#fdf4c1aa;">(</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1;">{}{}</span><span style="color:#b8bb26;">&quot;</span><span style="color:#fdf4c1aa;">, prefix, req.</span><span style="color:#fabd2f;">path</span><span style="color:#fdf4c1aa;">()))
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">fn index(
+    prefix: web::Data<&str>,
+    req: HttpRequest,
+) -> impl IntoFuture<Item = String, Error = Error> {
+    Ok(format!("{}{}", prefix, req.path()))
 }
-</span></code></pre>
+</code></pre>
 <p><strong>これ、ちゃんと動いてしまう。</strong></p>
 <p>Rust のようなガチガチに検証するタイプの言語でこの柔軟性を一体どうやって実現しているんだろう・・・？ と思ったのがきっかけ。</p>
 
@@ -336,7 +333,7 @@ bag.</span><span style="color:#fabd2f;">set</span><span style="color:#fdf4c1aa;"
         </div>
 
       
-          <script type="text/javascript" src="https:&#x2F;&#x2F;blog.endflow.net&#x2F;even.js" ></script>
+          <script type="text/javascript" src="https://blog.endflow.net/even.js" ></script>
       
     </body>
 

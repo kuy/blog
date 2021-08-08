@@ -18,7 +18,7 @@
 
       
           <link href="https://fonts.googleapis.com/css?family=Roboto:400,700|Source+Code+Pro&display=swap" rel="stylesheet">
-          <link rel="stylesheet" href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;site.css">
+          <link rel="stylesheet" href="https://blog.endflow.net/site.css">
           
       
 
@@ -123,60 +123,60 @@
 <p>参考: <a href="https://github.com/diesel-rs/diesel/issues/455">https://github.com/diesel-rs/diesel/issues/455</a></p>
 <h2 id="yaritaikoto">やりたいこと</h2>
 <p>数字の ID でも文字列の slug でも１つの関数で検索できるようにしたい。</p>
-<pre style="background-color:#282828;">
-<code class="language-rust" data-lang="rust"><span style="color:#fa5c4b;">pub enum </span><span style="color:#8ec07c;">IdOrSlug </span><span style="color:#fdf4c1aa;">{
-    Id(</span><span style="color:#fa5c4b;">i32</span><span style="color:#fdf4c1aa;">),
-    Slug(</span><span style="color:#fabd2f;">String</span><span style="color:#fdf4c1aa;">),
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">pub enum IdOrSlug {
+    Id(i32),
+    Slug(String),
 }
 
-</span><span style="font-style:italic;color:#928374;">// ...
+// ...
 
-</span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">find</span><span style="color:#fdf4c1aa;">(..., </span><span style="color:#fdf4c1;">id</span><span style="color:#fdf4c1aa;">: IdOrSlug) -&gt; </span><span style="color:#fabd2f;">Result</span><span style="color:#fdf4c1aa;">&lt;Article&gt; {
-    </span><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> query </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1aa;">articles::table.</span><span style="color:#fabd2f;">left_join</span><span style="color:#fdf4c1aa;">(categories::table);
-    </span><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> query </span><span style="color:#fe8019;">= </span><span style="color:#fa5c4b;">match</span><span style="color:#fdf4c1aa;"> id {
-        IdOrSlug::Id(id) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> query.</span><span style="color:#fabd2f;">filter</span><span style="color:#fdf4c1aa;">(articles::id.</span><span style="color:#fabd2f;">eq</span><span style="color:#fdf4c1aa;">(id)),
-        IdOrSlug::Slug(slug) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> query.</span><span style="color:#fabd2f;">filter</span><span style="color:#fdf4c1aa;">(articles::slug.</span><span style="color:#fabd2f;">eq</span><span style="color:#fdf4c1aa;">(slug.</span><span style="color:#fabd2f;">as_str</span><span style="color:#fdf4c1aa;">())),
+pub fn find(..., id: IdOrSlug) -> Result<Article> {
+    let query = articles::table.left_join(categories::table);
+    let query = match id {
+        IdOrSlug::Id(id) => query.filter(articles::id.eq(id)),
+        IdOrSlug::Slug(slug) => query.filter(articles::slug.eq(slug.as_str())),
     };
 
-    </span><span style="font-style:italic;color:#928374;">// ...
-</span></code></pre><h2 id="dametupoi">ダメっぽい</h2>
+    // ...
+</code></pre>
+<h2 id="dametupoi">ダメっぽい</h2>
 <p><code>.filter()</code> をかますと引数の型が戻り値の型に埋め込まれるようで、 incompatible だと怒られる。</p>
-<pre style="background-color:#282828;">
-<code><span style="color:#fdf4c1aa;">match arms have incompatible types
+<pre><code>match arms have incompatible types
 
 expected struct `schema::articles::columns::id`, found struct `schema::articles::columns::slug`
 
-note: expected type `diesel::query_builder::SelectStatement&lt;_, _, _, diesel::query_builder::where_clause::WhereClause&lt;diesel::expression::operators::Eq&lt;schema::articles::columns::id, diesel::expression::bound::Bound&lt;diesel::sql_types::Integer, i32&gt;&gt;&gt;&gt;`
-       found struct `diesel::query_builder::SelectStatement&lt;_, _, _, diesel::query_builder::where_clause::WhereClause&lt;diesel::expression::operators::Eq&lt;schema::articles::columns::slug, diesel::expression::bound::Bound&lt;diesel::sql_types::Text, &amp;str&gt;&gt;&gt;&gt;`
-</span></code></pre><span id="continue-reading"></span><h2 id="jie-jue-fang-fa">解決方法</h2>
+note: expected type `diesel::query_builder::SelectStatement<_, _, _, diesel::query_builder::where_clause::WhereClause<diesel::expression::operators::Eq<schema::articles::columns::id, diesel::expression::bound::Bound<diesel::sql_types::Integer, i32>>>>`
+       found struct `diesel::query_builder::SelectStatement<_, _, _, diesel::query_builder::where_clause::WhereClause<diesel::expression::operators::Eq<schema::articles::columns::slug, diesel::expression::bound::Bound<diesel::sql_types::Text, &str>>>>`
+</code></pre>
+<span id="continue-reading"></span><h2 id="jie-jue-fang-fa">解決方法</h2>
 <p><code>.filter()</code> の呼び出しのあとに <code>into_boxed()</code> を使って Box する。</p>
-<pre style="background-color:#282828;">
-<code class="language-rust" data-lang="rust"><span style="font-style:italic;color:#928374;">// ...
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">// ...
 
-</span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">find</span><span style="color:#fdf4c1aa;">(..., </span><span style="color:#fdf4c1;">id</span><span style="color:#fdf4c1aa;">: IdOrSlug) -&gt; </span><span style="color:#fabd2f;">Result</span><span style="color:#fdf4c1aa;">&lt;ViewProduct&gt; {
-    </span><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> query </span><span style="color:#fe8019;">= </span><span style="color:#fdf4c1aa;">articles::table.</span><span style="color:#fabd2f;">left_join</span><span style="color:#fdf4c1aa;">(categories::table);
-    </span><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> query </span><span style="color:#fe8019;">= </span><span style="color:#fa5c4b;">match</span><span style="color:#fdf4c1aa;"> id {
-        IdOrSlug::Id(id) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> query.</span><span style="color:#fabd2f;">filter</span><span style="color:#fdf4c1aa;">(articles::id.</span><span style="color:#fabd2f;">eq</span><span style="color:#fdf4c1aa;">(id)).</span><span style="color:#fabd2f;">into_boxed</span><span style="color:#fdf4c1aa;">(),
-        IdOrSlug::Slug(slug) </span><span style="color:#fe8019;">=&gt;</span><span style="color:#fdf4c1aa;"> query.</span><span style="color:#fabd2f;">filter</span><span style="color:#fdf4c1aa;">(articles::slug.</span><span style="color:#fabd2f;">eq</span><span style="color:#fdf4c1aa;">(slug.</span><span style="color:#fabd2f;">as_str</span><span style="color:#fdf4c1aa;">())).</span><span style="color:#fabd2f;">into_boxed</span><span style="color:#fdf4c1aa;">(),
+pub fn find(..., id: IdOrSlug) -> Result<ViewProduct> {
+    let query = articles::table.left_join(categories::table);
+    let query = match id {
+        IdOrSlug::Id(id) => query.filter(articles::id.eq(id)).into_boxed(),
+        IdOrSlug::Slug(slug) => query.filter(articles::slug.eq(slug.as_str())).into_boxed(),
     };
 
-    </span><span style="font-style:italic;color:#928374;">// ...
-</span></code></pre><h2 id="wei-jie-jue">未解決</h2>
+    // ...
+</code></pre>
+<h2 id="wei-jie-jue">未解決</h2>
 <p>最初は条件部分だけ切り出してやろうとしたんだけど、こっちは何か方法が無いんだろうか。</p>
-<pre style="background-color:#282828;">
-<code class="language-rust" data-lang="rust"><span style="font-style:italic;color:#928374;">// ...
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">// ...
 
-</span><span style="color:#fa5c4b;">pub fn </span><span style="color:#8ec07c;">find</span><span style="color:#fdf4c1aa;">(..., </span><span style="color:#fdf4c1;">id</span><span style="color:#fdf4c1aa;">: IdOrSlug) -&gt; </span><span style="color:#fabd2f;">Result</span><span style="color:#fdf4c1aa;">&lt;Article&gt; {
-    </span><span style="color:#fa5c4b;">let</span><span style="color:#fdf4c1aa;"> cond </span><span style="color:#fe8019;">= </span><span style="color:#fa5c4b;">match</span><span style="color:#fdf4c1aa;"> id {
-        IdOrSlug::Id(id) </span><span style="color:#fe8019;">=&gt; </span><span style="color:#fdf4c1aa;">articles::id.</span><span style="color:#fabd2f;">eq</span><span style="color:#fdf4c1aa;">(id),
-        IdOrSlug::Slug(slug) </span><span style="color:#fe8019;">=&gt; </span><span style="color:#fdf4c1aa;">articles::slug.</span><span style="color:#fabd2f;">eq</span><span style="color:#fdf4c1aa;">(slug.</span><span style="color:#fabd2f;">as_str</span><span style="color:#fdf4c1aa;">()),
+pub fn find(..., id: IdOrSlug) -> Result<Article> {
+    let cond = match id {
+        IdOrSlug::Id(id) => articles::id.eq(id),
+        IdOrSlug::Slug(slug) => articles::slug.eq(slug.as_str()),
     };
-    </span><span style="color:#fa5c4b;">match </span><span style="color:#fdf4c1aa;">articles::table.</span><span style="color:#fabd2f;">left_join</span><span style="color:#fdf4c1aa;">(categories::table).</span><span style="color:#fabd2f;">filter</span><span style="color:#fdf4c1aa;">(cond)</span><span style="color:#fe8019;">... </span><span style="color:#fdf4c1aa;">{
-        </span><span style="font-style:italic;color:#928374;">// ...
-    </span><span style="color:#fdf4c1aa;">}
+    match articles::table.left_join(categories::table).filter(cond)... {
+        // ...
+    }
 
-    </span><span style="font-style:italic;color:#928374;">// ...
-</span></code></pre>
+    // ...
+</code></pre>
+
     </div>
 
     
@@ -187,13 +187,13 @@ note: expected type `diesel::query_builder::SelectStatement&lt;_, _, _, diesel::
             
                 <div class="post-tags">
                     
-                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;rust&#x2F;">#rust</a>
+                        <a href="https://blog.endflow.net/tags/rust/">#rust</a>
                     
-                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;actix-web&#x2F;">#actix-web</a>
+                        <a href="https://blog.endflow.net/tags/actix-web/">#actix-web</a>
                     
-                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;diesel&#x2F;">#diesel</a>
+                        <a href="https://blog.endflow.net/tags/diesel/">#diesel</a>
                     
-                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags&#x2F;sql&#x2F;">#sql</a>
+                        <a href="https://blog.endflow.net/tags/sql/">#sql</a>
                     
                 </div>
             
@@ -227,7 +227,7 @@ note: expected type `diesel::query_builder::SelectStatement&lt;_, _, _, diesel::
         </div>
 
       
-          <script type="text/javascript" src="https:&#x2F;&#x2F;blog.endflow.net&#x2F;even.js" ></script>
+          <script type="text/javascript" src="https://blog.endflow.net/even.js" ></script>
       
     </body>
 
