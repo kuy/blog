@@ -165,3 +165,5 @@ WAKE 6560 をエアロ効果を失わずに使うには、23c のタイヤを使
 追記: PCW から新作の PEAK 4550 が発売されたので追加
 
 追記: Princeton CarbonWorks の 2021/06/30 時点での出荷リードタイムは約 4 週間とのことだった。
+
+追記: GRIT 4540 が届いて取り付けました → [CHAPTER2 TERE のアップグレード - 2021 年 8 月](https://blog.endflow.net/bike-upgrade-202108/)

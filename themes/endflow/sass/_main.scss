@@ -82,6 +82,29 @@ main {
       }
     }
 
+    table.layout {
+      margin: 0;
+      box-shadow: none;
+
+      th,
+      td {
+        padding: 0;
+        border: 0;
+      }
+
+      td {
+        padding-right: 12px;
+      }
+
+      td:last-child {
+        padding-right: 0;
+      }
+
+      tr:hover {
+        background-color: inherit;
+      }
+    }
+
     .footnote-definition {
       padding-left: 40px;
 

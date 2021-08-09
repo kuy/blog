@@ -109,6 +109,27 @@
                                     
     <header class="post__header">
         <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;setup-yew-dev&#x2F;">Yew: Setup development environment</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2020-03-22</span>
+            
+        </div>
+    </header>
+
+                                    <div class="post__summary">
+                                        <p>This post is a supplemental note for setting up <a href="https://yew.rs">Yew</a>'s development environment (not development environment using Yew). Hope this save your time.</p>
+
+                                    </div>
+                                    <div class="read-more">
+                                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;setup-yew-dev&#x2F;">Read more...</a>
+                                    </div>
+                                </article>
+                            
+                                <article class="post">
+                                    
+    <header class="post__header">
+        <h1 class="post__title">
             <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;cores-grinder-review&#x2F;">Cores コーングラインダー C330</a>
         </h1>
         <div class="post__meta">
@@ -246,72 +267,6 @@ println!("&str: {}", bag.get::<&str>()); // => "&str: Universe"
                                     </div>
                                     <div class="read-more">
                                         <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;typed-basket&#x2F;">Read more...</a>
-                                    </div>
-                                </article>
-                            
-                                <article class="post">
-                                    
-    <header class="post__header">
-        <h1 class="post__title">
-            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;flex-handler&#x2F;">actix-webの柔軟なリクエストハンドラの仕組み</a>
-        </h1>
-        <div class="post__meta">
-            <span class="post__time">2019-08-12</span>
-            
-        </div>
-    </header>
-
-                                    <div class="post__summary">
-                                        <h2 id="kitukake">きっかけ</h2>
-<p>業務で Rust を使っていこうということになったので、Rust を勉強しながら何か Web アプリでも作ってみようと思って <a href="https://actix.rs/">actix-web</a> を触り始めた。サンプルコードをいじっていて気になったのはリクエストハンドラの引数の柔軟さで、まるでスクリプト言語のように扱える。</p>
-<p>例えば以下は <code>http://localhost:8080/hoge</code> にリクエストを受けると path 部分である <code>/hoge</code> をレスポンスとして返す。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">fn index(
-    req: HttpRequest,
-) -> impl IntoFuture<Item = String, Error = Error> {
-    Ok(String::from(req.path()))
-}
-
-fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
-        App::new()
-            .default_service(web::route().to_async(index))
-    })
-    .bind("127.0.0.1:8080")?
-    .run()
-}
-</code></pre>
-<p>リクエストハンドラに何かデータ（普通はアプリケーションの状態など）を渡すこともできる。この例だと <code>http://localhost:8080/spacecat</code> にアクセスすると <code>http://www.example.com/spacecat</code> が表示される。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">fn index(
-    req: HttpRequest,
-    prefix: web::Data<&str>,
-) -> impl IntoFuture<Item = String, Error = Error> {
-    Ok(format!("{}{}", prefix, req.path()))
-}
-
-fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
-        App::new()
-            .data("http://www.example.com")
-            .default_service(web::route().to_async(index))
-    })
-    .bind("127.0.0.1:8080")?
-    .run()
-}
-</code></pre>
-<p>ここで「どこまで柔軟性があるんだろうか？」と思って、試しにリクエストハンドラの引数の順番を入れ替えてみた。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">fn index(
-    prefix: web::Data<&str>,
-    req: HttpRequest,
-) -> impl IntoFuture<Item = String, Error = Error> {
-    Ok(format!("{}{}", prefix, req.path()))
-}
-</code></pre>
-<p><strong>これ、ちゃんと動いてしまう。</strong></p>
-<p>Rust のようなガチガチに検証するタイプの言語でこの柔軟性を一体どうやって実現しているんだろう・・・？ と思ったのがきっかけ。</p>
-
-                                    </div>
-                                    <div class="read-more">
-                                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;flex-handler&#x2F;">Read more...</a>
                                     </div>
                                 </article>
                             
