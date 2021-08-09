@@ -1,6 +1,6 @@
 +++
 title = "CHAPTER2 TEREのアップグレード - 2021年8月"
-date = 2021-08-04
+date = 2021-08-08
 draft = false
 slug = "bike-upgrade-202108"
 in_search_index = true

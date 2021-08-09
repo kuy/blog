@@ -109,6 +109,45 @@
                                     
     <header class="post__header">
         <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;typed-basket&#x2F;">中身を型で表現するコンテナを作ろうとした</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2019-08-17</span>
+            
+        </div>
+    </header>
+
+                                    <div class="post__summary">
+                                        <h2 id="jie-guo">結果</h2>
+<p>自分には思い通りのものを作ることはできなかった。</p>
+<h2 id="yaritaikoto-yaritakatutakoto">やりたいこと（やりたかったこと）</h2>
+<p>以下みたいなことを実現したい。</p>
+<ul>
+<li>型をキーとした <code>HashMap</code></li>
+<li>値を与えると格納される</li>
+<li>型を指定することで値を取り出せる</li>
+<li>保管していない型を指定した場合は <strong>コンパイルエラー</strong> が発生</li>
+</ul>
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">let bag = Basket::new();
+bag.set("Universe");
+bag.set(42);
+
+println!("i32: {}", bag.get::<i32>());   // => "i32: 42"
+println!("&str: {}", bag.get::<&str>()); // => "&str: Universe"
+
+// println!("bool: {}", bag.get::<bool>()); => Compile Error!
+</code></pre>
+
+                                    </div>
+                                    <div class="read-more">
+                                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;typed-basket&#x2F;">Read more...</a>
+                                    </div>
+                                </article>
+                            
+                                <article class="post">
+                                    
+    <header class="post__header">
+        <h1 class="post__title">
             <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;flex-handler&#x2F;">actix-webの柔軟なリクエストハンドラの仕組み</a>
         </h1>
         <div class="post__meta">

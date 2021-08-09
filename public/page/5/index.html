@@ -109,6 +109,30 @@
                                     
     <header class="post__header">
         <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;pouring-tips&#x2F;">ハンドドリップでエグみが強く出てしまうときの対処方法</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2020-03-22</span>
+            
+        </div>
+    </header>
+
+                                    <div class="post__summary">
+                                        <h2 id="fa-duan">発端</h2>
+<p>ここのところ <a href="https://www.koffee-mameya.com/">KOFFEE MAMEYA</a> にどハマリしている。<a href="https://onacoffee.com.au/product/raspberry-candy/">Raspberry Candy / ONA Coffee</a> の異次元のうまさに感動して、同僚からもらった <a href="https://mame.coffee/collections/coffee/products/zelelu-filter">Ethiopia Zelelu Ararso / MAME</a> も意気揚々と淹れたところ、全然美味しく作れない。</p>
+<p>いろいろ考えて試行錯誤していたら 150g の豆は数日間で溶けて、結局満足できる１杯は得られなかった。</p>
+<p>この記事では最初の状況、自分の試行錯誤、淹れ方の相談、別の豆でリベンジ、優勝までを長々と書く。</p>
+
+                                    </div>
+                                    <div class="read-more">
+                                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;pouring-tips&#x2F;">Read more...</a>
+                                    </div>
+                                </article>
+                            
+                                <article class="post">
+                                    
+    <header class="post__header">
+        <h1 class="post__title">
             <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;setup-yew-dev&#x2F;">Yew: Setup development environment</a>
         </h1>
         <div class="post__meta">
@@ -228,45 +252,6 @@ note: expected type `diesel::query_builder::SelectStatement<_, _, _, diesel::que
                                     </div>
                                     <div class="read-more">
                                         <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;learn-program-semantics&#x2F;">Read more...</a>
-                                    </div>
-                                </article>
-                            
-                                <article class="post">
-                                    
-    <header class="post__header">
-        <h1 class="post__title">
-            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;typed-basket&#x2F;">中身を型で表現するコンテナを作ろうとした</a>
-        </h1>
-        <div class="post__meta">
-            <span class="post__time">2019-08-17</span>
-            
-        </div>
-    </header>
-
-                                    <div class="post__summary">
-                                        <h2 id="jie-guo">結果</h2>
-<p>自分には思い通りのものを作ることはできなかった。</p>
-<h2 id="yaritaikoto-yaritakatutakoto">やりたいこと（やりたかったこと）</h2>
-<p>以下みたいなことを実現したい。</p>
-<ul>
-<li>型をキーとした <code>HashMap</code></li>
-<li>値を与えると格納される</li>
-<li>型を指定することで値を取り出せる</li>
-<li>保管していない型を指定した場合は <strong>コンパイルエラー</strong> が発生</li>
-</ul>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">let bag = Basket::new();
-bag.set("Universe");
-bag.set(42);
-
-println!("i32: {}", bag.get::<i32>());   // => "i32: 42"
-println!("&str: {}", bag.get::<&str>()); // => "&str: Universe"
-
-// println!("bool: {}", bag.get::<bool>()); => Compile Error!
-</code></pre>
-
-                                    </div>
-                                    <div class="read-more">
-                                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;typed-basket&#x2F;">Read more...</a>
                                     </div>
                                 </article>
                             

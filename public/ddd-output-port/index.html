@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title>返り値でレスポンスを返すタイプのWebフレームワークでPresenterを実現する - blog.endflow.net</title>
+
+      
+
+      
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
+          
+      
+
+      
+          <link href="https://fonts.googleapis.com/css?family=Roboto:400,700|Source+Code+Pro&display=swap" rel="stylesheet">
+          <link rel="stylesheet" href="https://blog.endflow.net/site.css">
+          
+      
+
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-3511180-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-3511180-1');
+      </script>
+
+      
+      
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="mobile-navbar" class="mobile-navbar">
+              <div class="mobile-header-logo">
+                <a href="/" class="logo">&#x2F;* blog.endflow.net *&#x2F;</a>
+              </div>
+              <div class="mobile-navbar-icon icon-out">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
+              <ul class="mobile-menu-list">
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;categories">
+                            Categories
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags">
+                            Tags
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;about">
+                            @kuy
+                        </a>
+                    </li>
+                
+              </ul>
+            </nav>
+
+            <header id="header">
+                <div class="logo"><a href="https:&#x2F;&#x2F;blog.endflow.net">&#x2F;* blog.endflow.net *&#x2F;</a></div>
+                <nav class="menu">
+                    <ul>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;categories">
+                                    Categories
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags">
+                                    Tags
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;about">
+                                    @kuy
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="content" id="mobile-panel">
+                    
+
+
+
+<article class="post">
+    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;ddd-output-port&#x2F;">返り値でレスポンスを返すタイプのWebフレームワークでPresenterを実現する</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2021-08-09</span>
+            
+        </div>
+    </header>
+
+    <div class="post-content">
+      <h2 id="nanikore">なにこれ？</h2>
+<p>ちょっとコンテキストが面倒なんだけど、</p>
+<ul>
+<li>DDD で Web フレームワークを隠蔽して Controller/Presenter できっちり分けてる実装少ない</li>
+<li>返り値をレスポンスにしてる Web フレームワークが諸悪の根源っぽい</li>
+<li>Future を使えば実現できるんじゃね？ → やってみた</li>
+</ul>
+<p>記事のタイトルをどうするかすごく迷ったけど、迷ったわりにわかりやすくなってないのが悲しい。</p>
+<p>というわけで久々のやってみた系記事です。実用性はまったくない。</p>
+<span id="continue-reading"></span><h2 id="ke-ti-togoru">課題とゴール</h2>
+<p>先に何が実現できれば勝ちなのか明らかにしておく。</p>
+<p>ひと言で言うならば、Usecase の中で Presenter を使ってレスポンスを制御すること。</p>
+<p>これがリクエストハンドラのコード。</p>
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">
+async fn get_index_handler(...) {
+    let gateway = gateway::BeansGateway::new();
+    let view = views::BeansRenderer::new(sender);
+    let usecase = BeansUsecase::new(gateway, view);
+    usecase.list().await;
+}
+</code></pre>
+<p>こっちが Usecase のコード。 <code>render_list()</code> を呼び出すことでレスポンスを返している。返り値はない。</p>
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">pub async fn list(&self) {
+    let beans = self.repo.get_all().await;
+    self.view.render_list(beans);
+}
+</code></pre>
+<p>よくある Web フレームワークではリクエストに対するリクエストハンドラを定義して、ハンドラの戻り値がレスポンスになることが多い。
+その場合、Usecase の中でレスポンスを制御することが難しいことがある。具体的には以下のようなコード。</p>
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">
+async fn get_index_handler(...) {
+    let gateway = gateway::BeansGateway::new();
+    let usecase = BeansUsecase::new(gateway);
+    usecase.list().await
+}
+</code></pre>
+<p>Usecase のコードはこれ。Usecase の返り値をレスポンスにしている。</p>
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">pub async fn list(&self) -> Vec<Beans> {
+    self.repo.get_all().await
+}
+</code></pre>
+<p>こまけーことなんだけど、本当にそこまで責務を分離する必要があるのかという部分は置いておいて、
+Usecase が制御できれば単純に表現の幅が広がるので引き出しとしては持っておきたい。</p>
+<h2 id="ji-ben-de-naaidea">基本的なアイデア</h2>
+<p>Web フレームワーク側の要求として「関数の返り値をレスポンスとする」があって、Usecase の要求として「Usecase の中で Presenter 呼び出しによってレスポンスを表現したい」がある。</p>
+<p>相反するようだけど、Future とリクエストハンドラをラップするハンドラを作ってあげればいける。</p>
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">fn wrapper() -> Future<...> {
+    // Futureを用意する
+    let fut
+
+    // 非同期でレスポンスを生成
+    runtime::block_on(async {
+        handler(fut).await;
+    });
+
+    // いったんFutureを返して、レスポンスはあとで生成
+    fut
+}
+
+async fn handler() {
+    // 返り値は void になっている
+    usecase().await;
+}
+
+async fn usecase() {
+    // レスポンスを返すかはUsecaseが決定できる
+    // render()の中からFuture経由でレスポンスを返す
+    render(data);
+}
+</code></pre>
+<p>イメージはこんな感じ。</p>
+<h2 id="shi-zhuang">実装</h2>
+<p>コード全体は <a href="https://github.com/kuy/axum-study/tree/presenter">axum-study</a> を参照。</p>
+<p>channel を使ってレスポンスを受け取っている。</p>
+<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">async fn index(sender: Sender<String>) {
+    let gateway = gateway::BeansGateway::new();
+    let view = views::BeansRenderer::new(sender);
+    let usecase = BeansUsecase::new(gateway, view);
+    usecase.list().await;
+}
+
+fn index_wrapper() -> impl Future<Output = String> {
+    let (sender, receiver) = channel::<String>();
+
+    thread::spawn(move || {
+        let rt = Runtime::new().unwrap();
+        rt.block_on(async {
+            index(sender).await;
+        });
+    });
+
+    RespondLater::new(receiver)
+}
+
+struct RespondLater {
+    receiver: Receiver<String>,
+    pipe: (Sender<String>, Receiver<String>),
+}
+
+impl RespondLater {
+    pub fn new(receiver: Receiver<String>) -> Self {
+        Self {
+            receiver,
+            pipe: channel(),
+        }
+    }
+}
+
+impl Future for RespondLater {
+    type Output = String;
+
+    fn poll(
+        self: std::pin::Pin<&mut Self>,
+        cx: &mut std::task::Context<'_>,
+    ) -> std::task::Poll<Self::Output> {
+        if let Ok(body) = self.pipe.1.try_recv() {
+            Poll::Ready(body)
+        } else {
+            let waker = cx.waker().clone();
+            let sender = self.pipe.0.clone();
+            let receiver = self.receiver.clone();
+            thread::spawn(move || {
+                if let Ok(body) = receiver.recv() {
+                    sender.send(body).expect("should be sent");
+                    waker.wake();
+                }
+            });
+            Poll::Pending
+        }
+    }
+}
+</code></pre>
+<p>一応実現はできたけど、自分の実力ではこれを汎用化することは困難に思えた。</p>
+<h2 id="matome">まとめ</h2>
+<p>Rust は楽しいんだけど、ちょっとでも汎用化しようとすると型パズルで死ぬ。</p>
+
+    </div>
+
+    
+    
+
+    <div class="post-footer">
+        
+            
+                <div class="post-tags">
+                    
+                        <a href="https://blog.endflow.net/tags/rust/">#rust</a>
+                    
+                        <a href="https://blog.endflow.net/tags/web/">#web</a>
+                    
+                        <a href="https://blog.endflow.net/tags/axum/">#axum</a>
+                    
+                        <a href="https://blog.endflow.net/tags/ddd/">#ddd</a>
+                    
+                        <a href="https://blog.endflow.net/tags/clean-architecture/">#clean-architecture</a>
+                    
+                </div>
+            
+            
+                <div class="post-nav">
+                    
+                        <a class="previous" href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;bike-upgrade-202108&#x2F;">‹ CHAPTER2 TEREのアップグレード - 2021年8月</a>
+                    
+                    
+                    
+                    
+                </div>
+            
+
+        
+
+    </div>
+
+    
+    
+</article>
+
+
+                </div>
+            </main>
+
+            
+            
+        </div>
+
+      
+          <script type="text/javascript" src="https://blog.endflow.net/even.js" ></script>
+      
+    </body>
+
+</html>
