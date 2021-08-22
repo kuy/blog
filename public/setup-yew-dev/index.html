@@ -126,58 +126,58 @@
 <p>Yes, <a href="https://github.com/yewstack/yew/blob/master/examples/build_all.sh">fabulous script</a>.</p>
 <h2 id="build-run-stdweb-examples">Build &amp; Run <code>stdweb</code> examples</h2>
 <p>It's pretty easy. For example, here is an example to run <a href="https://github.com/yewstack/yew/tree/master/examples/std_web/counter">counter</a> example of <a href="https://github.com/yewstack/yew/tree/master/examples/std_web">stdweb</a> version.</p>
-<pre><code>cd examples/std_web/counter
-cargo web start --target wasm32-unknown-unknown
-</code></pre>
+<pre style="background-color:#2b303b;color:#6c7079;"><code><span style="color:#abb2bf;">cd examples/std_web/counter
+</span><span style="color:#abb2bf;">cargo web start --target wasm32-unknown-unknown
+</span></code></pre>
 <p>Open <code>http://localhost:8000</code> in your browser.</p>
 <h2 id="build-web-sys-examples">Build <code>web-sys</code> examples</h2>
 <p>In <a href="https://github.com/yewstack/yew/tree/master/examples/web_sys">web-sys</a> examples, you need to run separated build commands (<code>cargo build</code> and <code>wasm-bindgen</code>) because <code>cargo-web</code> doesn't support <code>web-sys</code> at this time.</p>
-<pre><code>cd examples/web_sys/counter
-cargo build --target wasm32-unknown-unknown
-wasm-bindgen --target web --no-typescript --out-dir ../../static/ --out-name wasm ../../target/wasm32-unknown-unknown/debug/counter_web_sys.wasm
-</code></pre>
+<pre style="background-color:#2b303b;color:#6c7079;"><code><span style="color:#abb2bf;">cd examples/web_sys/counter
+</span><span style="color:#abb2bf;">cargo build --target wasm32-unknown-unknown
+</span><span style="color:#abb2bf;">wasm-bindgen --target web --no-typescript --out-dir ../../static/ --out-name wasm ../../target/wasm32-unknown-unknown/debug/counter_web_sys.wasm
+</span></code></pre>
 <p>I got following error on running <code>wasm-bindgen</code>.</p>
 <h2 id="error-thread-main-panicked-at-index-out-of-bounds-the-len-is-0-but-the-index-is-0-users-yourname-cargo-registry-src-github-com-1ecc6299db9ec823-wasm-bindgen-cli-support-0-2-58-src-descriptor-rs-198-15">ERROR: thread 'main' panicked at 'index out of bounds: the len is 0 but the index is 0', /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15</h2>
 <p>Welcome to the main section of this post.</p>
-<pre><code>thread 'main' panicked at 'index out of bounds: the len is 0 but the index is 0', /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace.
-</code></pre>
+<pre style="background-color:#2b303b;color:#6c7079;"><code><span style="color:#abb2bf;">thread &#39;main&#39; panicked at &#39;index out of bounds: the len is 0 but the index is 0&#39;, /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15
+</span><span style="color:#abb2bf;">note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace.
+</span></code></pre>
 <p>Here is a verbose output.</p>
-<pre><code>thread 'main' panicked at 'index out of bounds: the len is 0 but the index is 0', /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15
-stack backtrace:
-   0: <std::sys_common::backtrace::_print::DisplayBacktrace as core::fmt::Display>::fmt
-   1: core::fmt::write
-   2: std::io::Write::write_fmt
-   3: std::panicking::default_hook::{{closure}}
-   4: std::panicking::default_hook
-   5: std::panicking::rust_panic_with_hook
-   6: rust_begin_unwind
-   7: core::panicking::panic_fmt
-   8: core::panicking::panic_bounds_check
-   9: wasm_bindgen_cli_support::descriptor::Descriptor::_decode
-  10: wasm_bindgen_cli_support::descriptor::Descriptor::_decode
-  11: wasm_bindgen_cli_support::descriptor::Function::decode
-  12: wasm_bindgen_cli_support::descriptor::Descriptor::_decode
-  13: wasm_bindgen_cli_support::descriptors::execute
-  14: wasm_bindgen_cli_support::Bindgen::generate_output
-  15: wasm_bindgen_cli_support::Bindgen::generate
-  16: wasm_bindgen::main
-  17: std::rt::lang_start::{{closure}}
-  18: std::panicking::try::do_call
-  19: __rust_maybe_catch_panic
-  20: std::rt::lang_start_internal
-  21: main
-note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
-</code></pre>
+<pre style="background-color:#2b303b;color:#6c7079;"><code><span style="color:#abb2bf;">thread &#39;main&#39; panicked at &#39;index out of bounds: the len is 0 but the index is 0&#39;, /Users/yourname/.cargo/registry/src/github.com-1ecc6299db9ec823/wasm-bindgen-cli-support-0.2.58/src/descriptor.rs:198:15
+</span><span style="color:#abb2bf;">stack backtrace:
+</span><span style="color:#abb2bf;">   0: &lt;std::sys_common::backtrace::_print::DisplayBacktrace as core::fmt::Display&gt;::fmt
+</span><span style="color:#abb2bf;">   1: core::fmt::write
+</span><span style="color:#abb2bf;">   2: std::io::Write::write_fmt
+</span><span style="color:#abb2bf;">   3: std::panicking::default_hook::{{closure}}
+</span><span style="color:#abb2bf;">   4: std::panicking::default_hook
+</span><span style="color:#abb2bf;">   5: std::panicking::rust_panic_with_hook
+</span><span style="color:#abb2bf;">   6: rust_begin_unwind
+</span><span style="color:#abb2bf;">   7: core::panicking::panic_fmt
+</span><span style="color:#abb2bf;">   8: core::panicking::panic_bounds_check
+</span><span style="color:#abb2bf;">   9: wasm_bindgen_cli_support::descriptor::Descriptor::_decode
+</span><span style="color:#abb2bf;">  10: wasm_bindgen_cli_support::descriptor::Descriptor::_decode
+</span><span style="color:#abb2bf;">  11: wasm_bindgen_cli_support::descriptor::Function::decode
+</span><span style="color:#abb2bf;">  12: wasm_bindgen_cli_support::descriptor::Descriptor::_decode
+</span><span style="color:#abb2bf;">  13: wasm_bindgen_cli_support::descriptors::execute
+</span><span style="color:#abb2bf;">  14: wasm_bindgen_cli_support::Bindgen::generate_output
+</span><span style="color:#abb2bf;">  15: wasm_bindgen_cli_support::Bindgen::generate
+</span><span style="color:#abb2bf;">  16: wasm_bindgen::main
+</span><span style="color:#abb2bf;">  17: std::rt::lang_start::{{closure}}
+</span><span style="color:#abb2bf;">  18: std::panicking::try::do_call
+</span><span style="color:#abb2bf;">  19: __rust_maybe_catch_panic
+</span><span style="color:#abb2bf;">  20: std::rt::lang_start_internal
+</span><span style="color:#abb2bf;">  21: main
+</span><span style="color:#abb2bf;">note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
+</span></code></pre>
 <h3 id="reason-version-mismatch">Reason: Version mismatch</h3>
 <p>Yew's <code>Cargo.toml</code> has <code>wasm-bindgen = { version = &quot;0.2.59&quot;, optional = true }</code>. But my <code>wasm-bindgen-cli</code> is <code>0.2.58</code>.</p>
-<pre><code>$ wasm-bindgen --version
-wasm-bindgen 0.2.58
-</code></pre>
+<pre style="background-color:#2b303b;color:#6c7079;"><code><span style="color:#abb2bf;">$ wasm-bindgen --version
+</span><span style="color:#abb2bf;">wasm-bindgen 0.2.58
+</span></code></pre>
 <h3 id="update-toolchains">Update toolchains</h3>
 <p>Update <code>wasm-bindgen-cli</code> to <code>0.2.59</code> to match a version used in <code>Cargo.toml</code>.</p>
-<pre><code>cargo install wasm-bindgen-cli --force
-</code></pre>
+<pre style="background-color:#2b303b;color:#6c7079;"><code><span style="color:#abb2bf;">cargo install wasm-bindgen-cli --force
+</span></code></pre>
 <p>Most of Rust projects assume you use the latest version of toolchains. I recommend you to also update other toolchains:</p>
 <ul>
 <li><code>rustup update stable</code></li>
@@ -186,21 +186,21 @@ wasm-bindgen 0.2.58
 <p>After updates, I confirmed <code>wasm-bindgen</code> is <code>0.2.59</code> and rebuilt successfully. Note that <code>wasm-bindgen</code> outputs nothing on success (according to UNIX philosophy).</p>
 <h2 id="run-web-sys-examples">Run <code>web-sys</code> examples</h2>
 <p>Let's run it. To serve local files, I'm using <a href="https://www.npmjs.com/package/http-server">http-server</a>. If you have favorite <a href="https://gist.github.com/willurd/5720255">one-liners</a>, it's okay to use it of course.</p>
-<pre><code>http-server ../../static -p 8000
-</code></pre>
+<pre style="background-color:#2b303b;color:#6c7079;"><code><span style="color:#abb2bf;">http-server ../../static -p 8000
+</span></code></pre>
 <p>Open <code>http://localhost:8000</code> in your browser.</p>
 <h2 id="build-run-mixed-examples">Build &amp; Run mixed examples</h2>
 <p>Now you can launch <a href="https://github.com/yewstack/yew/tree/master/examples/std_web">stdweb</a> and <a href="https://github.com/yewstack/yew/tree/master/examples/web_sys">web-sys</a> examples, but how about other examples? For instance, <a href="https://github.com/yewstack/yew/tree/master/examples/showcase">showcase</a> contains both backends.</p>
 <p>To build it, use <code>--features</code> option to indicate which backend you want to use.</p>
-<pre><code>cd examples/showcase
-cargo web start --target wasm32-unknown-unknown --features std_web
-</code></pre>
+<pre style="background-color:#2b303b;color:#6c7079;"><code><span style="color:#abb2bf;">cd examples/showcase
+</span><span style="color:#abb2bf;">cargo web start --target wasm32-unknown-unknown --features std_web
+</span></code></pre>
 <p>and</p>
-<pre><code>cd examples/showcase
-cargo build --target wasm32-unknown-unknown --features web_sys
-wasm-bindgen --target web --no-typescript --out-dir ../static/ --out-name wasm ../target/wasm32-unknown-unknown/debug/showcase.wasm
-http-server ../static -p 8000
-</code></pre>
+<pre style="background-color:#2b303b;color:#6c7079;"><code><span style="color:#abb2bf;">cd examples/showcase
+</span><span style="color:#abb2bf;">cargo build --target wasm32-unknown-unknown --features web_sys
+</span><span style="color:#abb2bf;">wasm-bindgen --target web --no-typescript --out-dir ../static/ --out-name wasm ../target/wasm32-unknown-unknown/debug/showcase.wasm
+</span><span style="color:#abb2bf;">http-server ../static -p 8000
+</span></code></pre>
 
     </div>
 

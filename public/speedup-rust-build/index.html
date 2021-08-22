@@ -129,59 +129,59 @@
 <p>忙しい人のために結論から言うと 2 倍も早くなった。 crate のダウンロードキャッシュなども導入することでさらに早くなりそう。</p>
 <h2 id="github-actions-no-workflow">GitHub Actions の workflow</h2>
 <p>記事の内容だとそのまま動かない部分があったので、とりあえず workflow を掲載しておく。</p>
-<pre data-lang="yml" class="language-yml "><code class="language-yml" data-lang="yml">name: Build
-
-on:
-  push:
-
-jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-20.04
-    env:
-      RUSTC_WRAPPER: sccache
-      SCCACHE_CACHE_SIZE: 1G
-      SCCACHE_DIR: /home/runner/.cache/sccache
-      # SCCACHE_RECACHE: 1 # Uncomment this to clear cache, then comment it back out
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install sccache
-        env:
-          LINK: https://github.com/mozilla/sccache/releases/download
-          SCCACHE_VERSION: 0.2.15
-        run: |
-          SCCACHE_FILE=sccache-v$SCCACHE_VERSION-x86_64-unknown-linux-musl
-          mkdir -p $HOME/.local/bin
-          curl -L "$LINK/v$SCCACHE_VERSION/$SCCACHE_FILE.tar.gz" | tar xz
-          mv -f $SCCACHE_FILE/sccache $HOME/.local/bin/sccache
-          chmod +x $HOME/.local/bin/sccache
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - name: Install Rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: 1.51.0
-          override: true
-      - name: Prepare sccache
-        uses: actions/cache@v2
-        continue-on-error: false
-        with:
-          path: /home/runner/.cache/sccache
-          key: ${{ runner.os }}-sccache-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-sccache-
-      - name: Start sccache server
-        run: sccache --start-server
-      - name: Build
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --release
-      - name: Print sccache stats
-        run: sccache --show-stats
-      - name: Stop sccache server
-        run: sccache --stop-server || true
-</code></pre>
+<pre data-lang="yml" style="background-color:#2b303b;color:#6c7079;" class="language-yml "><code class="language-yml" data-lang="yml"><span style="color:#eb6772;">name</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">Build
+</span><span style="color:#abb2bf;">
+</span><span style="color:#db9d63;">on</span><span style="color:#abb2bf;">:
+</span><span style="color:#abb2bf;">  </span><span style="color:#eb6772;">push</span><span style="color:#abb2bf;">:
+</span><span style="color:#abb2bf;">
+</span><span style="color:#eb6772;">jobs</span><span style="color:#abb2bf;">:
+</span><span style="color:#abb2bf;">  </span><span style="color:#eb6772;">build</span><span style="color:#abb2bf;">:
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">name</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">Build
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">runs-on</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">ubuntu-20.04
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">env</span><span style="color:#abb2bf;">:
+</span><span style="color:#abb2bf;">      </span><span style="color:#eb6772;">RUSTC_WRAPPER</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">sccache
+</span><span style="color:#abb2bf;">      </span><span style="color:#eb6772;">SCCACHE_CACHE_SIZE</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">1G
+</span><span style="color:#abb2bf;">      </span><span style="color:#eb6772;">SCCACHE_DIR</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">/home/runner/.cache/sccache
+</span><span style="color:#abb2bf;">      </span><span style="font-style:italic;color:#5f697a;"># SCCACHE_RECACHE: 1 # Uncomment this to clear cache, then comment it back out
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">steps</span><span style="color:#abb2bf;">:
+</span><span style="color:#abb2bf;">      - </span><span style="color:#eb6772;">uses</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">actions/checkout@v2
+</span><span style="color:#abb2bf;">      - </span><span style="color:#eb6772;">name</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">Install sccache
+</span><span style="color:#abb2bf;">        </span><span style="color:#eb6772;">env</span><span style="color:#abb2bf;">:
+</span><span style="color:#abb2bf;">          </span><span style="color:#eb6772;">LINK</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">https://github.com/mozilla/sccache/releases/download
+</span><span style="color:#abb2bf;">          </span><span style="color:#eb6772;">SCCACHE_VERSION</span><span style="color:#abb2bf;">: </span><span style="color:#db9d63;">0.2.15
+</span><span style="color:#abb2bf;">        </span><span style="color:#eb6772;">run</span><span style="color:#abb2bf;">: </span><span style="color:#cd74e8;">|
+</span><span style="color:#9acc76;">          SCCACHE_FILE=sccache-v$SCCACHE_VERSION-x86_64-unknown-linux-musl
+</span><span style="color:#9acc76;">          mkdir -p $HOME/.local/bin
+</span><span style="color:#9acc76;">          curl -L &quot;$LINK/v$SCCACHE_VERSION/$SCCACHE_FILE.tar.gz&quot; | tar xz
+</span><span style="color:#9acc76;">          mv -f $SCCACHE_FILE/sccache $HOME/.local/bin/sccache
+</span><span style="color:#9acc76;">          chmod +x $HOME/.local/bin/sccache
+</span><span style="color:#9acc76;">          echo &quot;$HOME/.local/bin&quot; &gt;&gt; $GITHUB_PATH
+</span><span style="color:#abb2bf;">      - </span><span style="color:#eb6772;">name</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">Install Rust toolchain
+</span><span style="color:#abb2bf;">        </span><span style="color:#eb6772;">uses</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">actions-rs/toolchain@v1
+</span><span style="color:#abb2bf;">        </span><span style="color:#eb6772;">with</span><span style="color:#abb2bf;">:
+</span><span style="color:#abb2bf;">          </span><span style="color:#eb6772;">profile</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">minimal
+</span><span style="color:#abb2bf;">          </span><span style="color:#eb6772;">toolchain</span><span style="color:#abb2bf;">: </span><span style="color:#db9d63;">1.51.0
+</span><span style="color:#abb2bf;">          </span><span style="color:#eb6772;">override</span><span style="color:#abb2bf;">: </span><span style="color:#db9d63;">true
+</span><span style="color:#abb2bf;">      - </span><span style="color:#eb6772;">name</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">Prepare sccache
+</span><span style="color:#abb2bf;">        </span><span style="color:#eb6772;">uses</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">actions/cache@v2
+</span><span style="color:#abb2bf;">        </span><span style="color:#eb6772;">continue-on-error</span><span style="color:#abb2bf;">: </span><span style="color:#db9d63;">false
+</span><span style="color:#abb2bf;">        </span><span style="color:#eb6772;">with</span><span style="color:#abb2bf;">:
+</span><span style="color:#abb2bf;">          </span><span style="color:#eb6772;">path</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">/home/runner/.cache/sccache
+</span><span style="color:#abb2bf;">          </span><span style="color:#eb6772;">key</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">${{ runner.os }}-sccache-${{ hashFiles(&#39;**/Cargo.lock&#39;) }}
+</span><span style="color:#abb2bf;">          </span><span style="color:#eb6772;">restore-keys</span><span style="color:#abb2bf;">: </span><span style="color:#cd74e8;">|
+</span><span style="color:#9acc76;">            ${{ runner.os }}-sccache-
+</span><span style="color:#abb2bf;">      - </span><span style="color:#eb6772;">name</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">Start sccache server
+</span><span style="color:#abb2bf;">        </span><span style="color:#eb6772;">run</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">sccache --start-server
+</span><span style="color:#abb2bf;">      - </span><span style="color:#eb6772;">name</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">Build
+</span><span style="color:#abb2bf;">        </span><span style="color:#eb6772;">uses</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">actions-rs/cargo@v1
+</span><span style="color:#abb2bf;">        </span><span style="color:#eb6772;">with</span><span style="color:#abb2bf;">:
+</span><span style="color:#abb2bf;">          </span><span style="color:#eb6772;">command</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">build
+</span><span style="color:#abb2bf;">          </span><span style="color:#eb6772;">args</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">--release
+</span><span style="color:#abb2bf;">      - </span><span style="color:#eb6772;">name</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">Print sccache stats
+</span><span style="color:#abb2bf;">        </span><span style="color:#eb6772;">run</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">sccache --show-stats
+</span><span style="color:#abb2bf;">      - </span><span style="color:#eb6772;">name</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">Stop sccache server
+</span><span style="color:#abb2bf;">        </span><span style="color:#eb6772;">run</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">sccache --stop-server || true
+</span></code></pre>
 <p>変更点としては、</p>
 <ul>
 <li>最新の <code>0.2.15</code> だと GitHub 上でのタグ付けフォーマットが変わった

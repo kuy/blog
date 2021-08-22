@@ -122,47 +122,47 @@
       <h2 id="kitukake">きっかけ</h2>
 <p>業務で Rust を使っていこうということになったので、Rust を勉強しながら何か Web アプリでも作ってみようと思って <a href="https://actix.rs/">actix-web</a> を触り始めた。サンプルコードをいじっていて気になったのはリクエストハンドラの引数の柔軟さで、まるでスクリプト言語のように扱える。</p>
 <p>例えば以下は <code>http://localhost:8080/hoge</code> にリクエストを受けると path 部分である <code>/hoge</code> をレスポンスとして返す。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">fn index(
-    req: HttpRequest,
-) -> impl IntoFuture<Item = String, Error = Error> {
-    Ok(String::from(req.path()))
-}
-
-fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
-        App::new()
-            .default_service(web::route().to_async(index))
-    })
-    .bind("127.0.0.1:8080")?
-    .run()
-}
-</code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">index</span><span style="color:#abb2bf;">(
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">req</span><span style="color:#abb2bf;">: HttpRequest,
+</span><span style="color:#abb2bf;">) -&gt; impl IntoFuture&lt;Item = String, Error = Error&gt; {
+</span><span style="color:#abb2bf;">    Ok(String::from(req.</span><span style="color:#5ebfcc;">path</span><span style="color:#abb2bf;">()))
+</span><span style="color:#abb2bf;">}
+</span><span style="color:#abb2bf;">
+</span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">main</span><span style="color:#abb2bf;">() -&gt; std::io::Result&lt;()&gt; {
+</span><span style="color:#abb2bf;">    HttpServer::new(|| {
+</span><span style="color:#abb2bf;">        App::new()
+</span><span style="color:#abb2bf;">            .</span><span style="color:#5ebfcc;">default_service</span><span style="color:#abb2bf;">(web::route().</span><span style="color:#5ebfcc;">to_async</span><span style="color:#abb2bf;">(index))
+</span><span style="color:#abb2bf;">    })
+</span><span style="color:#abb2bf;">    .</span><span style="color:#5ebfcc;">bind</span><span style="color:#abb2bf;">(</span><span style="color:#9acc76;">&quot;127.0.0.1:8080&quot;</span><span style="color:#abb2bf;">)</span><span style="color:#adb7c9;">?
+</span><span style="color:#abb2bf;">    .</span><span style="color:#5ebfcc;">run</span><span style="color:#abb2bf;">()
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
 <p>リクエストハンドラに何かデータ（普通はアプリケーションの状態など）を渡すこともできる。この例だと <code>http://localhost:8080/spacecat</code> にアクセスすると <code>http://www.example.com/spacecat</code> が表示される。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">fn index(
-    req: HttpRequest,
-    prefix: web::Data<&str>,
-) -> impl IntoFuture<Item = String, Error = Error> {
-    Ok(format!("{}{}", prefix, req.path()))
-}
-
-fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
-        App::new()
-            .data("http://www.example.com")
-            .default_service(web::route().to_async(index))
-    })
-    .bind("127.0.0.1:8080")?
-    .run()
-}
-</code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">index</span><span style="color:#abb2bf;">(
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">req</span><span style="color:#abb2bf;">: HttpRequest,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">prefix</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">) -&gt; impl IntoFuture&lt;Item = String, Error = Error&gt; {
+</span><span style="color:#abb2bf;">    Ok(format!(</span><span style="color:#9acc76;">&quot;</span><span style="color:#db9d63;">{}{}</span><span style="color:#9acc76;">&quot;</span><span style="color:#abb2bf;">, prefix, req.</span><span style="color:#5ebfcc;">path</span><span style="color:#abb2bf;">()))
+</span><span style="color:#abb2bf;">}
+</span><span style="color:#abb2bf;">
+</span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">main</span><span style="color:#abb2bf;">() -&gt; std::io::Result&lt;()&gt; {
+</span><span style="color:#abb2bf;">    HttpServer::new(|| {
+</span><span style="color:#abb2bf;">        App::new()
+</span><span style="color:#abb2bf;">            .</span><span style="color:#5ebfcc;">data</span><span style="color:#abb2bf;">(</span><span style="color:#9acc76;">&quot;http://www.example.com&quot;</span><span style="color:#abb2bf;">)
+</span><span style="color:#abb2bf;">            .</span><span style="color:#5ebfcc;">default_service</span><span style="color:#abb2bf;">(web::route().</span><span style="color:#5ebfcc;">to_async</span><span style="color:#abb2bf;">(index))
+</span><span style="color:#abb2bf;">    })
+</span><span style="color:#abb2bf;">    .</span><span style="color:#5ebfcc;">bind</span><span style="color:#abb2bf;">(</span><span style="color:#9acc76;">&quot;127.0.0.1:8080&quot;</span><span style="color:#abb2bf;">)</span><span style="color:#adb7c9;">?
+</span><span style="color:#abb2bf;">    .</span><span style="color:#5ebfcc;">run</span><span style="color:#abb2bf;">()
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
 <p>ここで「どこまで柔軟性があるんだろうか？」と思って、試しにリクエストハンドラの引数の順番を入れ替えてみた。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">fn index(
-    prefix: web::Data<&str>,
-    req: HttpRequest,
-) -> impl IntoFuture<Item = String, Error = Error> {
-    Ok(format!("{}{}", prefix, req.path()))
-}
-</code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">index</span><span style="color:#abb2bf;">(
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">prefix</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">req</span><span style="color:#abb2bf;">: HttpRequest,
+</span><span style="color:#abb2bf;">) -&gt; impl IntoFuture&lt;Item = String, Error = Error&gt; {
+</span><span style="color:#abb2bf;">    Ok(format!(</span><span style="color:#9acc76;">&quot;</span><span style="color:#db9d63;">{}{}</span><span style="color:#9acc76;">&quot;</span><span style="color:#abb2bf;">, prefix, req.</span><span style="color:#5ebfcc;">path</span><span style="color:#abb2bf;">()))
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
 <p><strong>これ、ちゃんと動いてしまう。</strong></p>
 <p>Rust のようなガチガチに検証するタイプの言語でこの柔軟性を一体どうやって実現しているんだろう・・・？ と思ったのがきっかけ。</p>
 <span id="continue-reading"></span><h2 id="yi-wen">疑問</h2>
@@ -187,75 +187,75 @@ fn main() -> std::io::Result<()> {
 <h3 id="taneakasi">タネあかし</h3>
 <p>そんなバカな、ということで <a href="https://github.com/actix/actix-web/blob/master/src/handler.rs"><code>handler.rs</code></a> を見てみると <a href="https://github.com/actix/actix-web/blob/master/src/handler.rs#L375"><code>factory_tuple!</code></a> というマクロ定義があり、引数 1 個から 10 個までの関数に対して <code>Factory</code> と <code>AsyncFactory</code> それぞれの実装が<a href="https://github.com/actix/actix-web/blob/master/src/handler.rs#L401-L410">マクロによって生成</a>されていた。</p>
 <p>例えば以下はマクロによって生成された「引数が 3 個で <code>Responder</code> を返す関数」をハンドラとして受け入れるようにする <code>Factory</code> トレイトの実装である。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">impl <Func, A, B, C, Res> Factory<(A, B, C), Res> for Func
-where
-    Func: Fn(A, B, C) -> Res + Clone,
-    Res: Responder,
-{
-    fn call(&self, param: (A, B, C)) -> Res {
-        (self)(param.0, param.1, param.2)
-    }
-}
-</code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">impl </span><span style="color:#abb2bf;">&lt;Func, A, B, C, Res&gt; Factory&lt;(A, B, C), Res&gt; </span><span style="color:#cd74e8;">for </span><span style="color:#abb2bf;">Func
+</span><span style="color:#cd74e8;">where
+</span><span style="color:#abb2bf;">    Func: Fn(A, B, C) -&gt; Res + Clone,
+</span><span style="color:#abb2bf;">    Res: Responder,
+</span><span style="color:#abb2bf;">{
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">call</span><span style="color:#abb2bf;">(</span><span style="color:#adb7c9;">&amp;</span><span style="color:#eb6772;">self</span><span style="color:#abb2bf;">, </span><span style="color:#eb6772;">param</span><span style="color:#abb2bf;">: (</span><span style="color:#eb6772;">A</span><span style="color:#abb2bf;">, </span><span style="color:#eb6772;">B</span><span style="color:#abb2bf;">, </span><span style="color:#eb6772;">C</span><span style="color:#abb2bf;">)) -&gt; Res {
+</span><span style="color:#abb2bf;">        (</span><span style="color:#eb6772;">self</span><span style="color:#abb2bf;">)(param.</span><span style="color:#db9d63;">0</span><span style="color:#abb2bf;">, param.</span><span style="color:#db9d63;">1</span><span style="color:#abb2bf;">, param.</span><span style="color:#db9d63;">2</span><span style="color:#abb2bf;">)
+</span><span style="color:#abb2bf;">    }
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
 <p>同様に以下は <code>AsyncFactory</code> トレイトの実装。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">impl <Func, A, B, C, Res> AsyncFactory<(A, B, C), Res> for Func
-where
-    Func: Fn(A, B, C) -> Res + Clone + 'static,
-    Res: IntoFuture,
-    Res::Item: Responder,
-    Res::Error: Into<Error>,
-{
-    fn call(&self, param: (A, B, C)) -> Res {
-        (self)(param.0, param.1, param.2)
-    }
-}
-</code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">impl </span><span style="color:#abb2bf;">&lt;Func, A, B, C, Res&gt; AsyncFactory&lt;(A, B, C), Res&gt; </span><span style="color:#cd74e8;">for </span><span style="color:#abb2bf;">Func
+</span><span style="color:#cd74e8;">where
+</span><span style="color:#abb2bf;">    Func: Fn(A, B, C) -&gt; Res + Clone + </span><span style="color:#cd74e8;">&#39;static</span><span style="color:#abb2bf;">,
+</span><span style="color:#abb2bf;">    Res: IntoFuture,
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">Res::</span><span style="color:#abb2bf;">Item: Responder,
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">Res::</span><span style="color:#abb2bf;">Error: Into&lt;Error&gt;,
+</span><span style="color:#abb2bf;">{
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">call</span><span style="color:#abb2bf;">(</span><span style="color:#adb7c9;">&amp;</span><span style="color:#eb6772;">self</span><span style="color:#abb2bf;">, </span><span style="color:#eb6772;">param</span><span style="color:#abb2bf;">: (</span><span style="color:#eb6772;">A</span><span style="color:#abb2bf;">, </span><span style="color:#eb6772;">B</span><span style="color:#abb2bf;">, </span><span style="color:#eb6772;">C</span><span style="color:#abb2bf;">)) -&gt; Res {
+</span><span style="color:#abb2bf;">        (</span><span style="color:#eb6772;">self</span><span style="color:#abb2bf;">)(param.</span><span style="color:#db9d63;">0</span><span style="color:#abb2bf;">, param.</span><span style="color:#db9d63;">1</span><span style="color:#abb2bf;">, param.</span><span style="color:#db9d63;">2</span><span style="color:#abb2bf;">)
+</span><span style="color:#abb2bf;">    }
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
 <p>Rust には現時点では可変長引数はないのでマクロによる力技に頼るしか無い。</p>
 <h3 id="shi-siniyin-shu-11-ge-nohandorawozuo-tutemiru">試しに引数 11 個のハンドラを作ってみる</h3>
 <p>引数 10 個はコンパイル通る。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">fn forward(
-    req: HttpRequest,
-    payload: web::Payload,
-    client: web::Data<Client>,
-    ignore4: web::Data<&str>,
-    ignore5: web::Data<&str>,
-    ignore6: web::Data<&str>,
-    ignore7: web::Data<&str>,
-    ignore8: web::Data<&str>,
-    ignore9: web::Data<&str>,
-    ignore10: web::Data<&str>,
-) -> impl Future<Item = HttpResponse, Error = Error> {
-</code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">forward</span><span style="color:#abb2bf;">(
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">req</span><span style="color:#abb2bf;">: HttpRequest,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">payload</span><span style="color:#abb2bf;">: web::Payload,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">client</span><span style="color:#abb2bf;">: web::Data&lt;Client&gt;,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">ignore4</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">ignore5</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">ignore6</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">ignore7</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">ignore8</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">ignore9</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">ignore10</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">) -&gt; impl Future&lt;Item = HttpResponse, Error = Error&gt; {
+</span></code></pre>
 <p>引数 11 個はコンパイル通らない。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">fn forward(
-    req: HttpRequest,
-    payload: web::Payload,
-    client: web::Data<Client>,
-    ignore4: web::Data<&str>,
-    ignore5: web::Data<&str>,
-    ignore6: web::Data<&str>,
-    ignore7: web::Data<&str>,
-    ignore8: web::Data<&str>,
-    ignore9: web::Data<&str>,
-    ignore10: web::Data<&str>,
-    ignore11: web::Data<&str>,
-) -> impl Future<Item = HttpResponse, Error = Error> {
-</code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">forward</span><span style="color:#abb2bf;">(
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">req</span><span style="color:#abb2bf;">: HttpRequest,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">payload</span><span style="color:#abb2bf;">: web::Payload,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">client</span><span style="color:#abb2bf;">: web::Data&lt;Client&gt;,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">ignore4</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">ignore5</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">ignore6</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">ignore7</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">ignore8</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">ignore9</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">ignore10</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">ignore11</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">) -&gt; impl Future&lt;Item = HttpResponse, Error = Error&gt; {
+</span></code></pre>
 <h3 id="factory-asyncfactory-no-call-self-param-t-nituite"><code>Factory</code> / <code>AsyncFactory</code> の <code>call(&amp;self, param: T)</code> について</h3>
 <p>前述の <code>factory_tuple!</code> マクロによって生成される <code>Factory</code> / <code>AsyncFactory</code> トレイトの実装にはいくつか重要なポイントがある。</p>
 <p>1 つ目はフレームワーク内の規約として、ハンドラを関数として普通に呼び出す代わりに <code>Factory</code> / <code>AsyncFactory</code> トレイトの <code>call()</code> メソッドを呼び出すようにし、さらに <code>call()</code> メソッドの引数をたった１つの <code>param: T</code> (<code>T</code>は型パラメータ) のみした点。この規約を導入することでハンドラ関数の引数がいくつだろうと呼び出し側は気にする必要がなくなる。</p>
 <p>もう 1 つは <code>param: T</code> の実際の型としてタプルを使うことで、<code>call()</code> メソッド呼び出し時にいったんタプルに集約しつつも、要素の型と並び順を保ち、ハンドラ関数の呼び出し時にはタプルを関数引数に展開している部分。</p>
 <p>さきほどの 3 引数の <code>Factory</code> トレイト実装をもう一度見てみる。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">impl <Func, A, B, C, Res> Factory<(A, B, C), Res> for Func
-where
-    Func: Fn(A, B, C) -> Res + Clone,
-    Res: Responder,
-{
-    fn call(&self, param: (A, B, C)) -> Res {
-        (self)(param.0, param.1, param.2)
-    }
-}
-</code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">impl </span><span style="color:#abb2bf;">&lt;Func, A, B, C, Res&gt; Factory&lt;(A, B, C), Res&gt; </span><span style="color:#cd74e8;">for </span><span style="color:#abb2bf;">Func
+</span><span style="color:#cd74e8;">where
+</span><span style="color:#abb2bf;">    Func: Fn(A, B, C) -&gt; Res + Clone,
+</span><span style="color:#abb2bf;">    Res: Responder,
+</span><span style="color:#abb2bf;">{
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">call</span><span style="color:#abb2bf;">(</span><span style="color:#adb7c9;">&amp;</span><span style="color:#eb6772;">self</span><span style="color:#abb2bf;">, </span><span style="color:#eb6772;">param</span><span style="color:#abb2bf;">: (</span><span style="color:#eb6772;">A</span><span style="color:#abb2bf;">, </span><span style="color:#eb6772;">B</span><span style="color:#abb2bf;">, </span><span style="color:#eb6772;">C</span><span style="color:#abb2bf;">)) -&gt; Res {
+</span><span style="color:#abb2bf;">        (</span><span style="color:#eb6772;">self</span><span style="color:#abb2bf;">)(param.</span><span style="color:#db9d63;">0</span><span style="color:#abb2bf;">, param.</span><span style="color:#db9d63;">1</span><span style="color:#abb2bf;">, param.</span><span style="color:#db9d63;">2</span><span style="color:#abb2bf;">)
+</span><span style="color:#abb2bf;">    }
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
 <p>注目すべきは <code>T = (A, B, C)</code> でのタプル型を指定し、要素の型と関数の引数の型と並び順が一致するように <code>Fn(A, B, C) -&gt; Res + Clone</code> というトレイト境界を定めているところ。</p>
 <h2 id="yi-wen-2-nazeshun-fan-woru-reti-etemodong-ku">疑問 2: なぜ順番を入れ替えても動く？</h2>
 <p>次は一番謎な引数の順番入れ替えについて。定義で型パラメータが使われているから順番を入れ替えてもコンパイルが通るというのはなんとなくわかるけど、実際に動いてしまうのは謎すぎる。</p>
@@ -271,22 +271,22 @@ where
 <h3 id="ru-rezi-tapurumo-fromrequest-toreitowoshi-zhuang-siteiru">入れ子: タプルも <code>FromRequest</code> トレイトを実装している</h3>
 <p>ここまでの話で、ハンドラ関数の呼び出しには同じ型で同じ並びのタプルが必要なこと、そして <code>FromRequest</code> トレイトによって引数の値をリクエスト情報から抽出できる仕組みを知った。あとはこれらの要素をつないで「引数の順番を入れ替えても動く」ようにする。</p>
 <p>以下は <a href="https://github.com/actix/actix-web/blob/master/src/extract.rs#L194"><code>tuple_from_req!</code> マクロ</a> が生成した、３要素タプル <code>(A, B, C)</code> への <code>FromRequest</code> トレイト実装である。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">impl <A: FromRequest + 'static, B: FromRequest + 'static,
-      C: FromRequest + 'static> FromRequest for (A, B, C) {
-    type Error = Error;
-    type Future = TupleFromRequest3<A, B, C>;
-    type Config = (A::Config, B::Config, C::Config);
-
-    fn from_request(req: &HttpRequest, payload: &mut Payload) -> Self::Future {
-        TupleFromRequest3{
-            items: <(Option<A>, Option<B>, Option<C>)>::default(),
-            futs: (A::from_request(req, payload).into_future(),
-                   B::from_request(req, payload).into_future(),
-                   C::from_request(req, payload).into_future()),
-        }
-    }
-}
-</code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">impl </span><span style="color:#abb2bf;">&lt;A: FromRequest </span><span style="color:#adb7c9;">+ </span><span style="color:#cd74e8;">&#39;static</span><span style="color:#abb2bf;">, B: FromRequest </span><span style="color:#adb7c9;">+ </span><span style="color:#cd74e8;">&#39;static</span><span style="color:#abb2bf;">,
+</span><span style="color:#abb2bf;">      C: FromRequest </span><span style="color:#adb7c9;">+ </span><span style="color:#cd74e8;">&#39;static</span><span style="color:#abb2bf;">&gt; FromRequest </span><span style="color:#cd74e8;">for</span><span style="color:#abb2bf;"> (A, B, C) {
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">type </span><span style="color:#abb2bf;">Error </span><span style="color:#adb7c9;">=</span><span style="color:#abb2bf;"> Error;
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">type </span><span style="color:#abb2bf;">Future </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">TupleFromRequest3&lt;A, B, C&gt;;
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">type </span><span style="color:#abb2bf;">Config </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">(A::Config, B::Config, C::Config);
+</span><span style="color:#abb2bf;">
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">from_request</span><span style="color:#abb2bf;">(</span><span style="color:#eb6772;">req</span><span style="color:#abb2bf;">: </span><span style="color:#adb7c9;">&amp;</span><span style="color:#abb2bf;">HttpRequest, </span><span style="color:#eb6772;">payload</span><span style="color:#abb2bf;">: </span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">mut</span><span style="color:#abb2bf;"> Payload) -&gt; </span><span style="color:#cd74e8;">Self::</span><span style="color:#abb2bf;">Future {
+</span><span style="color:#abb2bf;">        TupleFromRequest3{
+</span><span style="color:#abb2bf;">            items: &lt;(Option&lt;A&gt;, Option&lt;B&gt;, Option&lt;C&gt;)&gt;::default(),
+</span><span style="color:#abb2bf;">            futs: (A::from_request(req, payload).</span><span style="color:#5ebfcc;">into_future</span><span style="color:#abb2bf;">(),
+</span><span style="color:#abb2bf;">                   B::from_request(req, payload).</span><span style="color:#5ebfcc;">into_future</span><span style="color:#abb2bf;">(),
+</span><span style="color:#abb2bf;">                   C::from_request(req, payload).</span><span style="color:#5ebfcc;">into_future</span><span style="color:#abb2bf;">()),
+</span><span style="color:#abb2bf;">        }
+</span><span style="color:#abb2bf;">    }
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
 <p>注目すべきはトレイト境界の <code>&lt;A: FromRequest + 'static, B: FromRequest + 'static, C: FromRequest + 'static&gt;</code> で、これは何を意味しているかというとタプルの要素も <code>FromRequest</code> トレイトを実装しているという制約である。この制約によってタプルに対して呼び出された <code>from_request()</code> 関数が、要素に対して再帰的に <code>from_request()</code> 関数を呼び出す形になって、すべての引数が解決される。</p>
 <p>もう 1 つ（しれっと書かれてるけど）重要なことは <code>A::from_request(req, payload).into_future()</code> という形で型パラメータだったはずの <code>A</code> がコード中で使用されている部分。これは <code>from_request()</code> が関連関数であることが重要である理由になる。</p>
 <p>ここでちょっと「引数の順番」について考えてみると、このコードは型パラメータが使われているので、 <code>A</code> や <code>B</code> が実際に何であるかは気にしておらず、 <code>from_request()</code> を呼び出せることだけが重要になっている。つまり、 <strong>ユーザーが定義したハンドラ関数の引数の個数と型とその並びに一致するタプルに <code>FromRequest</code> トレイト実装がコンパイル時にコード生成されることで「引数の順番の入れ替え」を実現していることになる。</strong></p>
@@ -302,53 +302,53 @@ where
 <h2 id="sanpurukodo">サンプルコード</h2>
 <p>以上の仕組みの理解を深めるために、引数の数や順番を入れ替えてもいい感じに引数を fill して呼び出してくれるやつを作ってみた。仕組みがわかりやすいようにマクロなどは使っていないのと、上記で説明した部分とはかなり異なる部分もあるので注意。あくまで雰囲気を感じてもらえれば。</p>
 <h3 id="handorading-yi">ハンドラ定義</h3>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">fn handler0() {
-    println!("handler[0]");
-}
-
-fn handler1(a: &str) {
-    println!("handler[1]: {}", a);
-}
-
-fn handler1i(a: i32) {
-    println!("handler[1i]: {}", a);
-}
-
-fn handler2(a: &str, b: i32) {
-    println!("handler[2]: {}, {}", a, b);
-}
-
-fn handler2s(a: i32, b: &str) {
-    println!("handler[2s]: {}, {}", a, b);
-}
-</code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">handler0</span><span style="color:#abb2bf;">() {
+</span><span style="color:#abb2bf;">    println!(</span><span style="color:#9acc76;">&quot;handler[0]&quot;</span><span style="color:#abb2bf;">);
+</span><span style="color:#abb2bf;">}
+</span><span style="color:#abb2bf;">
+</span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">handler1</span><span style="color:#abb2bf;">(</span><span style="color:#eb6772;">a</span><span style="color:#abb2bf;">: </span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">) {
+</span><span style="color:#abb2bf;">    println!(</span><span style="color:#9acc76;">&quot;handler[1]: </span><span style="color:#db9d63;">{}</span><span style="color:#9acc76;">&quot;</span><span style="color:#abb2bf;">, a);
+</span><span style="color:#abb2bf;">}
+</span><span style="color:#abb2bf;">
+</span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">handler1i</span><span style="color:#abb2bf;">(</span><span style="color:#eb6772;">a</span><span style="color:#abb2bf;">: </span><span style="color:#cd74e8;">i32</span><span style="color:#abb2bf;">) {
+</span><span style="color:#abb2bf;">    println!(</span><span style="color:#9acc76;">&quot;handler[1i]: </span><span style="color:#db9d63;">{}</span><span style="color:#9acc76;">&quot;</span><span style="color:#abb2bf;">, a);
+</span><span style="color:#abb2bf;">}
+</span><span style="color:#abb2bf;">
+</span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">handler2</span><span style="color:#abb2bf;">(</span><span style="color:#eb6772;">a</span><span style="color:#abb2bf;">: </span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">, </span><span style="color:#eb6772;">b</span><span style="color:#abb2bf;">: </span><span style="color:#cd74e8;">i32</span><span style="color:#abb2bf;">) {
+</span><span style="color:#abb2bf;">    println!(</span><span style="color:#9acc76;">&quot;handler[2]: </span><span style="color:#db9d63;">{}</span><span style="color:#9acc76;">, </span><span style="color:#db9d63;">{}</span><span style="color:#9acc76;">&quot;</span><span style="color:#abb2bf;">, a, b);
+</span><span style="color:#abb2bf;">}
+</span><span style="color:#abb2bf;">
+</span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">handler2s</span><span style="color:#abb2bf;">(</span><span style="color:#eb6772;">a</span><span style="color:#abb2bf;">: </span><span style="color:#cd74e8;">i32</span><span style="color:#abb2bf;">, </span><span style="color:#eb6772;">b</span><span style="color:#abb2bf;">: </span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">) {
+</span><span style="color:#abb2bf;">    println!(</span><span style="color:#9acc76;">&quot;handler[2s]: </span><span style="color:#db9d63;">{}</span><span style="color:#9acc76;">, </span><span style="color:#db9d63;">{}</span><span style="color:#9acc76;">&quot;</span><span style="color:#abb2bf;">, a, b);
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
 <h3 id="hu-bichu-si">呼び出し</h3>
 <p><code>Dispatcher</code> 構造体を作ってハンドラ関数を格納しておいて、 <code>run()</code> メソッドで呼ぶときに引数の代わりに <code>Extensions</code> を渡して、ハンドラが必要とするタプルの生成とディスパッチを行う。</p>
 <p><code>TypeId</code> をキーにした <code>HashMap</code>、今の自分にはハイレベルすぎて詰んだので、<code>actix-web</code> から拝借した <code>Extensions</code> 実装を使っている。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">fn main() {
-    env::set_var("RUST_LOG", "info");
-    env_logger::init();
-
-    let mut bag = Extensions::new();
-    bag.insert("Universe");
-    bag.insert(42);
-
-    let d0 = Dispatcher::new(handler0);
-    d0.run(&bag);
-
-    let d1 = Dispatcher::new(handler1);
-    d1.run(&bag);
-
-    let d1i = Dispatcher::new(handler1i);
-    d1i.run(&bag);
-
-    let d2 = Dispatcher::new(handler2);
-    d2.run(&bag);
-
-    let d2s = Dispatcher::new(handler2s);
-    d2s.run(&bag);
-}
-</code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">main</span><span style="color:#abb2bf;">() {
+</span><span style="color:#abb2bf;">    env::set_var(</span><span style="color:#9acc76;">&quot;RUST_LOG&quot;</span><span style="color:#abb2bf;">, </span><span style="color:#9acc76;">&quot;info&quot;</span><span style="color:#abb2bf;">);
+</span><span style="color:#abb2bf;">    env_logger::init();
+</span><span style="color:#abb2bf;">
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">let mut</span><span style="color:#abb2bf;"> bag </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">Extensions::new();
+</span><span style="color:#abb2bf;">    bag.</span><span style="color:#5ebfcc;">insert</span><span style="color:#abb2bf;">(</span><span style="color:#9acc76;">&quot;Universe&quot;</span><span style="color:#abb2bf;">);
+</span><span style="color:#abb2bf;">    bag.</span><span style="color:#5ebfcc;">insert</span><span style="color:#abb2bf;">(</span><span style="color:#db9d63;">42</span><span style="color:#abb2bf;">);
+</span><span style="color:#abb2bf;">
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> d0 </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">Dispatcher::new(handler0);
+</span><span style="color:#abb2bf;">    d0.</span><span style="color:#5ebfcc;">run</span><span style="color:#abb2bf;">(</span><span style="color:#adb7c9;">&amp;</span><span style="color:#abb2bf;">bag);
+</span><span style="color:#abb2bf;">
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> d1 </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">Dispatcher::new(handler1);
+</span><span style="color:#abb2bf;">    d1.</span><span style="color:#5ebfcc;">run</span><span style="color:#abb2bf;">(</span><span style="color:#adb7c9;">&amp;</span><span style="color:#abb2bf;">bag);
+</span><span style="color:#abb2bf;">
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> d1i </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">Dispatcher::new(handler1i);
+</span><span style="color:#abb2bf;">    d1i.</span><span style="color:#5ebfcc;">run</span><span style="color:#abb2bf;">(</span><span style="color:#adb7c9;">&amp;</span><span style="color:#abb2bf;">bag);
+</span><span style="color:#abb2bf;">
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> d2 </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">Dispatcher::new(handler2);
+</span><span style="color:#abb2bf;">    d2.</span><span style="color:#5ebfcc;">run</span><span style="color:#abb2bf;">(</span><span style="color:#adb7c9;">&amp;</span><span style="color:#abb2bf;">bag);
+</span><span style="color:#abb2bf;">
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> d2s </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">Dispatcher::new(handler2s);
+</span><span style="color:#abb2bf;">    d2s.</span><span style="color:#5ebfcc;">run</span><span style="color:#abb2bf;">(</span><span style="color:#adb7c9;">&amp;</span><span style="color:#abb2bf;">bag);
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
 <p>ここで <code>bag.insert(42);</code> の行をコメントアウトして実行すると、 <code>Extensions</code> から取得できずにエラーログを吐いて <code>panic!</code> する。</p>
 <h3 id="shi-zhuang">実装</h3>
 <p>わりと長くなったので Github に置くことにした。</p>

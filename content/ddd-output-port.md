@@ -34,7 +34,6 @@ categories = ["programming"]
 これがリクエストハンドラのコード。
 
 ```rust
-
 async fn get_index_handler(...) {
     let gateway = gateway::BeansGateway::new();
     let view = views::BeansRenderer::new(sender);
@@ -56,7 +55,6 @@ pub async fn list(&self) {
 その場合、Usecase の中でレスポンスを制御することが難しいことがある。具体的には以下のようなコード。
 
 ```rust
-
 async fn get_index_handler(...) {
     let gateway = gateway::BeansGateway::new();
     let usecase = BeansUsecase::new(gateway);

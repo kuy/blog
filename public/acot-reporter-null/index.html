@@ -150,18 +150,18 @@
 <p>次にテスト用に <code>acot-study</code> というディレクトリを作って、ここで <code>npx acot run</code> できるように準備します。
 そのあとローカル package を使えるように <code>npm link acot-reporter-null</code> を実行してシンボリックリンクを作成します。</p>
 <p>最後に <code>acot.config.js</code> を変更して <code>reporter: &quot;null&quot;</code> を追加します。</p>
-<pre data-lang="javascript" class="language-javascript "><code class="language-javascript" data-lang="javascript">module.exports = {
-  presets: ["@acot/wcag"],
-  reporter: "null",
-  origin: "https://example.com",
-  paths: ["/pages"],
-  rules: {
-    "@acot/wcag/page-has-title": "error",
-    "@acot/wcag/img-has-name": "error",
-    "@acot/wcag/focusable-has-indicator": "error",
-  },
-};
-</code></pre>
+<pre data-lang="javascript" style="background-color:#2b303b;color:#6c7079;" class="language-javascript "><code class="language-javascript" data-lang="javascript"><span style="color:#abb2bf;">module.exports </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">{
+</span><span style="color:#abb2bf;">  presets: [</span><span style="color:#9acc76;">&quot;@acot/wcag&quot;</span><span style="color:#abb2bf;">],
+</span><span style="color:#abb2bf;">  reporter: </span><span style="color:#9acc76;">&quot;null&quot;</span><span style="color:#abb2bf;">,
+</span><span style="color:#abb2bf;">  origin: </span><span style="color:#9acc76;">&quot;https://example.com&quot;</span><span style="color:#abb2bf;">,
+</span><span style="color:#abb2bf;">  paths: [</span><span style="color:#9acc76;">&quot;/pages&quot;</span><span style="color:#abb2bf;">],
+</span><span style="color:#abb2bf;">  rules: {
+</span><span style="color:#abb2bf;">    </span><span style="color:#9acc76;">&quot;@acot/wcag/page-has-title&quot;</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">&quot;error&quot;</span><span style="color:#abb2bf;">,
+</span><span style="color:#abb2bf;">    </span><span style="color:#9acc76;">&quot;@acot/wcag/img-has-name&quot;</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">&quot;error&quot;</span><span style="color:#abb2bf;">,
+</span><span style="color:#abb2bf;">    </span><span style="color:#9acc76;">&quot;@acot/wcag/focusable-has-indicator&quot;</span><span style="color:#abb2bf;">: </span><span style="color:#9acc76;">&quot;error&quot;</span><span style="color:#abb2bf;">,
+</span><span style="color:#abb2bf;">  },
+</span><span style="color:#abb2bf;">};
+</span></code></pre>
 <h2 id="debatugufang-fa">デバッグ方法</h2>
 <p>これで <code>npx acot run</code> を実行すれば動くんですが、なんの手がかりもなくプラグイン開発を進めるのは厳しいものがあります。
 そういうときは <code>DEBUG='acot:module-loader' npx acot run</code> のように環境変数の <code>DEBUG</code> を使うとデバッグログ全体や

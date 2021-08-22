@@ -132,125 +132,123 @@
 <p>先に何が実現できれば勝ちなのか明らかにしておく。</p>
 <p>ひと言で言うならば、Usecase の中で Presenter を使ってレスポンスを制御すること。</p>
 <p>これがリクエストハンドラのコード。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">
-async fn get_index_handler(...) {
-    let gateway = gateway::BeansGateway::new();
-    let view = views::BeansRenderer::new(sender);
-    let usecase = BeansUsecase::new(gateway, view);
-    usecase.list().await;
-}
-</code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#abb2bf;">async </span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">get_index_handler</span><span style="color:#abb2bf;">(...) {
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> gateway </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">gateway::BeansGateway::new();
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> view </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">views::BeansRenderer::new(sender);
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> usecase </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">BeansUsecase::new(gateway, view);
+</span><span style="color:#abb2bf;">    usecase.</span><span style="color:#5ebfcc;">list</span><span style="color:#abb2bf;">().await;
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
 <p>こっちが Usecase のコード。 <code>render_list()</code> を呼び出すことでレスポンスを返している。返り値はない。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">pub async fn list(&self) {
-    let beans = self.repo.get_all().await;
-    self.view.render_list(beans);
-}
-</code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">pub</span><span style="color:#abb2bf;"> async </span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">list</span><span style="color:#abb2bf;">(</span><span style="color:#adb7c9;">&amp;</span><span style="color:#eb6772;">self</span><span style="color:#abb2bf;">) {
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> beans </span><span style="color:#adb7c9;">= </span><span style="color:#eb6772;">self</span><span style="color:#abb2bf;">.repo.</span><span style="color:#5ebfcc;">get_all</span><span style="color:#abb2bf;">().await;
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">self</span><span style="color:#abb2bf;">.view.</span><span style="color:#5ebfcc;">render_list</span><span style="color:#abb2bf;">(beans);
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
 <p>よくある Web フレームワークではリクエストに対するリクエストハンドラを定義して、ハンドラの戻り値がレスポンスになることが多い。
 その場合、Usecase の中でレスポンスを制御することが難しいことがある。具体的には以下のようなコード。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">
-async fn get_index_handler(...) {
-    let gateway = gateway::BeansGateway::new();
-    let usecase = BeansUsecase::new(gateway);
-    usecase.list().await
-}
-</code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#abb2bf;">async </span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">get_index_handler</span><span style="color:#abb2bf;">(...) {
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> gateway </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">gateway::BeansGateway::new();
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> usecase </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">BeansUsecase::new(gateway);
+</span><span style="color:#abb2bf;">    usecase.</span><span style="color:#5ebfcc;">list</span><span style="color:#abb2bf;">().await
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
 <p>Usecase のコードはこれ。Usecase の返り値をレスポンスにしている。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">pub async fn list(&self) -> Vec<Beans> {
-    self.repo.get_all().await
-}
-</code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">pub</span><span style="color:#abb2bf;"> async </span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">list</span><span style="color:#abb2bf;">(</span><span style="color:#adb7c9;">&amp;</span><span style="color:#eb6772;">self</span><span style="color:#abb2bf;">) -&gt; Vec&lt;Beans&gt; {
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">self</span><span style="color:#abb2bf;">.repo.</span><span style="color:#5ebfcc;">get_all</span><span style="color:#abb2bf;">().await
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
 <p>こまけーことなんだけど、本当にそこまで責務を分離する必要があるのかという部分は置いておいて、
 Usecase が制御できれば単純に表現の幅が広がるので引き出しとしては持っておきたい。</p>
 <h2 id="ji-ben-de-naaidea">基本的なアイデア</h2>
 <p>Web フレームワーク側の要求として「関数の返り値をレスポンスとする」があって、Usecase の要求として「Usecase の中で Presenter 呼び出しによってレスポンスを表現したい」がある。</p>
 <p>相反するようだけど、Future とリクエストハンドラをラップするハンドラを作ってあげればいける。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">fn wrapper() -> Future<...> {
-    // Futureを用意する
-    let fut
-
-    // 非同期でレスポンスを生成
-    runtime::block_on(async {
-        handler(fut).await;
-    });
-
-    // いったんFutureを返して、レスポンスはあとで生成
-    fut
-}
-
-async fn handler() {
-    // 返り値は void になっている
-    usecase().await;
-}
-
-async fn usecase() {
-    // レスポンスを返すかはUsecaseが決定できる
-    // render()の中からFuture経由でレスポンスを返す
-    render(data);
-}
-</code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">wrapper</span><span style="color:#abb2bf;">() -&gt; Future&lt;</span><span style="background-color:#e05252;color:#ffffff;">.</span><span style="color:#adb7c9;">..&gt; </span><span style="color:#abb2bf;">{
+</span><span style="color:#abb2bf;">    </span><span style="font-style:italic;color:#5f697a;">// Futureを用意する
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> fut
+</span><span style="color:#abb2bf;">
+</span><span style="color:#abb2bf;">    </span><span style="font-style:italic;color:#5f697a;">// 非同期でレスポンスを生成
+</span><span style="color:#abb2bf;">    runtime::block_on(async {
+</span><span style="color:#abb2bf;">        </span><span style="color:#5ebfcc;">handler</span><span style="color:#abb2bf;">(fut).await;
+</span><span style="color:#abb2bf;">    });
+</span><span style="color:#abb2bf;">
+</span><span style="color:#abb2bf;">    </span><span style="font-style:italic;color:#5f697a;">// いったんFutureを返して、レスポンスはあとで生成
+</span><span style="color:#abb2bf;">    fut
+</span><span style="color:#abb2bf;">}
+</span><span style="color:#abb2bf;">
+</span><span style="color:#abb2bf;">async </span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">handler</span><span style="color:#abb2bf;">() {
+</span><span style="color:#abb2bf;">    </span><span style="font-style:italic;color:#5f697a;">// 返り値は void になっている
+</span><span style="color:#abb2bf;">    </span><span style="color:#5ebfcc;">usecase</span><span style="color:#abb2bf;">().await;
+</span><span style="color:#abb2bf;">}
+</span><span style="color:#abb2bf;">
+</span><span style="color:#abb2bf;">async </span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">usecase</span><span style="color:#abb2bf;">() {
+</span><span style="color:#abb2bf;">    </span><span style="font-style:italic;color:#5f697a;">// レスポンスを返すかはUsecaseが決定できる
+</span><span style="color:#abb2bf;">    </span><span style="font-style:italic;color:#5f697a;">// render()の中からFuture経由でレスポンスを返す
+</span><span style="color:#abb2bf;">    </span><span style="color:#5ebfcc;">render</span><span style="color:#abb2bf;">(data);
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
 <p>イメージはこんな感じ。</p>
 <h2 id="shi-zhuang">実装</h2>
 <p>コード全体は <a href="https://github.com/kuy/axum-study/tree/presenter">axum-study</a> を参照。</p>
 <p>channel を使ってレスポンスを受け取っている。</p>
-<pre data-lang="rust" class="language-rust "><code class="language-rust" data-lang="rust">async fn index(sender: Sender<String>) {
-    let gateway = gateway::BeansGateway::new();
-    let view = views::BeansRenderer::new(sender);
-    let usecase = BeansUsecase::new(gateway, view);
-    usecase.list().await;
-}
-
-fn index_wrapper() -> impl Future<Output = String> {
-    let (sender, receiver) = channel::<String>();
-
-    thread::spawn(move || {
-        let rt = Runtime::new().unwrap();
-        rt.block_on(async {
-            index(sender).await;
-        });
-    });
-
-    RespondLater::new(receiver)
-}
-
-struct RespondLater {
-    receiver: Receiver<String>,
-    pipe: (Sender<String>, Receiver<String>),
-}
-
-impl RespondLater {
-    pub fn new(receiver: Receiver<String>) -> Self {
-        Self {
-            receiver,
-            pipe: channel(),
-        }
-    }
-}
-
-impl Future for RespondLater {
-    type Output = String;
-
-    fn poll(
-        self: std::pin::Pin<&mut Self>,
-        cx: &mut std::task::Context<'_>,
-    ) -> std::task::Poll<Self::Output> {
-        if let Ok(body) = self.pipe.1.try_recv() {
-            Poll::Ready(body)
-        } else {
-            let waker = cx.waker().clone();
-            let sender = self.pipe.0.clone();
-            let receiver = self.receiver.clone();
-            thread::spawn(move || {
-                if let Ok(body) = receiver.recv() {
-                    sender.send(body).expect("should be sent");
-                    waker.wake();
-                }
-            });
-            Poll::Pending
-        }
-    }
-}
-</code></pre>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#abb2bf;">async </span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">index</span><span style="color:#abb2bf;">(</span><span style="color:#eb6772;">sender</span><span style="color:#abb2bf;">: Sender&lt;String&gt;) {
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> gateway </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">gateway::BeansGateway::new();
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> view </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">views::BeansRenderer::new(sender);
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> usecase </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">BeansUsecase::new(gateway, view);
+</span><span style="color:#abb2bf;">    usecase.</span><span style="color:#5ebfcc;">list</span><span style="color:#abb2bf;">().await;
+</span><span style="color:#abb2bf;">}
+</span><span style="color:#abb2bf;">
+</span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">index_wrapper</span><span style="color:#abb2bf;">() -&gt; impl Future&lt;Output = String&gt; {
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">let </span><span style="color:#abb2bf;">(sender, receiver) </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">channel::&lt;String&gt;();
+</span><span style="color:#abb2bf;">
+</span><span style="color:#abb2bf;">    thread::spawn(</span><span style="color:#cd74e8;">move </span><span style="color:#adb7c9;">|| </span><span style="color:#abb2bf;">{
+</span><span style="color:#abb2bf;">        </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> rt </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">Runtime::new().</span><span style="color:#5ebfcc;">unwrap</span><span style="color:#abb2bf;">();
+</span><span style="color:#abb2bf;">        rt.</span><span style="color:#5ebfcc;">block_on</span><span style="color:#abb2bf;">(async {
+</span><span style="color:#abb2bf;">            </span><span style="color:#5ebfcc;">index</span><span style="color:#abb2bf;">(sender).await;
+</span><span style="color:#abb2bf;">        });
+</span><span style="color:#abb2bf;">    });
+</span><span style="color:#abb2bf;">
+</span><span style="color:#abb2bf;">    RespondLater::new(receiver)
+</span><span style="color:#abb2bf;">}
+</span><span style="color:#abb2bf;">
+</span><span style="color:#cd74e8;">struct </span><span style="color:#abb2bf;">RespondLater {
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">receiver</span><span style="color:#abb2bf;">: Receiver&lt;String&gt;,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">pipe</span><span style="color:#abb2bf;">: (Sender&lt;String&gt;, Receiver&lt;String&gt;),
+</span><span style="color:#abb2bf;">}
+</span><span style="color:#abb2bf;">
+</span><span style="color:#cd74e8;">impl </span><span style="color:#abb2bf;">RespondLater {
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">pub fn </span><span style="color:#5cb3fa;">new</span><span style="color:#abb2bf;">(</span><span style="color:#eb6772;">receiver</span><span style="color:#abb2bf;">: Receiver&lt;String&gt;) -&gt; </span><span style="color:#cd74e8;">Self </span><span style="color:#abb2bf;">{
+</span><span style="color:#abb2bf;">        </span><span style="color:#cd74e8;">Self </span><span style="color:#abb2bf;">{
+</span><span style="color:#abb2bf;">            receiver,
+</span><span style="color:#abb2bf;">            pipe: </span><span style="color:#5ebfcc;">channel</span><span style="color:#abb2bf;">(),
+</span><span style="color:#abb2bf;">        }
+</span><span style="color:#abb2bf;">    }
+</span><span style="color:#abb2bf;">}
+</span><span style="color:#abb2bf;">
+</span><span style="color:#cd74e8;">impl </span><span style="color:#abb2bf;">Future </span><span style="color:#cd74e8;">for </span><span style="color:#abb2bf;">RespondLater {
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">type </span><span style="color:#abb2bf;">Output </span><span style="color:#adb7c9;">= </span><span style="color:#abb2bf;">String;
+</span><span style="color:#abb2bf;">
+</span><span style="color:#abb2bf;">    </span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">poll</span><span style="color:#abb2bf;">(
+</span><span style="color:#abb2bf;">        </span><span style="color:#eb6772;">self</span><span style="color:#abb2bf;">: std::pin::Pin&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">mut Self</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">        </span><span style="color:#eb6772;">cx</span><span style="color:#abb2bf;">: </span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">mut </span><span style="color:#abb2bf;">std::task::Context&lt;&#39;</span><span style="color:#adb7c9;">_</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">    ) -&gt; std::task::Poll&lt;</span><span style="color:#cd74e8;">Self::</span><span style="color:#abb2bf;">Output&gt; {
+</span><span style="color:#abb2bf;">        </span><span style="color:#cd74e8;">if let </span><span style="color:#abb2bf;">Ok(body) </span><span style="color:#adb7c9;">= </span><span style="color:#eb6772;">self</span><span style="color:#abb2bf;">.pipe.</span><span style="color:#db9d63;">1.</span><span style="color:#5ebfcc;">try_recv</span><span style="color:#abb2bf;">() {
+</span><span style="color:#abb2bf;">            Poll::Ready(body)
+</span><span style="color:#abb2bf;">        } </span><span style="color:#cd74e8;">else </span><span style="color:#abb2bf;">{
+</span><span style="color:#abb2bf;">            </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> waker </span><span style="color:#adb7c9;">=</span><span style="color:#abb2bf;"> cx.</span><span style="color:#5ebfcc;">waker</span><span style="color:#abb2bf;">().</span><span style="color:#5ebfcc;">clone</span><span style="color:#abb2bf;">();
+</span><span style="color:#abb2bf;">            </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> sender </span><span style="color:#adb7c9;">= </span><span style="color:#eb6772;">self</span><span style="color:#abb2bf;">.pipe.</span><span style="color:#db9d63;">0.</span><span style="color:#5ebfcc;">clone</span><span style="color:#abb2bf;">();
+</span><span style="color:#abb2bf;">            </span><span style="color:#cd74e8;">let</span><span style="color:#abb2bf;"> receiver </span><span style="color:#adb7c9;">= </span><span style="color:#eb6772;">self</span><span style="color:#abb2bf;">.receiver.</span><span style="color:#5ebfcc;">clone</span><span style="color:#abb2bf;">();
+</span><span style="color:#abb2bf;">            thread::spawn(</span><span style="color:#cd74e8;">move </span><span style="color:#adb7c9;">|| </span><span style="color:#abb2bf;">{
+</span><span style="color:#abb2bf;">                </span><span style="color:#cd74e8;">if let </span><span style="color:#abb2bf;">Ok(body) </span><span style="color:#adb7c9;">=</span><span style="color:#abb2bf;"> receiver.</span><span style="color:#5ebfcc;">recv</span><span style="color:#abb2bf;">() {
+</span><span style="color:#abb2bf;">                    sender.</span><span style="color:#5ebfcc;">send</span><span style="color:#abb2bf;">(body).</span><span style="color:#5ebfcc;">expect</span><span style="color:#abb2bf;">(</span><span style="color:#9acc76;">&quot;should be sent&quot;</span><span style="color:#abb2bf;">);
+</span><span style="color:#abb2bf;">                    waker.</span><span style="color:#5ebfcc;">wake</span><span style="color:#abb2bf;">();
+</span><span style="color:#abb2bf;">                }
+</span><span style="color:#abb2bf;">            });
+</span><span style="color:#abb2bf;">            Poll::Pending
+</span><span style="color:#abb2bf;">        }
+</span><span style="color:#abb2bf;">    }
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
 <p>一応実現はできたけど、自分の実力ではこれを汎用化することは困難に思えた。</p>
 <h2 id="matome">まとめ</h2>
 <p>Rust は楽しいんだけど、ちょっとでも汎用化しようとすると型パズルで死ぬ。</p>
