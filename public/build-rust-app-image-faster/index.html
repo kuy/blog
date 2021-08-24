@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+      <!-- Enable responsiveness on mobile devices-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+      <title>GitHub Actions上のRustアプリのDockerイメージビルドを高速化する - blog.endflow.net</title>
+
+      
+
+      
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
+          
+      
+
+      
+          <link href="https://fonts.googleapis.com/css?family=Roboto:400,700|Source+Code+Pro&display=swap" rel="stylesheet">
+          <link rel="stylesheet" href="https://blog.endflow.net/site.css">
+          
+      
+
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-3511180-1"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-3511180-1');
+      </script>
+
+      
+      
+    </head>
+
+    <body>
+        <div class="container">
+
+            <div id="mobile-navbar" class="mobile-navbar">
+              <div class="mobile-header-logo">
+                <a href="/" class="logo">&#x2F;* blog.endflow.net *&#x2F;</a>
+              </div>
+              <div class="mobile-navbar-icon icon-out">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+
+            <nav id="mobile-menu" class="mobile-menu slideout-menu slideout-menu-left">
+              <ul class="mobile-menu-list">
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;categories">
+                            Categories
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags">
+                            Tags
+                        </a>
+                    </li>
+                
+                    <li class="mobile-menu-item">
+                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;about">
+                            @kuy
+                        </a>
+                    </li>
+                
+              </ul>
+            </nav>
+
+            <header id="header">
+                <div class="logo"><a href="https:&#x2F;&#x2F;blog.endflow.net">&#x2F;* blog.endflow.net *&#x2F;</a></div>
+                <nav class="menu">
+                    <ul>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;categories">
+                                    Categories
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;tags">
+                                    Tags
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;about">
+                                    @kuy
+                                </a>
+                            </li>
+                        
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <div class="content" id="mobile-panel">
+                    
+
+
+
+<article class="post">
+    
+    <header class="post__header">
+        <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;build-rust-app-image-faster&#x2F;">GitHub Actions上のRustアプリのDockerイメージビルドを高速化する</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2021-08-22</span>
+            
+        </div>
+    </header>
+
+    <div class="post-content">
+      <h2 id="rust-docker-github-actions-metiyachi-i">Rust + Docker + GitHub Actions = めちゃ遅い</h2>
+<p>以前、<a href="https://blog.endflow.net/speedup-rust-build/">GitHub Actions 上の Rust ビルドを高速化する記事</a>を書いたけど、
+今回は Kubernetes 環境にスムーズに移行できるよう Docker イメージ化するという要件も加わったことで、改めて試行錯誤する必要が出てきた。</p>
+<p>それぞれに対するビルド速度の最適化は存在しているものの、３つ (Rust, Docker, GitHub Actions) すべてを満たすとなるとコピペで終わるほど情報がまとまってないし、見つけた Tips もちょっと古かったり、これというものは見つけられなかった。</p>
+<p>公式ドキュメントを見ると正当進化していて新しいオプションが生えていたりしたので、賞味期限は短そうだけど、自分の試行錯誤の結果を残しておこうと思う。</p>
+<p>成果としては 12 分 22 秒かかっていた Rust アプリケーションの Docker イメージビルドが最短で 2 分 43 秒まで縮まった。Docker layer caching 最高だっ！！！！</p>
+<span id="continue-reading"></span><h2 id="tl-dr">TL; DR</h2>
+<p>3 行で言うと、</p>
+<ul>
+<li><a href="https://github.com/LukeMathWalker/cargo-chef">cargo-chef</a> で Docker layer caching を最大限活用する <code>Dockerfile</code> にしろ</li>
+<li><a href="https://github.com/docker/build-push-action">docker/build-push-action@v2</a> でビルドして GitHub Actions のキャッシュを使え</li>
+<li>優勝！！！</li>
+</ul>
+<h2 id="ke-ti">課題</h2>
+<p>GitHub Actions 上で Rust アプリの Docker イメージを高速ビルドするにあたってボトルネックとなるのは 2 つ。</p>
+<ul>
+<li>Rust コンパイルの遅さ</li>
+<li>Docker イメージのビルドそのものの遅さ</li>
+</ul>
+<p><a href="https://blog.endflow.net/speedup-rust-build/">sccache によって高速化</a>できたのは前者なわけだけど、Docker のマルチステージビルドを活用する場合 sccache サーバーを builder コンテナ内部に立てることになる。そのためにはキャッシュは外部からマウントして、それを <code>actions/cache</code> でキャッシュする・・・みたいな、なんともアレな構成になってやる前から地雷を踏みそうでそわそわする。</p>
+<p>落とし穴を避けるという意味ではマルチステージビルドはせず、外側 (つまり GitHub Actions のステップ) で sccache を効かせてビルドした成果物を Docker イメージに持ち込むというパターンもありえる。けど、持ち込みは条件揃えないと実行時に問題発生する可能性もあってちょいアレ。</p>
+<p>2 つ目の Docker イメージのビルド自体が遅いってやつは本質的な遅さで、小細工で高速化するには限界がある。抜本的な対策が必要。</p>
+<p>ということで、それぞれの課題について順に書いていく。</p>
+<h2 id="rust-konpairunochi-sa">Rust コンパイルの遅さ</h2>
+<p>Rust 1.52.1 から無効になっていた incremental compilation が 1.54 で戻ってきたことで、普段の開発体験は再び良くなった。ただ、常にまっさら状態からビルドをする CI/CD 環境においては Rust のビルドの遅さはしばしば問題となる。加えて今回はこれを Docker イメージビルドのプロセス内部で行うため、sccache のような仰々しい仕組みは使いたくない。</p>
+<p>そこで今回は <a href="https://github.com/LukeMathWalker/cargo-chef"><code>cargo-chef</code></a> を使った。このツールは「依存ライブラリだけをインストール・ビルドした中間レイヤを生成しておき、あとからアプリケーションコードを入れてビルドを実行する」という Docker の仕組みを活用したビルド高速化のテクニックを Rust でも手軽に利用できるようパッケージ化したもの。このテクニックは Python とか Node.js だとまさに「依存ライブラリだけインストール・ビルド」のためのコマンドが用意されているので比較的やりやすいものの、Rust だと依存ライブラリだけのインストール・ビルドというコマンドは存在しないため非常にやりにくい。</p>
+<p><code>cargo-chef</code> を利用するために既存の Dockerfile の構成を大幅に変える必要があるのでできるだけ最初の段階でこの構成にしておいた方がよい。</p>
+<p><code>cargo-chef</code> は Docker Buildx でビルドしないと意味がないどころか逆に遅くなるので注意が必要。Docker layer caching に強く依存した最適化手法なので、次のセクションで GitHub Actions でやり方を見ていく。</p>
+<h2 id="docker-imezinobirudosonomononochi-sa">Docker イメージのビルドそのものの遅さ</h2>
+<p>Docker イメージのビルドは古来より本当に遅かった。仕組み上の遅さではあるものの、最近は BuildKit によってかなり快適にビルドできるようになってきた。</p>
+<p>使いたい。GitHub Actions でも使いたい！！！</p>
+<p>とか思って記事を漁ってたら Docker 公式ドキュメントに <a href="https://docs.docker.com/ci-cd/github-actions/#optimizing-the-workflow">Optimizing the workflow</a> というセクションがあって、完全にほしかったやつが書いてあり、 <a href="https://github.com/docker/build-push-action">docker/build-push-action</a> を使えばよいらしい。</p>
+<p>さらに！ buildx 0.6.0 と BuildKit 0.9.0 以降では <a href="https://github.com/docker/build-push-action/blob/master/docs/advanced/cache.md#github-cache">GitHub Actions 専用のキャッシュ設定</a> が利用可能になっていて、 手作業で <code>actions/cache</code> を設定する必要もなく、単純に <code>type=gha</code> とだけ書いてあげれば OK といういたれりつくせりっぷり・・・。</p>
+<p>自分はビルド後に E2E を通してから push したかったので、 <code>push: true</code> の代わりに <code>load: true</code> をオプションとして渡した。 <code>push</code> や <code>load</code> は <code>output</code> と呼ばれていて、何かしらの <code>output</code> がないとキャッシュだけ作成されてそのあとイメージを呼び出せないので注意。</p>
+<p><code>docker/setup-qemu-action</code> は一度入れてみたもののどういう効果があるのかよくわからなかったので外した。特に問題なくビルドできているのでいったんなしのままいく。</p>
+<h2 id="owarini">おわりに</h2>
+<p>爆速すぎて笑いが止まらないレベルでした。Docker layer caching はこれほどまでに影響がでかい。そして、ここのところエコシステムがどんどん洗練されていて連携がしやすくなっていて本当にありがたい。</p>
+<p>とはいえサンプルコードがないのでただの紹介になってしまったのは反省点。高速ビルドネタはいろいろあるからまた書きたい。</p>
+<h3 id="can-kao">参考</h3>
+<ul>
+<li><a href="https://www.lpalmieri.com/posts/fast-rust-docker-builds/">5x Faster Rust Docker Builds with cargo-chef</a></li>
+<li><a href="https://dev.classmethod.jp/articles/docker-build-cache-with-buildkit-on-actions/">Docker イメージビルドのキャッシュを BuildKit を交えつつ Actions でやってみた</a></li>
+<li><a href="https://docs.docker.com/ci-cd/github-actions/#optimizing-the-workflow">Optimizing the workflow | Docker Docs</a></li>
+</ul>
+
+    </div>
+
+    
+    
+
+    <div class="post-footer">
+        
+            
+                <div class="post-tags">
+                    
+                        <a href="https://blog.endflow.net/tags/rust/">#rust</a>
+                    
+                        <a href="https://blog.endflow.net/tags/web/">#web</a>
+                    
+                        <a href="https://blog.endflow.net/tags/docker/">#docker</a>
+                    
+                        <a href="https://blog.endflow.net/tags/optimization/">#optimization</a>
+                    
+                        <a href="https://blog.endflow.net/tags/github-actions/">#github-actions</a>
+                    
+                </div>
+            
+            
+                <div class="post-nav">
+                    
+                        <a class="previous" href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;ddd-output-port&#x2F;">‹ 返り値でレスポンスを返すタイプのWebフレームワークでPresenterを実現する</a>
+                    
+                    
+                    
+                    
+                </div>
+            
+
+        
+
+    </div>
+
+    
+    
+</article>
+
+
+                </div>
+            </main>
+
+            
+            
+        </div>
+
+      
+          <script type="text/javascript" src="https://blog.endflow.net/even.js" ></script>
+      
+    </body>
+
+</html>

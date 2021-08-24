@@ -109,6 +109,29 @@
                                     
     <header class="post__header">
         <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;saml-proxy&#x2F;">社内システム向けにSAML用認証プロキシをFargateで立ててVPNを撲滅する話</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2020-04-13</span>
+            
+        </div>
+    </header>
+
+                                    <div class="post__summary">
+                                        <h2 id="jing-wei">経緯</h2>
+<p>Work from Home への対応を進める中で、部署によっては社内システムへのアクセスで VPN が必須になっている。でも、VPN 経由だと回線は細くなるので接続しっぱなしで作業するのはつらいことが多い。もちろんエンジニアであれば特定の IP だけ VPN 経由に、とかそういう設定もできるけど、みんなが手軽にできるわけでもない。それに、最近は <a href="https://www.wikiwand.com/en/Zero_Trust">Zero Trust Network</a> みたいな考え方も出てきているし、社内システムを G Suite の Google アカウントで SSO できるように対応できればセキュリティも強化されるし VPN 不要になってみんなハッピー！と思った。</p>
+<p>とはいえ、社内システムは他システムからの依存もあり、あんまり適当に認証まわりをいじりたくない。そこで、社内システム自体はそのままにして、SAML 対応の認証プロキシを別ドメインで立てるという構想に至った。</p>
+
+                                    </div>
+                                    <div class="read-more">
+                                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;saml-proxy&#x2F;">Read more...</a>
+                                    </div>
+                                </article>
+                            
+                                <article class="post">
+                                    
+    <header class="post__header">
+        <h1 class="post__title">
             <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;pouring-tips&#x2F;">ハンドドリップでエグみが強く出てしまうときの対処方法</a>
         </h1>
         <div class="post__meta">
@@ -219,39 +242,6 @@
                                     </div>
                                     <div class="read-more">
                                         <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;build-conditional-query&#x2F;">Read more...</a>
-                                    </div>
-                                </article>
-                            
-                                <article class="post">
-                                    
-    <header class="post__header">
-        <h1 class="post__title">
-            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;learn-program-semantics&#x2F;">プログラム意味論のお勉強</a>
-        </h1>
-        <div class="post__meta">
-            <span class="post__time">2020-02-09</span>
-            
-        </div>
-    </header>
-
-                                    <div class="post__summary">
-                                        <p>ふと思い出しては何かを読んで、挫折してを繰り返しているのでいつまで経っても理解できていない。
-けど、悔しいのでたぶん今後もチャレンジしていくと思うので自分用のリストを作っておく。</p>
-<h2 id="uebu">ウェブ</h2>
-<ul>
-<li><a href="http://www.kurims.kyoto-u.ac.jp/%7Ekenkyubu/kokai-koza/H28-hasegawa.pdf">プログラミング言語の意味論と圏論 [PDF]</a></li>
-<li><a href="https://ja.wikibooks.org/wiki/Haskell/Denotational_semantics">Haskell/Denotational semantics</a></li>
-<li><a href="http://m-hiyama.hatenablog.com/entry/20120118/1326852526">操作的意味論と、不純な表示的意味論</a></li>
-</ul>
-<h2 id="shu-ji">書籍</h2>
-<ul>
-<li>プログラミング言語の基礎概念 / 五十嵐 淳 / サイエンス社</li>
-<li>プログラム意味論 / 横内 筧文 / 共立出版株式会社</li>
-</ul>
-
-                                    </div>
-                                    <div class="read-more">
-                                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;learn-program-semantics&#x2F;">Read more...</a>
                                     </div>
                                 </article>
                             

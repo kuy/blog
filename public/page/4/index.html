@@ -109,6 +109,38 @@
                                     
     <header class="post__header">
         <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;acot-reporter-null&#x2F;">acot の Reporter プラグインを作ってみる #1</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2021-04-05</span>
+            
+        </div>
+    </header>
+
+                                    <div class="post__summary">
+                                        <h2 id="acot-toiunoha">acot というのは</h2>
+<p><a href="https://github.com/puppeteer/puppeteer">puppeteer</a> を使ったアクセシビリティテストフレームワークで、
+ウェブサイトや Web アプリケーションに対してルールに基づいて機械的にチェックを行って結果をレポートしてくれます。
+似たような目的を持ったツールは他にもあるようですが、静的解析ではなく、実際にブラウザに表示して AOM や DOM を使って検証を行うため、
+マウスカーソルを要素にホバーしたときにどうなるかなど動的な検証が得意なのが特徴です。</p>
+<p>ルールは ESLint のように <code>extends</code> で拡張可能なので、自社のアクセシビリティガイドラインに基づいたルールを構築することもできますし、
+まだガイドラインのようなものがなければ、acot のプリセットも使えるし、スモールスタートで小さなルールセットから始めることもできます。</p>
+<p>さらに実行戦略である Runner や結果表示の Reporter などプラグイン機構によって様々な環境に適用できそうです。
+例えば GitHub の PR ごとに GitHub Actions で実行して結果をコメントとして残すようにしたり、
+本番環境に対して定期実行させて結果を Slack に流したりできそうです。</p>
+<h2 id="wu-xian-noke-neng-xing">無限の可能性</h2>
+<p>ということで無限の可能性を秘めているのでプラグインを作ってみようと思います。</p>
+
+                                    </div>
+                                    <div class="read-more">
+                                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;acot-reporter-null&#x2F;">Read more...</a>
+                                    </div>
+                                </article>
+                            
+                                <article class="post">
+                                    
+    <header class="post__header">
+        <h1 class="post__title">
             <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;delter-coffee-press&#x2F;">Delter Coffee Pressが最高な件について</a>
         </h1>
         <div class="post__meta">
@@ -206,29 +238,6 @@
                                     </div>
                                     <div class="read-more">
                                         <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;first-cupping&#x2F;">Read more...</a>
-                                    </div>
-                                </article>
-                            
-                                <article class="post">
-                                    
-    <header class="post__header">
-        <h1 class="post__title">
-            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;saml-proxy&#x2F;">社内システム向けにSAML用認証プロキシをFargateで立ててVPNを撲滅する話</a>
-        </h1>
-        <div class="post__meta">
-            <span class="post__time">2020-04-13</span>
-            
-        </div>
-    </header>
-
-                                    <div class="post__summary">
-                                        <h2 id="jing-wei">経緯</h2>
-<p>Work from Home への対応を進める中で、部署によっては社内システムへのアクセスで VPN が必須になっている。でも、VPN 経由だと回線は細くなるので接続しっぱなしで作業するのはつらいことが多い。もちろんエンジニアであれば特定の IP だけ VPN 経由に、とかそういう設定もできるけど、みんなが手軽にできるわけでもない。それに、最近は <a href="https://www.wikiwand.com/en/Zero_Trust">Zero Trust Network</a> みたいな考え方も出てきているし、社内システムを G Suite の Google アカウントで SSO できるように対応できればセキュリティも強化されるし VPN 不要になってみんなハッピー！と思った。</p>
-<p>とはいえ、社内システムは他システムからの依存もあり、あんまり適当に認証まわりをいじりたくない。そこで、社内システム自体はそのままにして、SAML 対応の認証プロキシを別ドメインで立てるという構想に至った。</p>
-
-                                    </div>
-                                    <div class="read-more">
-                                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;saml-proxy&#x2F;">Read more...</a>
                                     </div>
                                 </article>
                             

@@ -109,6 +109,32 @@
                                     
     <header class="post__header">
         <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;build-rust-app-image-faster&#x2F;">GitHub Actions上のRustアプリのDockerイメージビルドを高速化する</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2021-08-22</span>
+            
+        </div>
+    </header>
+
+                                    <div class="post__summary">
+                                        <h2 id="rust-docker-github-actions-metiyachi-i">Rust + Docker + GitHub Actions = めちゃ遅い</h2>
+<p>以前、<a href="https://blog.endflow.net/speedup-rust-build/">GitHub Actions 上の Rust ビルドを高速化する記事</a>を書いたけど、
+今回は Kubernetes 環境にスムーズに移行できるよう Docker イメージ化するという要件も加わったことで、改めて試行錯誤する必要が出てきた。</p>
+<p>それぞれに対するビルド速度の最適化は存在しているものの、３つ (Rust, Docker, GitHub Actions) すべてを満たすとなるとコピペで終わるほど情報がまとまってないし、見つけた Tips もちょっと古かったり、これというものは見つけられなかった。</p>
+<p>公式ドキュメントを見ると正当進化していて新しいオプションが生えていたりしたので、賞味期限は短そうだけど、自分の試行錯誤の結果を残しておこうと思う。</p>
+<p>成果としては 12 分 22 秒かかっていた Rust アプリケーションの Docker イメージビルドが最短で 2 分 43 秒まで縮まった。Docker layer caching 最高だっ！！！！</p>
+
+                                    </div>
+                                    <div class="read-more">
+                                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;build-rust-app-image-faster&#x2F;">Read more...</a>
+                                    </div>
+                                </article>
+                            
+                                <article class="post">
+                                    
+    <header class="post__header">
+        <h1 class="post__title">
             <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;ddd-output-port&#x2F;">返り値でレスポンスを返すタイプのWebフレームワークでPresenterを実現する</a>
         </h1>
         <div class="post__meta">
@@ -216,29 +242,6 @@
                                     </div>
                                     <div class="read-more">
                                         <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;cutting-carbon-seatpost&#x2F;">Read more...</a>
-                                    </div>
-                                </article>
-                            
-                                <article class="post">
-                                    
-    <header class="post__header">
-        <h1 class="post__title">
-            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;competitive-cyclist-part1&#x2F;">Competitive CyclistからENVEパーツを買う Part1</a>
-        </h1>
-        <div class="post__meta">
-            <span class="post__time">2021-06-25</span>
-            
-        </div>
-    </header>
-
-                                    <div class="post__summary">
-                                        <h2 id="bu-pin-nozai-ku-ganai">部品の在庫がない</h2>
-<p>COVID-19 の影響で自転車パーツの在庫が・・・というのはよく聞く話だったけど、<a href="https://blog.endflow.net/bike-upgrade-202104/">4 月のアップグレード</a>でもあまり影響を受けてこなかった（サドルは R1 になったけど結果オーライ）。</p>
-<p>ただ、ついに在庫ない問題が発生したので、何とか海外通販で切り抜けるべく頑張ってみようと思う。</p>
-
-                                    </div>
-                                    <div class="read-more">
-                                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;competitive-cyclist-part1&#x2F;">Read more...</a>
                                     </div>
                                 </article>
                             
