@@ -85,6 +85,10 @@
         <lastmod>2021-06-24</lastmod>
     </url>
     <url>
+        <loc>https://blog.endflow.net/espresso-espresso/</loc>
+        <lastmod>2021-11-12</lastmod>
+    </url>
+    <url>
         <loc>https://blog.endflow.net/first-cupping/</loc>
         <lastmod>2020-06-28</lastmod>
     </url>
@@ -248,6 +252,9 @@
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/node-js/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/nomad/</loc>
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/optimization/</loc>
