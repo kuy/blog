@@ -31,30 +31,160 @@ categories = ["coffee"]
 
 ## 記録
 
-|     | Roaster                                           | Beans                                                              | Amount | Grind | Tamping                | Note                 |
-| --- | ------------------------------------------------- | :----------------------------------------------------------------- | -----: | ----: | ---------------------- | -------------------- |
-| 😫  | [TRUNK](https://www.trunkcoffee.com/)             | [Guatemala La Pia](https://trunkcoffee.thebase.in/items/52504275)  |    20g |   1.5 | しっかり強く押し込む   |                      |
-| 😫  | [TRUNK](https://www.trunkcoffee.com/)             | [Guatemala La Pia](https://trunkcoffee.thebase.in/items/52504275)  |    18g |   1.2 | かなり強く押し込む     |                      |
-| 🤔  | [Coffee Collective](https://coffeecollective.dk/) | [Kieni Espresso](https://coffeecollective.dk/shop/kieni-espresso/) |    18g |   0.9 | 表面をならすだけ       | 抽出スピードが遅い   |
-| 👌  | [Coffee Collective](https://coffeecollective.dk/) | [Kieni Espresso](https://coffeecollective.dk/shop/kieni-espresso/) |    16g |   1.3 | 押し込まない程度に軽く | 飲める感じ           |
-| 🎉  | [Coffee Collective](https://coffeecollective.dk/) | [Kieni Espresso](https://coffeecollective.dk/shop/kieni-espresso/) |    16g |   1.1 | かなり強く押し込む     | 初優勝               |
-| 🎉  | [Coffee Collective](https://coffeecollective.dk/) | [Kieni Espresso](https://coffeecollective.dk/shop/kieni-espresso/) |    16g |   1.0 | 強めに押し込む         | 蒸らし 30 秒         |
-| 🎉  | [Philocoffea](https://philocoffea.com/)           | 友達 for Espresso                                                  |    16g |   1.1 | 強めに押し込む         | 蒸らし 20 秒         |
-| 🎉  | [わかき珈琲](https://wakakicoffee.thebase.in/)    | Panama Estrella DC                                                 |    16g |   1.1 | しっかり強く押し込む   |                      |
-| 🎉  | [Coffee Collective](https://coffeecollective.dk/) | [Kieni Espresso](https://coffeecollective.dk/shop/kieni-espresso/) |    15g |   1.1 | 軽く押し込む           |                      |
-| 🎉  | [Coffee Collective](https://coffeecollective.dk/) | [Kieni Espresso](https://coffeecollective.dk/shop/kieni-espresso/) |    14g |   1.1 | 強めに押し込む         | 予熱、とろみが減った |
-| 🎉  | [わかき珈琲](https://wakakicoffee.thebase.in/)    | Panama Estrella DC                                                 |    16g |   1.0 | 強めに押し込む         | 予熱                 |
+| Date    | 2021/10/25                                                        |
+| :------ | :---------------------------------------------------------------- |
+| Roaster | [TRUNK](https://www.trunkcoffee.com/)                             |
+| Beans   | [Guatemala La Pia](https://trunkcoffee.thebase.in/items/52504275) |
+| Amount  | 20g                                                               |
+| Coarse  | 1.5                                                               |
+| Tamping | しっかり強く押し込む                                              |
+| Result  | Bad                                                               |
+| Comment | 完全なる未抽出。                                                  |
 
-## ノート
+| Date    | 2021/10/26                                                        |
+| :------ | :---------------------------------------------------------------- |
+| Roaster | [TRUNK](https://www.trunkcoffee.com/)                             |
+| Beans   | [Guatemala La Pia](https://trunkcoffee.thebase.in/items/52504275) |
+| Amount  | 18g                                                               |
+| Coarse  | 1.2                                                               |
+| Tamping | かなり強く押し込む                                                |
+| Result  | Bad                                                               |
+| Comment | 薄すぎて失敗。                                                    |
 
-### Kieni Espresso に変えた
+| Date    | 2021/10/27                                                                  |
+| :------ | :-------------------------------------------------------------------------- |
+| Roaster | [Coffee Collective](https://coffeecollective.dk/)                           |
+| Beans   | [Kieni Espresso](https://coffeecollective.dk/shop/kieni-espresso/) / Washed |
+| Amount  | 18g                                                                         |
+| Coarse  | 0.9                                                                         |
+| Tamping | 表面をならすだけ                                                            |
+| Result  | Nod Bad                                                                     |
+| Comment | ようやく飲めなくないレベルになった。抽出スピードが遅いので挽目が細すぎた。  |
+
+| Date    | 2021/10/30                                                                  |
+| :------ | :-------------------------------------------------------------------------- |
+| Roaster | [Coffee Collective](https://coffeecollective.dk/)                           |
+| Beans   | [Kieni Espresso](https://coffeecollective.dk/shop/kieni-espresso/) / Washed |
+| Amount  | 16g                                                                         |
+| Coarse  | 1.3                                                                         |
+| Tamping | 押し込まない程度に軽く                                                      |
+| Result  | Nod Bad                                                                     |
+| Comment | まだ美味しいとはいえない。                                                  |
+
+| Date       | 2021/11/02                                                                  |
+| :--------- | :-------------------------------------------------------------------------- |
+| Roaster    | [Coffee Collective](https://coffeecollective.dk/)                           |
+| Beans      | [Kieni Espresso](https://coffeecollective.dk/shop/kieni-espresso/) / Washed |
+| Amount     | 16g                                                                         |
+| Coarse     | 1.1                                                                         |
+| Tamping    | かなり強く押し込む                                                          |
+| Extra Ops. | 3 気圧で蒸らし 30 秒                                                        |
+| Result     | Pretty Good                                                                 |
+| Comment    | 初優勝。ようやく一定満足できる味になった。                                  |
+
+| Date       | 2021/11/05                                                                  |
+| :--------- | :-------------------------------------------------------------------------- |
+| Roaster    | [Coffee Collective](https://coffeecollective.dk/)                           |
+| Beans      | [Kieni Espresso](https://coffeecollective.dk/shop/kieni-espresso/) / Washed |
+| Amount     | 16g                                                                         |
+| Coarse     | 1.0                                                                         |
+| Tamping    | 強く押し込む                                                                |
+| Extra Ops. | 3 気圧で蒸らし 20 秒                                                        |
+| Result     | Pretty Good                                                                 |
+| Comment    | しっかりした甘みとナッツの香りが出ていて美味しい。                          |
+
+| Date       | 2021/11/05                                                                                                 |
+| :--------- | :--------------------------------------------------------------------------------------------------------- |
+| Roaster    | [Philocoffea](https://philocoffea.com/)                                                                    |
+| Beans      | 友達 for Espresso / Tetsu Process                                                                          |
+| Amount     | 16g                                                                                                        |
+| Coarse     | 1.1                                                                                                        |
+| Tamping    | 強く押し込む                                                                                               |
+| Extra Ops. | 3 気圧で蒸らし 30 秒                                                                                       |
+| Result     | Good                                                                                                       |
+| Comment    | 美味しいんだけど「友達」の良さを引き出せてない気がする。後半がちょっと薄くなってしまった。濃さが足りない。 |
+
+| Date       | 2021/11/06                                                   |
+| :--------- | :----------------------------------------------------------- |
+| Roaster    | [わかき珈琲](https://wakakicoffee.thebase.in/)               |
+| Beans      | Panama Estrella / Dynamic Cherry Process                     |
+| Amount     | 16g                                                          |
+| Coarse     | 1.1                                                          |
+| Tamping    | しっかり強く押し込む                                         |
+| Extra Ops. | 2 気圧で蒸らし 20 秒                                         |
+| Flow Rate  | 34ml / 7 気圧                                                |
+| Result     | Pretty Good                                                  |
+| Comment    | 爽やかな味に仕上がった。浅煎りは蒸らしなくてもいいかもなぁ。 |
+
+| Date      | 2021/11/10                                                                  |
+| :-------- | :-------------------------------------------------------------------------- |
+| Roaster   | [Coffee Collective](https://coffeecollective.dk/)                           |
+| Beans     | [Kieni Espresso](https://coffeecollective.dk/shop/kieni-espresso/) / Washed |
+| Amount    | 15g                                                                         |
+| Coarse    | 1.1                                                                         |
+| Tamping   | 軽く押し込む                                                                |
+| Flow Rate | 30ml / 30s                                                                  |
+| Result    | Pretty Good                                                                 |
+| Comment   | 安定して抽出できるようになった。ドーシングリングを導入した。                |
+
+| Date       | 2021/11/10                                                                  |
+| :--------- | :-------------------------------------------------------------------------- |
+| Roaster    | [Coffee Collective](https://coffeecollective.dk/)                           |
+| Beans      | [Kieni Espresso](https://coffeecollective.dk/shop/kieni-espresso/) / Washed |
+| Amount     | 14g                                                                         |
+| Coarse     | 1.1                                                                         |
+| Tamping    | 強めに押し込む                                                              |
+| Extra Ops. | 予熱あり                                                                    |
+| Flow Rate  | 30ml / 40s                                                                  |
+| Result     | Pretty Good                                                                 |
+| Comment    | 十分美味しいけど、ちょっととろみが減った。14g だと減らしすぎかも。          |
+
+| Date       | 2021/11/12                                                                   |
+| :--------- | :--------------------------------------------------------------------------- |
+| Roaster    | [わかき珈琲](https://wakakicoffee.thebase.in/)                               |
+| Beans      | Panama Estrella / Dynamic Cherry Process                                     |
+| Amount     | 16g                                                                          |
+| Coarse     | 1.0                                                                          |
+| Tamping    | 強めに押し込む                                                               |
+| Extra Ops. | 予熱あり                                                                     |
+| Flow Rate  | 36ml / 33s                                                                   |
+| Result     | Pretty Good                                                                  |
+| Comment    | 個性的な味がエスプレッソにしてもちゃんと現れてて嬉しい。抽出速度は問題なし。 |
+
+| Date       | 2021/11/13                                                                                                                                                                       |
+| :--------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Roaster    | [Fugulen Coffee Roasters Tokyo](https://fuglencoffee.jp/)                                                                                                                        |
+| Beans      | [Lalesa Espresso](https://fuglencoffee.jp/collections/coffeebeans/products/lalesa-espresso) / Washed                                                                             |
+| Amount     | 16g                                                                                                                                                                              |
+| Coarse     | 1.1                                                                                                                                                                              |
+| Tamping    | かなり強めに押し込む                                                                                                                                                             |
+| Extra Ops. | 予熱あり、結果的に蒸らしあり                                                                                                                                                     |
+| Flow Rate  | 34ml / 50s                                                                                                                                                                       |
+| Result     | Excellent                                                                                                                                                                        |
+| Comment    | 甘みがあって Nutty で自分の好みの味。ミルクによく合う。ただ、抽出は 8 気圧になっても始まらず、9 気圧を 30 秒ほどキープしてようやく抽出できた。今回は単純にタンピングが強すぎた。 |
+
+| Date       | 2021/11/14                                                                                                                                                                             |
+| :--------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Roaster    | [Philocoffea](https://philocoffea.com/)                                                                                                                                                |
+| Beans      | 友達 for Espresso / Tetsu Process                                                                                                                                                      |
+| Amount     | 16g                                                                                                                                                                                    |
+| Coarse     | 1.0                                                                                                                                                                                    |
+| Tamping    | 軽く押し込む                                                                                                                                                                           |
+| Extra Ops. | 予熱あり、結果的に蒸らしあり                                                                                                                                                           |
+| Flow Rate  | 35ml / 60s                                                                                                                                                                             |
+| Result     | Excellent                                                                                                                                                                              |
+| Comment    | とてもフルーティーに仕上がった。濃さも申し分ない。ただ、9 気圧になっても全然抽出が始まらず、10 気圧を 1 分ほどキープしてようやくポタポタと抽出が始まった。抽出速度が絶望的に遅かった。 |
+
+## わかったこと
+
+### うまく抽出できない豆もある
 
 最初に TRUNK Guatemala La Pia を選んだのは、あまり自分の好みの味ではなかったので Nomad のお試しに使ってみた、というのが正直なところ。
 ローストとしては極端に浅煎りというわけでもないし、エスプレッソで抽出できそうかなと思っていたけど、本当に相性が悪くて全然抽出されない。
 
 一方で Kieni Espresso はあっさりうまくいった。
 
-自分にはこの２つの豆でなぜここまでの差が生まれるのかは説明できない。
+自分にはこの２つの豆でなぜここまでの差が生まれるのか説明できない。
 Kieni Espresso はエスプレッソローストではあるけど、Swim と比べるとそこまで焙煎が深いというわけではない。
 
 ただ、わからないながらも考えてみると、 La Pia はドリップで何度か淹れてみたとき、あまり甘みがないというかボディ感が弱い豆だったので、浅煎りのままエスプレッソに使うには向かない豆なのかもしれない。
@@ -68,20 +198,18 @@ Flair のときはプラスチック製のものが付属していたけど、No
 Nomad のフィルターバスケットは 49.8mm という今となっては珍しいサイズを採用している。
 さすがにすぐに手に入るものだと 51mm か 58mm なのでとりあえず 51mm のものを買ってみたらうまくフィットしている。
 
-ドーシングがうまくいくようになると、次はレベリングが気になる。けどこればっかりは 49.8mm 用のディストリビューターを買う必要があって悩んでいる。1 万円はちょっと勇気がいる。
+ドーシングがうまくいくようになると、次はレベリングが気になる。けどこればっかりは 49.8mm 用のディストリビューターを買う必要があって、とりあえず買ってみたけどまだ届かない。
 
 ただ、ドーシングは奥深い世界のようで、自分みたいに家庭用のグラインダーを使う場合、均等に入らないのが問題で、それを改善する手法として「WDT」がある。
 [詳しくはこの記事に書かれている通り](https://www.meticulist.net/blog/improving-espresso-wdt-what-is-it-and-why)で、特に浅煎りにおいては大きな効果があるようなので試してみるつもりである。
 
 ### 蒸らし
 
-効果があるのかわからない。
+効果があるのかわからない。蒸らしのありなしでわかりやすい変化はなかった。
 
-やり方はポンピングをして 3〜4 気圧あたりでゆっくりとお湯を染み込ませて、少し抽出が始まったタイミングで 30 秒ほど待つ。
+やり方はポンピングをして 3〜4 気圧あたりでゆっくりとお湯を染み込ませて、少し抽出が始まったタイミングで 30 秒ほど待つ。ただ、低圧のまま抽出が始まって、その状態で 30 秒放置するとポタポタ垂れてしまうので正直微妙な気がしている。
 
-ただ、低圧のまま抽出が始まって、その状態で 30 秒放置するとポタポタ垂れてしまうので正直微妙な気がしている。
-
-蒸らしのありなしでわかりやすい変化はなかった。
+別パターンとして、細めに挽いたりタンピングを強くするなどして低圧状態では抽出が始まらないように調整すると、副次的に蒸らし工程を挟み込むこともできる。
 
 ### 予熱
 
@@ -90,8 +218,14 @@ Nomad の内部を予熱するために、最初はフィルターバスケッ�
 
 予熱は効果があったと思う。あきらかに抽出されるエスプレッソが濃くなった。
 
+ただ、予熱してからバスケットを取り出して、粉を詰めて再度セットする間に温度が下がってしまうので、コーヒードロワーを複数用意しておくのが良さそう。自分は追加で 2 つ注文した。これで連続抽出もできる。
+
 ### クレマができない
 
 浅煎りだとそもそもクレマはできにくいのかなと思い始めた。クレマができないとダメってこともないだろうけど、
 
 あとはエイジングをしっかり取った豆だと炭酸ガスが抜けているのでクレマできにくいよな、とは思った。
+
+### 抽出スピード
+
+一般的なエスプレッソマシンでの抽出であれば 30ml / 30 秒だと思うけど、Nomad で同じ速度で抽出するとちょっと薄い気がする。
