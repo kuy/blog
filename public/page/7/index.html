@@ -109,6 +109,72 @@
                                     
     <header class="post__header">
         <h1 class="post__title">
+            <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;flex-handler&#x2F;">actix-webの柔軟なリクエストハンドラの仕組み</a>
+        </h1>
+        <div class="post__meta">
+            <span class="post__time">2019-08-12</span>
+            
+        </div>
+    </header>
+
+                                    <div class="post__summary">
+                                        <h2 id="kitukake">きっかけ</h2>
+<p>業務で Rust を使っていこうということになったので、Rust を勉強しながら何か Web アプリでも作ってみようと思って <a href="https://actix.rs/">actix-web</a> を触り始めた。サンプルコードをいじっていて気になったのはリクエストハンドラの引数の柔軟さで、まるでスクリプト言語のように扱える。</p>
+<p>例えば以下は <code>http://localhost:8080/hoge</code> にリクエストを受けると path 部分である <code>/hoge</code> をレスポンスとして返す。</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">index</span><span style="color:#abb2bf;">(
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">req</span><span style="color:#abb2bf;">: HttpRequest,
+</span><span style="color:#abb2bf;">) -&gt; impl IntoFuture&lt;Item = String, Error = Error&gt; {
+</span><span style="color:#abb2bf;">    Ok(String::from(req.</span><span style="color:#5ebfcc;">path</span><span style="color:#abb2bf;">()))
+</span><span style="color:#abb2bf;">}
+</span><span style="color:#abb2bf;">
+</span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">main</span><span style="color:#abb2bf;">() -&gt; std::io::Result&lt;()&gt; {
+</span><span style="color:#abb2bf;">    HttpServer::new(|| {
+</span><span style="color:#abb2bf;">        App::new()
+</span><span style="color:#abb2bf;">            .</span><span style="color:#5ebfcc;">default_service</span><span style="color:#abb2bf;">(web::route().</span><span style="color:#5ebfcc;">to_async</span><span style="color:#abb2bf;">(index))
+</span><span style="color:#abb2bf;">    })
+</span><span style="color:#abb2bf;">    .</span><span style="color:#5ebfcc;">bind</span><span style="color:#abb2bf;">(</span><span style="color:#9acc76;">&quot;127.0.0.1:8080&quot;</span><span style="color:#abb2bf;">)</span><span style="color:#adb7c9;">?
+</span><span style="color:#abb2bf;">    .</span><span style="color:#5ebfcc;">run</span><span style="color:#abb2bf;">()
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
+<p>リクエストハンドラに何かデータ（普通はアプリケーションの状態など）を渡すこともできる。この例だと <code>http://localhost:8080/spacecat</code> にアクセスすると <code>http://www.example.com/spacecat</code> が表示される。</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">index</span><span style="color:#abb2bf;">(
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">req</span><span style="color:#abb2bf;">: HttpRequest,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">prefix</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">) -&gt; impl IntoFuture&lt;Item = String, Error = Error&gt; {
+</span><span style="color:#abb2bf;">    Ok(format!(</span><span style="color:#9acc76;">&quot;</span><span style="color:#db9d63;">{}{}</span><span style="color:#9acc76;">&quot;</span><span style="color:#abb2bf;">, prefix, req.</span><span style="color:#5ebfcc;">path</span><span style="color:#abb2bf;">()))
+</span><span style="color:#abb2bf;">}
+</span><span style="color:#abb2bf;">
+</span><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">main</span><span style="color:#abb2bf;">() -&gt; std::io::Result&lt;()&gt; {
+</span><span style="color:#abb2bf;">    HttpServer::new(|| {
+</span><span style="color:#abb2bf;">        App::new()
+</span><span style="color:#abb2bf;">            .</span><span style="color:#5ebfcc;">data</span><span style="color:#abb2bf;">(</span><span style="color:#9acc76;">&quot;http://www.example.com&quot;</span><span style="color:#abb2bf;">)
+</span><span style="color:#abb2bf;">            .</span><span style="color:#5ebfcc;">default_service</span><span style="color:#abb2bf;">(web::route().</span><span style="color:#5ebfcc;">to_async</span><span style="color:#abb2bf;">(index))
+</span><span style="color:#abb2bf;">    })
+</span><span style="color:#abb2bf;">    .</span><span style="color:#5ebfcc;">bind</span><span style="color:#abb2bf;">(</span><span style="color:#9acc76;">&quot;127.0.0.1:8080&quot;</span><span style="color:#abb2bf;">)</span><span style="color:#adb7c9;">?
+</span><span style="color:#abb2bf;">    .</span><span style="color:#5ebfcc;">run</span><span style="color:#abb2bf;">()
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
+<p>ここで「どこまで柔軟性があるんだろうか？」と思って、試しにリクエストハンドラの引数の順番を入れ替えてみた。</p>
+<pre data-lang="rust" style="background-color:#2b303b;color:#6c7079;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#cd74e8;">fn </span><span style="color:#5cb3fa;">index</span><span style="color:#abb2bf;">(
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">prefix</span><span style="color:#abb2bf;">: web::Data&lt;</span><span style="color:#adb7c9;">&amp;</span><span style="color:#cd74e8;">str</span><span style="color:#abb2bf;">&gt;,
+</span><span style="color:#abb2bf;">    </span><span style="color:#eb6772;">req</span><span style="color:#abb2bf;">: HttpRequest,
+</span><span style="color:#abb2bf;">) -&gt; impl IntoFuture&lt;Item = String, Error = Error&gt; {
+</span><span style="color:#abb2bf;">    Ok(format!(</span><span style="color:#9acc76;">&quot;</span><span style="color:#db9d63;">{}{}</span><span style="color:#9acc76;">&quot;</span><span style="color:#abb2bf;">, prefix, req.</span><span style="color:#5ebfcc;">path</span><span style="color:#abb2bf;">()))
+</span><span style="color:#abb2bf;">}
+</span></code></pre>
+<p><strong>これ、ちゃんと動いてしまう。</strong></p>
+<p>Rust のようなガチガチに検証するタイプの言語でこの柔軟性を一体どうやって実現しているんだろう・・・？ と思ったのがきっかけ。</p>
+
+                                    </div>
+                                    <div class="read-more">
+                                        <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;flex-handler&#x2F;">Read more...</a>
+                                    </div>
+                                </article>
+                            
+                                <article class="post">
+                                    
+    <header class="post__header">
+        <h1 class="post__title">
             <a href="https:&#x2F;&#x2F;blog.endflow.net&#x2F;about&#x2F;">&#x2F;* @kuy *&#x2F;</a>
         </h1>
         <div class="post__meta">
