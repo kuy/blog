@@ -37,6 +37,9 @@
         <loc>https://blog.endflow.net/categories/coffee/page/1/</loc>
     </url>
     <url>
+        <loc>https://blog.endflow.net/categories/coffee/page/2/</loc>
+    </url>
+    <url>
         <loc>https://blog.endflow.net/categories/programming/</loc>
     </url>
     <url>
@@ -53,6 +56,10 @@
     </url>
     <url>
         <loc>https://blog.endflow.net/categories/wine/page/1/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/cold-brew-2022/</loc>
+        <lastmod>2022-08-27</lastmod>
     </url>
     <url>
         <loc>https://blog.endflow.net/competitive-cyclist-part1/</loc>
@@ -189,6 +196,9 @@
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/clean-architecture/</loc>
+    </url>
+    <url>
+        <loc>https://blog.endflow.net/tags/cold-brew/</loc>
     </url>
     <url>
         <loc>https://blog.endflow.net/tags/computer-science/</loc>

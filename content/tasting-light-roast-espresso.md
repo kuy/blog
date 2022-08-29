@@ -21,6 +21,7 @@ categories = ["coffee"]
 
 ## 目次
 
+- Swamp
 - Wavy Coffee Roasters
 - Finetime Coffee Roasters
 - Light Up Coffee
@@ -30,6 +31,22 @@ categories = ["coffee"]
 - Acid Coffee Tokyo
 
 <!-- more -->
+
+## Swamp
+
+![espresso-swamp](/img/espresso-swamp.jpg)
+
+とにかくキレイなエスプレッソ。1 杯飲むと他のも試したくなる。
+
+行った日はエチオピア・ドゥメルソとコロンビア・タビ種をシングルでいただいた（提供前に必ず味見をされてたので、ダブルは選べないかも）。
+豆をリストから選べるのも嬉しい。
+
+エチオピアはスッキリとした味わいで、キレイな酸味が印象的。甘みやボディ感とのバランスが絶妙だった。
+
+コロンビアの方はボディ主体。甘さはセミドライトマトの旨味を合わせ持った印象で、
+味わいはしっかりしてるのにアフターはキレイに抜けて、余韻にも一切渋みや苦味がない。
+
+空間としては広くないのに、不思議と居心地が良くて、何度でも足を運びたいいいお店でした。
 
 ## Wavy Coffee Roasters
 
