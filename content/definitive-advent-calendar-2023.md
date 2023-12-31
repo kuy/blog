@@ -179,7 +179,7 @@ Day 4のNuguoと同じか少し上くらいのスコアありそう。
 |   9 | Adaura Honey        | Adaura Geisha Honey         | ✅  |
 |  10 | Bernardina 1262     | Longboard Windy Ridge GN    |     |
 |  11 | Nuguo AN            | Nuguo	AN 355 AN             | 🔺 |
-|  12 | Totumas W           | Mount Totumas GW            |     |
+|  12 | Totumas W           | Mount Totumas GW            | ✅  |
 |  13 | Nuguo AW            | Nuguo AN 372                | 🔺 |
 |  14 | Nuguo or Black Moon | Nuguo AN 376                | 🔺 |
 |  15 | Black Moon W        | Abu GW 78 Mossto            |     |
